@@ -66,25 +66,46 @@ An evaluation and reproduction harness integrating **[Sentry](https://arxiv.org/
 
 ## 📊 Empirical Results Summary
 
-Results on SWE-bench Lite tasks evaluated with **OpenCode (google/gemini-3.5-flash-lite)** and **Sentry (google/gemma-4-e4b on LM Studio)**:
+Status and metrics across the 10 SWE-bench Lite candidate tasks evaluated using **OpenCode (`google/gemini-3.5-flash-lite`)** as the agent and **Sentry (`google/gemma-4-e4b` on LM Studio)** as the runtime monitor:
 
-| Task ID | Mode | Steps | Interventions | Elapsed Time | Agent Tokens | Sentry Tokens | Total Tokens | Patch Size |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`psf__requests-2317`** | Base | 43 | — | 1923.1s | 1,652,084 | — | 1,652,084 | 1,775 B |
-| | **Sentry** | **29** | **1** | **424.4s** *(4.5× faster)* | 879,514 | 13,365 | **892,879** *(-46%)* | 1,892 B |
-| **`pallets__flask-4045`** | Base | 46 | — | 517.8s | 2,406,252 | — | 2,406,252 | 2,630 B |
-| | **Sentry** | **30** | **1** | **298.4s** *(1.7× faster)* | 852,381 | 23,700 | **876,081** *(-64%)* | 3,072 B |
-| **`pallets__flask-5063`** | Base | 67 | — | 2842.0s | 3,463,402 | — | 3,463,402 | 6,642 B |
-| | **Sentry** | **34** | **2** | **325.7s** *(8.7× faster)* | 787,792 | 22,872 | **810,664** *(-77%)* | 0 B |
-| **`psf__requests-2148`** | Base | 41 | — | 14518.2s | 2,012,165 | — | 2,012,165 | 4,728 B |
-| | **Sentry** | **23** | **1** | **335.3s** *(43× faster)* | 867,054 | 5,288 | **872,342** *(-57%)* | 0 B |
+### 1. Overall Batch Status (10 Tasks)
 
-### Key Takeaways:
-1. **Dramatic Token Savings (-46% to -77%)**: When agents drift into repetitive exploratory loops (reading files repeatedly, redundant grep patterns), Sentry intervenes early, preventing millions of wasted tokens.
-2. **Massive Speedups (1.7× to 43× faster)**: Early intervention stops runaway turns and infinite tool retries.
-3. **Overhead of Sentry is Minimal**: Sentry tokens accounted for only 1% to 2.8% of total tokens spent.
+| Task ID | Base Status | Base Patch | Sentry Status | Sentry Patch | Failure Cause (if any) |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **`psf__requests-2317`** | Completed (43 steps) | **1,775 B** | Completed (29 steps) | **1,892 B** | — (Valid comparative run) |
+| **`pallets__flask-4045`** | Completed (46 steps) | **2,630 B** | Completed (30 steps) | **3,072 B** | — (Valid comparative run) |
+| **`pallets__flask-5063`** | Completed (67 steps) | **6,642 B** | Aborted early (34 steps) | **0 B** | Agent stopped after intervention without making code edits |
+| **`psf__requests-2148`** | Completed (41 steps) | **4,728 B** | Aborted early (23 steps) | **0 B** | Agent stopped after intervention without making code edits |
+| **`pallets__flask-4992`** | Completed (35 steps) | **2,081 B** | Crashed (step 0) | **0 B** | LM Studio `HTTP 400` (context window overflow) |
+| **`psf__requests-1963`** | Completed (33 steps) | **2,598 B** | Crashed (step 0) | **0 B** | LM Studio `HTTP 400` (context window overflow) |
+| **`psf__requests-2674`** | Not run (0 steps) | **0 B** | Not run (0 steps) | **0 B** | Gemini API free tier limit exhausted (500 req/day) |
+| **`psf__requests-3362`** | Not run (0 steps) | **0 B** | Not run (0 steps) | **0 B** | Gemini API free tier limit exhausted (500 req/day) |
+| **`psf__requests-863`** | Not run (0 steps) | **0 B** | Not run (0 steps) | **0 B** | Gemini API free tier limit exhausted (500 req/day) |
+| **`pytest-dev__pytest-11143`** | Not run (0 steps) | **0 B** | Not run (0 steps) | **0 B** | Gemini API free tier limit exhausted (500 req/day) |
 
 ---
+
+### 2. Verified Comparative Runs (Tasks with Real Patches)
+
+Only 2 out of 10 tasks produced non-zero, valid patches in both Base and Sentry modes:
+
+| Task ID | Mode | Steps | Interventions | Elapsed Time | Billed Tokens (API) | Patch Size |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
+| **`psf__requests-2317`** | Base | 43 | — | 1923.1s | 1,652,084 | 1,775 B |
+| | **Sentry** | **29** | **1** | **424.4s** | **892,879** | 1,892 B |
+| **`pallets__flask-4045`** | Base | 46 | — | 517.8s | 2,406,252 | 2,630 B |
+| | **Sentry** | **30** | **1** | **298.4s** | **876,081** | 3,072 B |
+
+### Empirical Observations:
+1. **On tasks where Sentry succeeded (`requests-2317`, `flask-4045`)**:
+   - 1 targeted intervention helped guide the agent back to the core issue, avoiding redundant exploratory cycles.
+   - Reduced step count by ~32–35% while preserving patch validity.
+2. **On tasks where Sentry failed to produce a patch (`flask-5063`, `requests-2148`)**:
+   - The agent misinterpreted Sentry's corrective guidance as a termination instruction and stopped before making file modifications (resulting in 0-byte patches).
+   - This caused lower step counts, but represents a failure to solve the task rather than an optimization.
+3. **Infrastructure Bottlenecks**:
+   - 4 tasks could not be evaluated due to API quota exhaustion (Google AI Studio 500 req/day limit).
+   - 2 tasks crashed due to local judge model context limits in LM Studio (`n_ctx` < 8k).
 
 ## 🚀 Setup & Installation
 

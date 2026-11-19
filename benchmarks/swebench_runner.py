@@ -93,6 +93,7 @@ def run_instance(
     use_sentry: bool = True,
     sentry_config_path: str | Path = "configs/providers/lmstudio.yaml",
     opencode_model: str | None = "openrouter/nvidia/nemotron-3.5-lightning:free",
+    opencode_variant: str | None = None,
     openrouter_key: str | None = None,
     opencode_bin: str | None = None,
     workspaces_dir: Path = Path("workspaces"),
@@ -138,6 +139,7 @@ def run_instance(
     opencode = OpenCodeRunner(
         workspace_path,
         model=opencode_model,
+        variant=opencode_variant,
         opencode_bin=opencode_bin,
         env=env,
     )
@@ -297,6 +299,7 @@ def main():
     parser.add_argument("--provider", type=str, choices=["opencode", "lmstudio"], default="lmstudio", help="LLM backend for Sentry")
     parser.add_argument("--config", type=str, default=None, help="Explicit Sentry config YAML file")
     parser.add_argument("--opencode-model", type=str, default="google/gemini-3.5-flash-lite", help="Model for OpenCode CLI")
+    parser.add_argument("--opencode-variant", type=str, default=None, help="Reasoning effort variant for OpenCode (e.g. low, high, max)")
     parser.add_argument("--openrouter-key", type=str, default=None, help="OpenRouter API key")
     parser.add_argument("--check-interval", type=int, default=5, help="Steps between Sentry evaluations")
     parser.add_argument("--check-on-error", action="store_true", default=True, help="Evaluate Sentry immediately on tool errors")
@@ -315,6 +318,7 @@ def main():
         use_sentry=not args.no_sentry,
         sentry_config_path=config_path,
         opencode_model=args.opencode_model,
+        opencode_variant=args.opencode_variant,
         openrouter_key=args.openrouter_key,
         opencode_bin=args.opencode_bin,
         check_interval=args.check_interval,

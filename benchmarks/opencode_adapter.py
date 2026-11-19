@@ -43,12 +43,14 @@ class OpenCodeRunner:
         workspace_dir: Path | str,
         *,
         model: str | None = None,
+        variant: str | None = None,
         opencode_bin: str | None = None,
         timeout_seconds: int = 300,
         env: dict[str, str] | None = None,
     ):
         self.workspace_dir = Path(workspace_dir).resolve()
         self.model = model
+        self.variant = variant
         resolved_bin = opencode_bin or shutil.which("opencode") or "/opt/homebrew/bin/opencode"
         self.opencode_bin = str(resolved_bin)
         self.timeout_seconds = timeout_seconds
@@ -84,6 +86,8 @@ class OpenCodeRunner:
         cmd = [self.opencode_bin, "run", prompt, "--pure", "--format", "json", "--dir", str(self.workspace_dir)]
         if self.model:
             cmd.extend(["--model", self.model])
+        if self.variant:
+            cmd.extend(["--variant", self.variant])
         if is_continuation and self.session_id:
             cmd.extend(["--session", self.session_id, "--continue"])
 

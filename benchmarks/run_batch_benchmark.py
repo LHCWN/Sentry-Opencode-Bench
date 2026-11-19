@@ -27,6 +27,7 @@ def run_batch(
     task_ids: list[str],
     *,
     opencode_model: str = "openrouter/nvidia/nemotron-3.5-lightning:free",
+    opencode_variant: str | None = None,
     openrouter_key: str | None = None,
     opencode_bin: str | None = None,
     sentry_config_path: str = "configs/providers/lmstudio.yaml",
@@ -82,6 +83,7 @@ def run_batch(
                     instance,
                     use_sentry=False,
                     opencode_model=opencode_model,
+                    opencode_variant=opencode_variant,
                     openrouter_key=openrouter_key,
                     opencode_bin=opencode_bin,
                     max_total_steps=max_steps_per_task,
@@ -110,6 +112,7 @@ def run_batch(
                     use_sentry=True,
                     sentry_config_path=sentry_config_path,
                     opencode_model=opencode_model,
+                    opencode_variant=opencode_variant,
                     openrouter_key=openrouter_key,
                     opencode_bin=opencode_bin,
                     max_total_steps=max_steps_per_task,
@@ -165,6 +168,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run 10-task SWE-bench Lite comparison")
     parser.add_argument("--tasks", nargs="+", default=CANDIDATE_TASKS, help="Task IDs to evaluate")
     parser.add_argument("--model", type=str, default="google/gemini-3.5-flash-lite", help="OpenCode model")
+    parser.add_argument("--variant", type=str, default=None, help="Reasoning effort variant for OpenCode (e.g. low, high, max)")
     parser.add_argument("--key", type=str, default=None, help="OpenRouter Key")
     parser.add_argument("--sentry-config", type=str, default="configs/providers/lmstudio.yaml", help="Sentry config")
     parser.add_argument("--max-steps", type=int, default=25, help="Max steps per task")
@@ -176,6 +180,7 @@ def main():
     run_batch(
         args.tasks,
         opencode_model=args.model,
+        opencode_variant=args.variant,
         openrouter_key=args.key,
         opencode_bin=args.opencode_bin,
         sentry_config_path=args.sentry_config,

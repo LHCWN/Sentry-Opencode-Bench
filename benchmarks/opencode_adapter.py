@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import time
 from dataclasses import dataclass
@@ -42,13 +43,14 @@ class OpenCodeRunner:
         workspace_dir: Path | str,
         *,
         model: str | None = None,
-        opencode_bin: str = "/opt/homebrew/bin/opencode",
+        opencode_bin: str | None = None,
         timeout_seconds: int = 300,
         env: dict[str, str] | None = None,
     ):
         self.workspace_dir = Path(workspace_dir).resolve()
         self.model = model
-        self.opencode_bin = opencode_bin
+        resolved_bin = opencode_bin or shutil.which("opencode") or "/opt/homebrew/bin/opencode"
+        self.opencode_bin = str(resolved_bin)
         self.timeout_seconds = timeout_seconds
         self.env = env or {}
         self.session_id: str | None = None
@@ -237,7 +239,15 @@ class OpenCodeRunner:
         return steps
 
     def get_git_diff(self) -> str:
-        """Returns the current git diff of the workspace."""
+        """Returns the current git diff of the workspace, including new untracked files."""
+        # Stage untracked files with intent-to-add so newly created files appear in git diff
+        subprocess.run(
+            ["git", "add", "-N", "."],
+            cwd=str(self.workspace_dir),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
         res = subprocess.run(
             ["git", "diff"],
             cwd=str(self.workspace_dir),

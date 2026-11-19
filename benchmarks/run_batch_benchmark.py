@@ -28,6 +28,7 @@ def run_batch(
     *,
     opencode_model: str = "openrouter/nvidia/nemotron-3.5-lightning:free",
     openrouter_key: str | None = None,
+    opencode_bin: str | None = None,
     sentry_config_path: str = "configs/providers/lmstudio.yaml",
     output_dir: Path = Path("outputs/batch_benchmark"),
     max_steps_per_task: int = 25,
@@ -82,6 +83,7 @@ def run_batch(
                     use_sentry=False,
                     opencode_model=opencode_model,
                     openrouter_key=openrouter_key,
+                    opencode_bin=opencode_bin,
                     max_total_steps=max_steps_per_task,
                     output_dir=output_dir / "runs",
                 )
@@ -109,6 +111,7 @@ def run_batch(
                     sentry_config_path=sentry_config_path,
                     opencode_model=opencode_model,
                     openrouter_key=openrouter_key,
+                    opencode_bin=opencode_bin,
                     max_total_steps=max_steps_per_task,
                     check_interval=check_interval,
                     check_on_error=check_on_error,
@@ -165,6 +168,7 @@ def main():
     parser.add_argument("--key", type=str, default=None, help="OpenRouter Key")
     parser.add_argument("--sentry-config", type=str, default="configs/providers/lmstudio.yaml", help="Sentry config")
     parser.add_argument("--max-steps", type=int, default=25, help="Max steps per task")
+    parser.add_argument("--opencode-bin", type=str, default=None, help="Explicit path to opencode binary")
     parser.add_argument("--rerun-failed", action="store_true", help="Re-run tasks that previously failed or had 0 steps")
     parser.add_argument("--force", action="store_true", help="Force re-run all tasks from scratch")
     args = parser.parse_args()
@@ -173,6 +177,7 @@ def main():
         args.tasks,
         opencode_model=args.model,
         openrouter_key=args.key,
+        opencode_bin=args.opencode_bin,
         sentry_config_path=args.sentry_config,
         max_steps_per_task=args.max_steps,
         rerun_failed=args.rerun_failed,

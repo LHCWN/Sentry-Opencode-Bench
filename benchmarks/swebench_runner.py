@@ -53,12 +53,25 @@ def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path) -> Path:
     if index_lock.exists():
         index_lock.unlink(missing_ok=True)
 
-    # Reset and checkout base_commit
+    # Reset and checkout base_commit cleanly (both tracked dirty modifications and untracked files)
     base_commit = instance["base_commit"]
     print(f"Checking out base commit {base_commit}...")
-    subprocess.run(["git", "fetch"], cwd=str(work_dir), check=False)
+    subprocess.run(["git", "reset", "--hard", "HEAD"], cwd=str(work_dir), check=False)
     subprocess.run(["git", "clean", "-fdx"], cwd=str(work_dir), check=True)
+    subprocess.run(["git", "fetch"], cwd=str(work_dir), check=False)
     subprocess.run(["git", "checkout", "-f", base_commit], cwd=str(work_dir), check=True)
+    subprocess.run(["git", "reset", "--hard", base_commit], cwd=str(work_dir), check=True)
+
+    # Exclude opencode configuration, logs, and venvs from git diff tracking
+    exclude_file = work_dir / ".git" / "info" / "exclude"
+    exclude_patterns = "opencode.json\n.venv\n*.log\n"
+    if exclude_file.exists():
+        existing = exclude_file.read_text(encoding="utf-8")
+        if "opencode.json" not in existing:
+            exclude_file.write_text(existing.rstrip() + "\n" + exclude_patterns, encoding="utf-8")
+    else:
+        exclude_file.parent.mkdir(parents=True, exist_ok=True)
+        exclude_file.write_text(exclude_patterns, encoding="utf-8")
 
     # Disable websearch, webfetch, and external directory access so the agent cannot escape workspace
     opencode_cfg = work_dir / "opencode.json"
@@ -81,6 +94,7 @@ def run_instance(
     sentry_config_path: str | Path = "configs/providers/lmstudio.yaml",
     opencode_model: str | None = "openrouter/nvidia/nemotron-3.5-lightning:free",
     openrouter_key: str | None = None,
+    opencode_bin: str | None = None,
     workspaces_dir: Path = Path("workspaces"),
     output_dir: Path = Path("outputs/swebench"),
     max_interventions: int = 5,
@@ -124,6 +138,7 @@ def run_instance(
     opencode = OpenCodeRunner(
         workspace_path,
         model=opencode_model,
+        opencode_bin=opencode_bin,
         env=env,
     )
 
@@ -285,6 +300,7 @@ def main():
     parser.add_argument("--openrouter-key", type=str, default=None, help="OpenRouter API key")
     parser.add_argument("--check-interval", type=int, default=5, help="Steps between Sentry evaluations")
     parser.add_argument("--check-on-error", action="store_true", default=True, help="Evaluate Sentry immediately on tool errors")
+    parser.add_argument("--opencode-bin", type=str, default=None, help="Explicit path to opencode binary")
     parser.add_argument("--workspaces", type=Path, default=Path("workspaces"), help="Workspaces directory")
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/swebench"), help="Outputs directory")
     args = parser.parse_args()
@@ -300,6 +316,7 @@ def main():
         sentry_config_path=config_path,
         opencode_model=args.opencode_model,
         openrouter_key=args.openrouter_key,
+        opencode_bin=args.opencode_bin,
         check_interval=args.check_interval,
         check_on_error=args.check_on_error,
         workspaces_dir=args.workspaces,

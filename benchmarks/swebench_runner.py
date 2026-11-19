@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import time
 import uuid
@@ -34,33 +35,89 @@ def fetch_swebench_instance(instance_id: str | None = None, index: int = 0) -> d
     return dict(dataset[index])
 
 
+def purge_git_future_history(work_dir: Path) -> None:
+    """Anti-cheating protection: Purge origin remote, future branches, tags, and reflogs
+    so that the model cannot inspect future commits (PR merges, fix commits, origin/main).
+    """
+    subprocess.run(["git", "remote", "remove", "origin"], cwd=str(work_dir), check=False)
+    try:
+        branches = subprocess.check_output(["git", "branch"], cwd=str(work_dir), text=True).splitlines()
+        for b in branches:
+            b = b.strip()
+            if b and not b.startswith("*"):
+                subprocess.run(["git", "branch", "-D", b.split()[-1]], cwd=str(work_dir), check=False)
+    except Exception:
+        pass
+
+    try:
+        tags = subprocess.check_output(["git", "tag", "-l"], cwd=str(work_dir), text=True).splitlines()
+        clean_tags = [t.strip() for t in tags if t.strip()]
+        if clean_tags:
+            subprocess.run(["git", "tag", "-d"] + clean_tags, cwd=str(work_dir), check=False)
+    except Exception:
+        pass
+
+    for p in [work_dir / ".git/refs/remotes", work_dir / ".git/refs/tags", work_dir / ".git/logs", work_dir / ".git/packed-refs"]:
+        if p.is_dir():
+            shutil.rmtree(p, ignore_errors=True)
+        elif p.is_file():
+            p.unlink(missing_ok=True)
+
+    subprocess.run(["git", "reflog", "expire", "--expire=now", "--all"], cwd=str(work_dir), check=False)
+    subprocess.run(["git", "prune", "--expire=now"], cwd=str(work_dir), check=False)
+    subprocess.run(["git", "gc", "--prune=now"], cwd=str(work_dir), check=False)
+
+
 def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path) -> Path:
     """Clones the target repo and checks out the base commit."""
     repo_name = instance["repo"]  # e.g., "django/django", "sympy/sympy"
     instance_id = instance["instance_id"]
+    base_commit = instance["base_commit"]
     work_dir = base_dir / instance_id
-    work_dir.mkdir(parents=True, exist_ok=True)
-
-    git_url = f"https://github.com/{repo_name}.git"
-    if not (work_dir / ".git").is_dir():
-        print(f"Cloning {git_url} into {work_dir}...")
-        subprocess.run(["git", "clone", git_url, str(work_dir)], check=True)
-    else:
-        print(f"Repo already exists in {work_dir}")
 
     # Remove stale git index lock if present from previous interrupted runs
     index_lock = work_dir / ".git" / "index.lock"
     if index_lock.exists():
         index_lock.unlink(missing_ok=True)
 
-    # Reset and checkout base_commit cleanly (both tracked dirty modifications and untracked files)
-    base_commit = instance["base_commit"]
+    # Use a bare cache per repo in base_dir / ".cache" to avoid downloading huge repos repeatedly
+    cache_dir = base_dir / ".cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    repo_slug = repo_name.replace("/", "__")
+    cache_repo = cache_dir / f"{repo_slug}.git"
+    git_url = f"https://github.com/{repo_name}.git"
+
+    def do_clone() -> None:
+        if work_dir.exists():
+            shutil.rmtree(work_dir, ignore_errors=True)
+        if not (cache_repo / "HEAD").exists():
+            print(f"Creating local bare cache for {repo_name} at {cache_repo}...")
+            if cache_repo.exists():
+                shutil.rmtree(cache_repo, ignore_errors=True)
+            subprocess.run(["git", "clone", "--bare", git_url, str(cache_repo)], check=True)
+        print(f"Cloning {repo_name} from local bare cache into {work_dir}...")
+        subprocess.run(["git", "clone", str(cache_repo), str(work_dir)], check=True)
+
+    if not (work_dir / ".git").is_dir():
+        do_clone()
+    else:
+        print(f"Repo already exists in {work_dir}")
+
+    # Reset and checkout base_commit cleanly
     print(f"Checking out base commit {base_commit}...")
-    subprocess.run(["git", "reset", "--hard", "HEAD"], cwd=str(work_dir), check=False)
-    subprocess.run(["git", "clean", "-fdx"], cwd=str(work_dir), check=True)
-    subprocess.run(["git", "fetch"], cwd=str(work_dir), check=False)
-    subprocess.run(["git", "checkout", "-f", base_commit], cwd=str(work_dir), check=True)
-    subprocess.run(["git", "reset", "--hard", base_commit], cwd=str(work_dir), check=True)
+    try:
+        subprocess.run(["git", "reset", "--hard", "HEAD"], cwd=str(work_dir), check=False)
+        subprocess.run(["git", "clean", "-fdx"], cwd=str(work_dir), check=True)
+        subprocess.run(["git", "checkout", "-f", base_commit], cwd=str(work_dir), check=True)
+        subprocess.run(["git", "reset", "--hard", base_commit], cwd=str(work_dir), check=True)
+    except Exception as exc:
+        print(f"Failed checking out base commit {base_commit} ({exc}). Re-cloning workspace...")
+        do_clone()
+        subprocess.run(["git", "checkout", "-f", base_commit], cwd=str(work_dir), check=True)
+        subprocess.run(["git", "reset", "--hard", base_commit], cwd=str(work_dir), check=True)
+
+    # Purge future history & branches to prevent cheating
+    purge_git_future_history(work_dir)
 
     # Exclude opencode configuration, logs, and venvs from git diff tracking
     exclude_file = work_dir / ".git" / "info" / "exclude"

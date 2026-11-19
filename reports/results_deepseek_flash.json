@@ -28,7 +28,28 @@
       "sentry_tokens": {},
       "cumulative_tokens": 120397,
       "session_net_tokens": 2505,
-      "total_tokens": 120397
+      "total_tokens": 120397,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "psf__requests-2317",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 8,
+        "fail_to_pass_tests": [
+          "test_requests.py::RequestsTestCase::test_HTTP_302_ALLOW_REDIRECT_GET",
+          "test_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES",
+          "test_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA",
+          "test_requests.py::RequestsTestCase::test_basicauth_with_netrc",
+          "test_requests.py::RequestsTestCase::test_json_param_post_content_type_works",
+          "test_requests.py::RequestsTestCase::test_manual_redirect_with_partial_body_read",
+          "test_requests.py::RequestsTestCase::test_requests_history_is_saved",
+          "test_requests.py::TestTimeout::test_encoded_methods"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 8.95,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 8 items\n\ntest_requests.py::RequestsTestCase::test_HTTP_302_ALLOW_REDIRECT_GET PASSED [ 12%]\ntest_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES PASSED   [ 25%]\ntest_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA PASSED [ 37%]\ntest_requests.py::RequestsTestCase::test_basicauth_with_netrc PASSED     [ 50%]\ntest_requests.py::RequestsTestCase::test_json_param_post_content_type_works PASSED [ 62%]\ntest_requests.py::RequestsTestCase::test_manual_redirect_with_partial_body_read PASSED [ 75%]\ntest_requests.py::RequestsTestCase::test_requests_history_is_saved PASSED [ 87%]\ntest_requests.py::TestTimeout::test_encoded_methods PASSED               [100%]\n\n============================== 8 passed in 7.81s ===============================\n\n"
+      }
     },
     "sentry": {
       "instance_id": "psf__requests-2317",
@@ -62,7 +83,28 @@
       },
       "cumulative_tokens": 245806,
       "session_net_tokens": 15627,
-      "total_tokens": 245806
+      "total_tokens": 245806,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "psf__requests-2317",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 8,
+        "fail_to_pass_tests": [
+          "test_requests.py::RequestsTestCase::test_HTTP_302_ALLOW_REDIRECT_GET",
+          "test_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES",
+          "test_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA",
+          "test_requests.py::RequestsTestCase::test_basicauth_with_netrc",
+          "test_requests.py::RequestsTestCase::test_json_param_post_content_type_works",
+          "test_requests.py::RequestsTestCase::test_manual_redirect_with_partial_body_read",
+          "test_requests.py::RequestsTestCase::test_requests_history_is_saved",
+          "test_requests.py::TestTimeout::test_encoded_methods"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 9.19,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 8 items\n\ntest_requests.py::RequestsTestCase::test_HTTP_302_ALLOW_REDIRECT_GET PASSED [ 12%]\ntest_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES PASSED   [ 25%]\ntest_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA PASSED [ 37%]\ntest_requests.py::RequestsTestCase::test_basicauth_with_netrc PASSED     [ 50%]\ntest_requests.py::RequestsTestCase::test_json_param_post_content_type_works PASSED [ 62%]\ntest_requests.py::RequestsTestCase::test_manual_redirect_with_partial_body_read PASSED [ 75%]\ntest_requests.py::RequestsTestCase::test_requests_history_is_saved PASSED [ 87%]\ntest_requests.py::TestTimeout::test_encoded_methods PASSED               [100%]\n\n============================== 8 passed in 8.34s ===============================\n\n"
+      }
     }
   },
   "pallets__flask-4045": {
@@ -94,7 +136,22 @@
       "sentry_tokens": {},
       "cumulative_tokens": 279549,
       "session_net_tokens": 4116,
-      "total_tokens": 279549
+      "total_tokens": 279549,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "pallets__flask-4045",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 2,
+        "fail_to_pass_tests": [
+          "tests/test_blueprints.py::test_dotted_name_not_allowed",
+          "tests/test_blueprints.py::test_route_decorator_custom_endpoint_with_dots"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 0.93,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/workspaces/pallets__flask-4045\nconfigfile: setup.cfg\nplugins: anyio-4.16.0\ncollecting ... collected 2 items\n\ntests/test_blueprints.py::test_dotted_name_not_allowed PASSED            [ 50%]\ntests/test_blueprints.py::test_route_decorator_custom_endpoint_with_dots PASSED [100%]\n\n============================== 2 passed in 0.08s ===============================\n\n"
+      }
     },
     "sentry": {
       "instance_id": "pallets__flask-4045",
@@ -128,7 +185,22 @@
       },
       "cumulative_tokens": 309298,
       "session_net_tokens": 14856,
-      "total_tokens": 309298
+      "total_tokens": 309298,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "pallets__flask-4045",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 2,
+        "fail_to_pass_tests": [
+          "tests/test_blueprints.py::test_dotted_name_not_allowed",
+          "tests/test_blueprints.py::test_route_decorator_custom_endpoint_with_dots"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 0.99,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/workspaces/pallets__flask-4045\nconfigfile: setup.cfg\nplugins: anyio-4.16.0\ncollecting ... collected 2 items\n\ntests/test_blueprints.py::test_dotted_name_not_allowed PASSED            [ 50%]\ntests/test_blueprints.py::test_route_decorator_custom_endpoint_with_dots PASSED [100%]\n\n============================== 2 passed in 0.08s ===============================\n\n"
+      }
     }
   },
   "pallets__flask-4992": {
@@ -160,7 +232,21 @@
       "sentry_tokens": {},
       "cumulative_tokens": 253597,
       "session_net_tokens": 4365,
-      "total_tokens": 253597
+      "total_tokens": 253597,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "pallets__flask-4992",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 1,
+        "fail_to_pass_tests": [
+          "tests/test_config.py::test_config_from_file_toml"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 1.2,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/workspaces/pallets__flask-4992\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 1 item\n\ntests/test_config.py::test_config_from_file_toml PASSED                  [100%]\n\n============================== 1 passed in 0.04s ===============================\n\n"
+      }
     },
     "sentry": {
       "instance_id": "pallets__flask-4992",
@@ -194,7 +280,21 @@
       },
       "cumulative_tokens": 181031,
       "session_net_tokens": 10987,
-      "total_tokens": 181031
+      "total_tokens": 181031,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "pallets__flask-4992",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 1,
+        "fail_to_pass_tests": [
+          "tests/test_config.py::test_config_from_file_toml"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 1.07,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/workspaces/pallets__flask-4992\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 1 item\n\ntests/test_config.py::test_config_from_file_toml PASSED                  [100%]\n\n============================== 1 passed in 0.04s ===============================\n\n"
+      }
     }
   },
   "pallets__flask-5063": {
@@ -226,7 +326,22 @@
       "sentry_tokens": {},
       "cumulative_tokens": 363600,
       "session_net_tokens": 5304,
-      "total_tokens": 363600
+      "total_tokens": 363600,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "pallets__flask-5063",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 2,
+        "fail_to_pass_tests": [
+          "tests/test_cli.py::TestRoutes::test_subdomain",
+          "tests/test_cli.py::TestRoutes::test_host"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 1.23,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/workspaces/pallets__flask-5063\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 2 items\n\ntests/test_cli.py::TestRoutes::test_subdomain PASSED                     [ 50%]\ntests/test_cli.py::TestRoutes::test_host PASSED                          [100%]\n\n============================== 2 passed in 0.09s ===============================\n\n"
+      }
     },
     "sentry": {
       "instance_id": "pallets__flask-5063",
@@ -260,7 +375,22 @@
       },
       "cumulative_tokens": 210195,
       "session_net_tokens": 30776,
-      "total_tokens": 210195
+      "total_tokens": 210195,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "pallets__flask-5063",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 2,
+        "fail_to_pass_tests": [
+          "tests/test_cli.py::TestRoutes::test_subdomain",
+          "tests/test_cli.py::TestRoutes::test_host"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 1.08,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/workspaces/pallets__flask-5063\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 2 items\n\ntests/test_cli.py::TestRoutes::test_subdomain PASSED                     [ 50%]\ntests/test_cli.py::TestRoutes::test_host PASSED                          [100%]\n\n============================== 2 passed in 0.08s ===============================\n\n"
+      }
     }
   },
   "psf__requests-1963": {
@@ -292,7 +422,27 @@
       "sentry_tokens": {},
       "cumulative_tokens": 154900,
       "session_net_tokens": 3291,
-      "total_tokens": 154900
+      "total_tokens": 154900,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "psf__requests-1963",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 7,
+        "fail_to_pass_tests": [
+          "test_requests.py::RequestsTestCase::test_DIGESTAUTH_QUOTES_QOP_VALUE",
+          "test_requests.py::RequestsTestCase::test_DIGESTAUTH_WRONG_HTTP_401_GET",
+          "test_requests.py::RequestsTestCase::test_DIGEST_AUTH_RETURNS_COOKIE",
+          "test_requests.py::RequestsTestCase::test_DIGEST_HTTP_200_OK_GET",
+          "test_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA",
+          "test_requests.py::RequestsTestCase::test_param_cookiejar_works",
+          "test_requests.py::TestRedirects::test_requests_are_updated_each_time"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 8.64,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 7 items\n\ntest_requests.py::RequestsTestCase::test_DIGESTAUTH_QUOTES_QOP_VALUE PASSED [ 14%]\ntest_requests.py::RequestsTestCase::test_DIGESTAUTH_WRONG_HTTP_401_GET PASSED [ 28%]\ntest_requests.py::RequestsTestCase::test_DIGEST_AUTH_RETURNS_COOKIE PASSED [ 42%]\ntest_requests.py::RequestsTestCase::test_DIGEST_HTTP_200_OK_GET PASSED   [ 57%]\ntest_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA PASSED [ 71%]\ntest_requests.py::RequestsTestCase::test_param_cookiejar_works PASSED    [ 85%]\ntest_requests.py::TestRedirects::test_requests_are_updated_each_time PASSED [100%]\n\n============================== 7 passed in 7.79s ===============================\n\n"
+      }
     },
     "sentry": {
       "instance_id": "psf__requests-1963",
@@ -326,7 +476,27 @@
       },
       "cumulative_tokens": 227778,
       "session_net_tokens": 13742,
-      "total_tokens": 227778
+      "total_tokens": 227778,
+      "resolved": true,
+      "evaluation": {
+        "instance_id": "psf__requests-1963",
+        "resolved": true,
+        "patch_applied": true,
+        "test_patch_applied": true,
+        "fail_to_pass_count": 7,
+        "fail_to_pass_tests": [
+          "test_requests.py::RequestsTestCase::test_DIGESTAUTH_QUOTES_QOP_VALUE",
+          "test_requests.py::RequestsTestCase::test_DIGESTAUTH_WRONG_HTTP_401_GET",
+          "test_requests.py::RequestsTestCase::test_DIGEST_AUTH_RETURNS_COOKIE",
+          "test_requests.py::RequestsTestCase::test_DIGEST_HTTP_200_OK_GET",
+          "test_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA",
+          "test_requests.py::RequestsTestCase::test_param_cookiejar_works",
+          "test_requests.py::TestRedirects::test_requests_are_updated_each_time"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 6.5,
+        "pytest_output": "============================= test session starts ==============================\nplatform linux -- Python 3.11.18, pytest-9.2.0, pluggy-1.7.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app\nconfigfile: pyproject.toml\nplugins: anyio-4.16.0\ncollecting ... collected 7 items\n\ntest_requests.py::RequestsTestCase::test_DIGESTAUTH_QUOTES_QOP_VALUE PASSED [ 14%]\ntest_requests.py::RequestsTestCase::test_DIGESTAUTH_WRONG_HTTP_401_GET PASSED [ 28%]\ntest_requests.py::RequestsTestCase::test_DIGEST_AUTH_RETURNS_COOKIE PASSED [ 42%]\ntest_requests.py::RequestsTestCase::test_DIGEST_HTTP_200_OK_GET PASSED   [ 57%]\ntest_requests.py::RequestsTestCase::test_POSTBIN_GET_POST_FILES_WITH_DATA PASSED [ 71%]\ntest_requests.py::RequestsTestCase::test_param_cookiejar_works PASSED    [ 85%]\ntest_requests.py::TestRedirects::test_requests_are_updated_each_time PASSED [100%]\n\n============================== 7 passed in 5.64s ===============================\n\n"
+      }
     }
   }
 }

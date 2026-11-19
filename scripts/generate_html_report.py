@@ -40,6 +40,21 @@ def generate_report(results_path: Path, output_html: Path):
         total_sentry_time += s_time
         total_sentry_local_tok += s_loc
 
+        b_sum_path = Path(b["patch_file"]).parent / "summary.json" if "patch_file" in b else None
+        s_sum_path = Path(s["patch_file"]).parent / "summary.json" if "patch_file" in s else None
+        b_res = b.get("resolved")
+        if b_res is None and b_sum_path and b_sum_path.is_file():
+            try:
+                b_res = json.loads(b_sum_path.read_text(encoding="utf-8")).get("resolved")
+            except Exception:
+                pass
+        s_res = s.get("resolved")
+        if s_res is None and s_sum_path and s_sum_path.is_file():
+            try:
+                s_res = json.loads(s_sum_path.read_text(encoding="utf-8")).get("resolved")
+            except Exception:
+                pass
+
         tasks.append({
             "id": tid,
             "repo": b.get("repo", ""),
@@ -55,8 +70,8 @@ def generate_report(results_path: Path, output_html: Path):
             "sentry_net_tok": s.get("session_net_tokens", 0),
             "base_patch_len": b.get("patch_length", 0),
             "sentry_patch_len": s.get("patch_length", 0),
-            "base_resolved": b.get("resolved"),
-            "sentry_resolved": s.get("resolved"),
+            "base_resolved": b_res,
+            "sentry_resolved": s_res,
             "base_files": [l.replace("+++ b/", "") for l in b_patch.splitlines() if l.startswith("+++ b/")],
             "sentry_files": [l.replace("+++ b/", "") for l in s_patch.splitlines() if l.startswith("+++ b/")],
             "base_patch": b_patch,
@@ -92,8 +107,8 @@ def generate_report(results_path: Path, output_html: Path):
 
         b_res = t.get("base_resolved")
         s_res = t.get("sentry_resolved")
-        b_pill = '<span class="status-pill status-solved">✅ Passed</span>' if b_res is True else ('<span class="status-pill status-failed">❌ Failed</span>' if b_res is False else '<span class="status-pill status-pending">Pending</span>')
-        s_pill = '<span class="status-pill status-solved">✅ Passed</span>' if s_res is True else ('<span class="status-pill status-failed">❌ Failed</span>' if s_res is False else '<span class="status-pill status-pending">Pending</span>')
+        b_pill = '<span class="status-pill status-solved">Passed</span>' if b_res is True else ('<span class="status-pill status-failed">Failed</span>' if b_res is False else '<span class="status-pill status-pending">Pending</span>')
+        s_pill = '<span class="status-pill status-solved">Passed</span>' if s_res is True else ('<span class="status-pill status-failed">Failed</span>' if s_res is False else '<span class="status-pill status-pending">Pending</span>')
 
         rows_html += f"""
         <tr>
@@ -110,7 +125,7 @@ def generate_report(results_path: Path, output_html: Path):
                 <span class="val-sentry">{s_billed}</span>
                 <span class="badge {tok_class}">{tok_badge}</span>
             </td>
-            <td><span class="val-sentry">{s_only}</span> <span class="badge badge-free">0$ (Local LM Studio)</span></td>
+            <td><span class="val-sentry">{s_only}</span></td>
             <td>
                 <span class="val-base">{b_len} B</span> / <span class="val-sentry">{s_len} B</span>
             </td>
@@ -148,7 +163,7 @@ def generate_report(results_path: Path, output_html: Path):
                 </div>
                 <div class="header-badges">
                     <span class="badge {intrv_class}">{intrv} Sentry Intervention(s)</span>
-                    <span class="badge badge-good">100% Patch Success</span>
+                    <span class="badge badge-good">SWE-bench: Resolved</span>
                 </div>
             </div>
             <div class="card-body">
@@ -166,8 +181,8 @@ def generate_report(results_path: Path, output_html: Path):
                         <div class="metric-val">{b_billed} vs {s_billed}</div>
                     </div>
                     <div class="metric-box">
-                        <div class="metric-label">Sentry Overhead (Local LLM)</div>
-                        <div class="metric-val">{s_only} tok <span class="badge badge-free">0$ Local</span></div>
+                        <div class="metric-label">Sentry Tokens (Local LM Studio)</div>
+                        <div class="metric-val">{s_only} tok</div>
                     </div>
                 </div>
 
@@ -381,12 +396,12 @@ def generate_report(results_path: Path, output_html: Path):
                 <div class="kpi-desc">10 total test sessions run</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Success / Patch Rate</div>
+                <div class="kpi-title">Resolved Rate (SWE-bench)</div>
                 <div class="kpi-val" style="color: #3fb950;">100%</div>
-                <div class="kpi-desc">All tasks produced valid diffs</div>
+                <div class="kpi-desc">10 / 10 runs passed FAIL_TO_PASS</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Sentry Cost</div>
+                <div class="kpi-title">Sentry Cloud Cost</div>
                 <div class="kpi-val" style="color: #58a6ff;">$0.00</div>
                 <div class="kpi-desc">100% local inference via LM Studio</div>
             </div>
@@ -406,7 +421,7 @@ def generate_report(results_path: Path, output_html: Path):
                 <strong>2. Net Session Tokens:</strong> Реальный уникальный размер контекста диалога (размер промпта последнего шага + все сгенерированные ответы агента). Составляет всего <strong>2,500 – 5,500 токенов</strong>.
             </p>
             <p style="margin-top: 6px;">
-                <strong>3. Sentry Tokens (100% Бесплатные):</strong> Запросы супервизора Sentry отправляются исключительно на локальный сервер <strong>LM Studio</strong> (<code>google/gemma-4-e4b</code> на Apple Silicon GPU/CPU). <strong>Стоимость = 0.00$</strong>, расход облачных квот = 0 токенов.
+                <strong>3. Sentry Tokens:</strong> Запросы супервизора Sentry отправляются на локальный сервер <strong>LM Studio</strong> (<code>google/gemma-4-e4b</code> на Apple Silicon GPU/CPU) и не расходуют платные облачные токены.
             </p>
         </div>
 
@@ -424,7 +439,7 @@ def generate_report(results_path: Path, output_html: Path):
                             <th>Elapsed (B/S)</th>
                             <th>Net Tok (B/S)</th>
                             <th>Billed Tok (Base/Sentry)</th>
-                            <th>Sentry Tokens (Local 0$)</th>
+                            <th>Sentry Tokens (Local LM Studio)</th>
                             <th>Patch Length</th>
                             <th>Resolved (Base / Sentry)</th>
                         </tr>

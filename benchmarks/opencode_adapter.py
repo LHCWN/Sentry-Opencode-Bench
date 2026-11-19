@@ -49,6 +49,17 @@ class OpenCodeRunner:
         self.session_id: str | None = None
         self._step_counter = 0
         self.token_usage = {
+            # Cumulative sums across all LLM API calls in the session (Billing / Provider Quota view)
+            "cumulative_input": 0,
+            "cumulative_output": 0,
+            "cumulative_reasoning": 0,
+            "cumulative_total": 0,
+            # Session snapshot (Context window / Unique token view)
+            "max_context_window": 0,
+            "last_step_input": 0,
+            "total_generated": 0,  # generated output + reasoning
+            "net_session_tokens": 0,  # last_step_input + total_generated
+            # Backward compatibility fields
             "input": 0,
             "output": 0,
             "reasoning": 0,
@@ -148,10 +159,29 @@ class OpenCodeRunner:
                     reason = part.get("reason")
                     tokens = part.get("tokens", {})
                     if isinstance(tokens, dict):
-                        self.token_usage["input"] += int(tokens.get("input", 0))
-                        self.token_usage["output"] += int(tokens.get("output", 0))
-                        self.token_usage["reasoning"] += int(tokens.get("reasoning", 0))
-                        self.token_usage["total"] += int(tokens.get("total", 0))
+                        inp = int(tokens.get("input", 0))
+                        out = int(tokens.get("output", 0))
+                        rsn = int(tokens.get("reasoning", 0))
+                        tot = int(tokens.get("total", 0))
+
+                        # Cumulative across all turns (API billing / quota view)
+                        self.token_usage["cumulative_input"] += inp
+                        self.token_usage["cumulative_output"] += out
+                        self.token_usage["cumulative_reasoning"] += rsn
+                        self.token_usage["cumulative_total"] += tot
+
+                        # Session context view (net unique tokens in conversation)
+                        self.token_usage["last_step_input"] = inp
+                        if inp > self.token_usage["max_context_window"]:
+                            self.token_usage["max_context_window"] = inp
+                        self.token_usage["total_generated"] += (out + rsn)
+                        self.token_usage["net_session_tokens"] = inp + self.token_usage["total_generated"]
+
+                        # Backward compatibility
+                        self.token_usage["input"] = self.token_usage["cumulative_input"]
+                        self.token_usage["output"] = self.token_usage["cumulative_output"]
+                        self.token_usage["reasoning"] = self.token_usage["cumulative_reasoning"]
+                        self.token_usage["total"] = self.token_usage["cumulative_total"]
                     # If stopped without tool calls and there was pending reasoning/text, record as final step
                     if reason == "stop" and current_reasoning.strip() and not steps:
                         step = agent_step_from_parts(

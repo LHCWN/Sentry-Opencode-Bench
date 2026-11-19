@@ -119,7 +119,7 @@ def print_comparative_table(results: dict):
     print("\n" + "=" * 90)
     print("🎯 BATCH EVALUATION COMPARATIVE SUMMARY")
     print("=" * 90)
-    header = f"{'Task ID':<26} | {'Mode':<7} | {'Steps':<5} | {'Interv':<6} | {'Time (s)':<8} | {'Agent Tok':<10} | {'Sentry Tok':<10} | {'Total Tok':<10} | {'Patch (B)':<9}"
+    header = f"{'Task ID':<24} | {'Mode':<7} | {'Steps':<5} | {'Intrv':<5} | {'Time (s)':<8} | {'Net Tok':<10} | {'Billed Tok':<11} | {'Sentry Tok':<10} | {'Patch (B)':<9}"
     print(header)
     print("-" * len(header))
 
@@ -129,19 +129,20 @@ def print_comparative_table(results: dict):
 
         b_steps = str(base.get("total_steps", "ERR"))
         b_time = f"{base.get('elapsed_seconds', 0):.1f}"
-        b_tok = str(base.get("opencode_tokens", {}).get("total", base.get("total_tokens", 0)))
+        b_net = str(base.get("session_net_tokens", base.get("opencode_tokens", {}).get("net_session_tokens", "-")))
+        b_cumul = str(base.get("cumulative_tokens", base.get("opencode_tokens", {}).get("total", base.get("total_tokens", 0))))
         b_patch = str(base.get("patch_length", 0))
 
         s_steps = str(sentry.get("total_steps", "ERR"))
         s_interv = str(sentry.get("interventions", 0))
         s_time = f"{sentry.get('elapsed_seconds', 0):.1f}"
-        s_agent_tok = str(sentry.get("opencode_tokens", {}).get("total", 0))
+        s_net = str(sentry.get("session_net_tokens", sentry.get("opencode_tokens", {}).get("net_session_tokens", "-")))
+        s_cumul = str(sentry.get("cumulative_tokens", sentry.get("total_tokens", 0)))
         s_sent_tok = str(sentry.get("sentry_tokens", {}).get("total_tokens", 0))
-        s_total_tok = str(sentry.get("total_tokens", 0))
         s_patch = str(sentry.get("patch_length", 0))
 
-        print(f"{task_id:<26} | {'Base':<7} | {b_steps:<5} | {'-':<6} | {b_time:<8} | {b_tok:<10} | {'-':<10} | {b_tok:<10} | {b_patch:<9}")
-        print(f"{'':<26} | {'Sentry':<7} | {s_steps:<5} | {s_interv:<6} | {s_time:<8} | {s_agent_tok:<10} | {s_sent_tok:<10} | {s_total_tok:<10} | {s_patch:<9}")
+        print(f"{task_id:<24} | {'Base':<7} | {b_steps:<5} | {'-':<5} | {b_time:<8} | {b_net:<10} | {b_cumul:<11} | {'-':<10} | {b_patch:<9}")
+        print(f"{'':<24} | {'Sentry':<7} | {s_steps:<5} | {s_interv:<5} | {s_time:<8} | {s_net:<10} | {s_cumul:<11} | {s_sent_tok:<10} | {s_patch:<9}")
         print("-" * len(header))
 
 

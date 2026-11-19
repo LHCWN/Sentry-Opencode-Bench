@@ -221,14 +221,17 @@ def run_instance(
         "patch_file": str(patch_file),
         "opencode_tokens": opencode.token_usage,
         "sentry_tokens": sentry_tokens,
-        "total_tokens": opencode.token_usage.get("total", 0) + sentry_tokens.get("total_tokens", 0),
+        "cumulative_tokens": opencode.token_usage.get("cumulative_total", 0) + sentry_tokens.get("total_tokens", 0),
+        "session_net_tokens": opencode.token_usage.get("net_session_tokens", 0) + sentry_tokens.get("total_tokens", 0),
+        "total_tokens": opencode.token_usage.get("cumulative_total", 0) + sentry_tokens.get("total_tokens", 0),
     }
 
     summary_file = instance_output / "summary.json"
     summary_file.write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
     print(f"\n=== Finished {instance_id} in {elapsed:.1f}s | Steps: {len(all_steps)} | Interventions: {interventions} | Patch: {len(patch)} bytes ===")
-    print(f"OpenCode Tokens: {opencode.token_usage} | Sentry Tokens: {sentry_tokens}")
+    print(f"OpenCode Context Window: {opencode.token_usage.get('max_context_window', 0)} | Net Session Tokens: {opencode.token_usage.get('net_session_tokens', 0)}")
+    print(f"Cumulative API Tokens (Billed): {opencode.token_usage.get('cumulative_total', 0)} | Sentry Tokens: {sentry_tokens}")
     return summary
 
 

@@ -37,6 +37,7 @@ def run_batch(
     check_on_error: bool = True,
     rerun_failed: bool = False,
     force: bool = False,
+    auto_evaluate: bool = False,
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     results_file = output_dir / "results.json"
@@ -128,6 +129,27 @@ def run_batch(
         else:
             print(f"SENTRY run already completed for {instance_id}.")
 
+        # 3. Optional automated patch evaluation against ground truth
+        if auto_evaluate:
+            from benchmarks.evaluator import evaluate_summary_file
+            if "patch_file" in task_data.get("base", {}):
+                try:
+                    b_sum = Path(task_data["base"]["patch_file"]).parent / "summary.json"
+                    b_ev = evaluate_summary_file(b_sum)
+                    task_data["base"]["resolved"] = b_ev["resolved"]
+                except Exception as e:
+                    print(f"Error evaluating Base run for {instance_id}: {e}")
+
+            if "patch_file" in task_data.get("sentry", {}):
+                try:
+                    s_sum = Path(task_data["sentry"]["patch_file"]).parent / "summary.json"
+                    s_ev = evaluate_summary_file(s_sum)
+                    task_data["sentry"]["resolved"] = s_ev["resolved"]
+                except Exception as e:
+                    print(f"Error evaluating Sentry run for {instance_id}: {e}")
+
+            results_file.write_text(json.dumps(results, indent=2), encoding="utf-8")
+
     # Generate Markdown Summary Table
     print_comparative_table(results)
     return results
@@ -176,6 +198,7 @@ def main():
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/batch_benchmark"), help="Directory for benchmark results")
     parser.add_argument("--rerun-failed", action="store_true", help="Re-run tasks that previously failed or had 0 steps")
     parser.add_argument("--force", action="store_true", help="Force re-run all tasks from scratch")
+    parser.add_argument("--evaluate", action="store_true", help="Automatically evaluate generated patches against test_patch")
     args = parser.parse_args()
 
     run_batch(
@@ -189,6 +212,7 @@ def main():
         max_steps_per_task=args.max_steps,
         rerun_failed=args.rerun_failed,
         force=args.force,
+        auto_evaluate=args.evaluate,
     )
 
 

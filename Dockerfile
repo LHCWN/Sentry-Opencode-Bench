@@ -33,9 +33,12 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pyyaml \
     tqdm \
     pytest \
+    "werkzeug<3.0" \
+    jinja2 \
+    itsdangerous \
+    blinker \
+    tomli \
     requests \
-    flask \
-    werkzeug \
     pandas \
     numpy
 

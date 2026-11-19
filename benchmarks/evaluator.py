@@ -1,0 +1,373 @@
+"""Lightweight in-container evaluator for SWE-bench Lite patches.
+
+Evaluates generated patches by applying hidden test patches and executing the
+task's FAIL_TO_PASS test suite inside the existing Docker container environment
+without downloading external Docker images.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import time
+from typing import Any, Optional
+
+_DATASET_CACHE: dict[str, dict[str, Any]] = {}
+
+
+def strip_test_hunks(patch_text: str) -> str:
+    """Strip modifications to test files from model patch so test_patch applies cleanly.
+    
+    Standard SWE-bench evaluation only evaluates changes to source code files.
+    """
+    diff_files = re.split(r"(?=diff --git )", patch_text)
+    clean_diffs = []
+    for f_diff in diff_files:
+        if not f_diff.strip():
+            continue
+        m = re.search(r"diff --git a/(.*?) b/", f_diff)
+        if m:
+            path_str = m.group(1).lower()
+            if (
+                path_str.startswith("tests/")
+                or path_str.startswith("test/")
+                or "/tests/" in path_str
+                or "/test_" in path_str
+                or path_str.startswith("test_")
+            ):
+                continue
+        clean_diffs.append(f_diff)
+    return "".join(clean_diffs)
+
+
+def get_task_data(instance_id: str, split: str = "test") -> dict[str, Any]:
+    """Retrieve task metadata from SWE-bench Lite dataset."""
+    global _DATASET_CACHE
+    if not _DATASET_CACHE:
+        try:
+            from datasets import load_dataset
+        except ImportError:
+            raise RuntimeError("datasets package is required for evaluation. Run inside Docker or pip install datasets.")
+
+        ds = load_dataset("princeton-nlp/SWE-bench_Lite", split=split)
+        for item in ds:
+            _DATASET_CACHE[item["instance_id"]] = item
+
+    if instance_id not in _DATASET_CACHE:
+        raise KeyError(f"Task '{instance_id}' not found in SWE-bench Lite ({split} split)")
+    return _DATASET_CACHE[instance_id]
+
+
+def evaluate_patch(
+    instance_id: str,
+    patch_content: Optional[str] = None,
+    patch_file: Optional[Path | str] = None,
+    workspace_dir: Optional[Path | str] = None,
+    timeout: int = 180,
+    reset_to_base: bool = False,
+) -> dict[str, Any]:
+    """Evaluate a generated patch against the ground truth test suite.
+
+    Args:
+        instance_id: SWE-bench task identifier (e.g., 'psf__requests-2317')
+        patch_content: Diff string to evaluate. If None, read from patch_file or existing workspace.
+        patch_file: Path to model_patch.diff.
+        workspace_dir: Path to repository workspace. Defaults to 'workspaces/{instance_id}'.
+        timeout: Maximum seconds to wait for pytest execution.
+        reset_to_base: Whether to hard reset workspace to base_commit before applying patch.
+
+    Returns:
+        Structured evaluation result dict.
+    """
+    task = get_task_data(instance_id)
+    base_commit = task["base_commit"]
+    test_patch = task.get("test_patch", "")
+    fail_to_pass_raw = task.get("FAIL_TO_PASS", [])
+
+    if isinstance(fail_to_pass_raw, str):
+        try:
+            fail_to_pass = json.loads(fail_to_pass_raw)
+        except json.JSONDecodeError:
+            fail_to_pass = [fail_to_pass_raw]
+    else:
+        fail_to_pass = list(fail_to_pass_raw)
+
+    if workspace_dir is None:
+        workspace = Path("workspaces") / instance_id
+    else:
+        workspace = Path(workspace_dir)
+
+    if not workspace.is_dir():
+        return {
+            "instance_id": instance_id,
+            "resolved": False,
+            "patch_applied": False,
+            "test_patch_applied": False,
+            "fail_to_pass_count": len(fail_to_pass),
+            "fail_to_pass_tests": fail_to_pass,
+            "error": f"Workspace directory '{workspace}' does not exist",
+            "exit_code": -1,
+            "duration_seconds": 0.0,
+            "pytest_output": "",
+        }
+
+    # Resolve patch content if specified
+    if patch_content is None and patch_file is not None:
+        p_path = Path(patch_file)
+        if p_path.is_file():
+            patch_content = p_path.read_text(encoding="utf-8")
+
+    # If reset_to_base requested or patch_content provided and we want clean slate
+    if reset_to_base and patch_content is not None:
+        subprocess.run(["git", "-C", str(workspace), "checkout", "-f", base_commit], check=False, capture_output=True)
+        subprocess.run(["git", "-C", str(workspace), "clean", "-fd"], check=False, capture_output=True)
+
+        # Strip test files from model patch so hidden test_patch doesn't conflict
+        clean_model_patch = strip_test_hunks(patch_content)
+
+        if clean_model_patch.strip():
+            apply_res = subprocess.run(
+                ["git", "-C", str(workspace), "apply", "--whitespace=nowarn"],
+                input=clean_model_patch.encode("utf-8"),
+                capture_output=True,
+            )
+            if apply_res.returncode != 0:
+                return {
+                    "instance_id": instance_id,
+                    "resolved": False,
+                    "patch_applied": False,
+                    "test_patch_applied": False,
+                    "fail_to_pass_count": len(fail_to_pass),
+                    "fail_to_pass_tests": fail_to_pass,
+                    "error": f"Failed to apply model patch: {apply_res.stderr.decode('utf-8')}",
+                    "exit_code": apply_res.returncode,
+                    "duration_seconds": 0.0,
+                    "pytest_output": "",
+                }
+
+    # Apply test_patch
+    test_patch_applied = False
+    if test_patch.strip():
+        apply_test_res = subprocess.run(
+            ["git", "-C", str(workspace), "apply", "--whitespace=nowarn"],
+            input=test_patch.encode("utf-8"),
+            capture_output=True,
+        )
+        if apply_test_res.returncode != 0:
+            apply_test_res = subprocess.run(
+                ["git", "-C", str(workspace), "apply", "--3way", "--whitespace=nowarn"],
+                input=test_patch.encode("utf-8"),
+                capture_output=True,
+            )
+        test_patch_applied = (apply_test_res.returncode == 0)
+        if not test_patch_applied:
+            return {
+                "instance_id": instance_id,
+                "resolved": False,
+                "patch_applied": True,
+                "test_patch_applied": False,
+                "fail_to_pass_count": len(fail_to_pass),
+                "fail_to_pass_tests": fail_to_pass,
+                "error": f"Failed to apply test patch: {apply_test_res.stderr.decode('utf-8')}",
+                "exit_code": apply_test_res.returncode,
+                "duration_seconds": 0.0,
+                "pytest_output": "",
+            }
+
+    start_time = time.time()
+    pytest_output = ""
+    exit_code = -1
+
+    try:
+        # Prepare python runner with compatibility shims for older Python 2/3 codebases
+        shimmed_runner = (
+            "import sys, os\n"
+            "if os.path.isdir('src'):\n"
+            "    sys.path.insert(0, os.path.abspath('src'))\n"
+            "sys.path.insert(0, os.path.abspath('.'))\n"
+            "import urllib.parse\n"
+            "try:\n"
+            "    import werkzeug.urls\n"
+            "    if not hasattr(werkzeug.urls, 'url_quote'):\n"
+            "        werkzeug.urls.url_quote = urllib.parse.quote\n"
+            "    if not hasattr(werkzeug.urls, 'url_unquote'):\n"
+            "        werkzeug.urls.url_unquote = urllib.parse.unquote\n"
+            "except Exception:\n"
+            "    pass\n"
+            "import collections, collections.abc\n"
+            "for name in ['Mapping', 'MutableMapping', 'Sequence', 'Iterable', 'Callable', 'Container', 'Hashable']:\n"
+            "    if not hasattr(collections, name) and hasattr(collections.abc, name):\n"
+            "        setattr(collections, name, getattr(collections.abc, name))\n"
+            "try:\n"
+            "    import _pytest.monkeypatch\n"
+            "    if hasattr(_pytest.monkeypatch, 'NOTSET') and not hasattr(_pytest.monkeypatch, 'notset'):\n"
+            "        _pytest.monkeypatch.notset = _pytest.monkeypatch.NOTSET\n"
+            "except Exception:\n"
+            "    pass\n"
+            "import pytest\n"
+            "args = sys.argv[1:]\n"
+            "sys.exit(pytest.main(args))\n"
+        )
+
+        test_args = ["-v"] + fail_to_pass
+        cmd = [sys.executable, "-c", shimmed_runner] + test_args
+
+        env = os.environ.copy()
+        env["PYTHONPATH"] = f".:{env.get('PYTHONPATH', '')}"
+        env["PYTHONWARNINGS"] = "ignore::DeprecationWarning"
+
+        proc = subprocess.run(
+            cmd,
+            cwd=str(workspace),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+        exit_code = proc.returncode
+        pytest_output = proc.stdout + "\n" + proc.stderr
+
+    except subprocess.TimeoutExpired:
+        pytest_output = f"Pytest execution timed out after {timeout} seconds"
+        exit_code = 124
+    except Exception as e:
+        pytest_output = f"Execution error: {e}"
+        exit_code = 1
+    finally:
+        if test_patch.strip() and test_patch_applied:
+            rev_res = subprocess.run(
+                ["git", "-C", str(workspace), "apply", "-R", "--whitespace=nowarn"],
+                input=test_patch.encode("utf-8"),
+                capture_output=True,
+            )
+            if rev_res.returncode != 0:
+                diff_stat = subprocess.run(
+                    ["git", "-C", str(workspace), "diff", "--name-only"],
+                    capture_output=True,
+                    text=True,
+                )
+                for line in diff_stat.stdout.splitlines():
+                    if line.startswith("tests/") or line.startswith("test_") or "test" in line:
+                        subprocess.run(["git", "-C", str(workspace), "checkout", "--", line], check=False)
+
+    duration = time.time() - start_time
+    resolved = (exit_code == 0)
+
+    return {
+        "instance_id": instance_id,
+        "resolved": resolved,
+        "patch_applied": True,
+        "test_patch_applied": test_patch_applied,
+        "fail_to_pass_count": len(fail_to_pass),
+        "fail_to_pass_tests": fail_to_pass,
+        "exit_code": exit_code,
+        "duration_seconds": round(duration, 2),
+        "pytest_output": pytest_output[-4000:],
+    }
+
+
+def evaluate_summary_file(summary_path: Path | str, reset_to_base: bool = True) -> dict[str, Any]:
+    """Evaluate a single task run from its summary.json."""
+    sum_file = Path(summary_path)
+    if not sum_file.is_file():
+        raise FileNotFoundError(f"Summary file not found: {sum_file}")
+
+    data = json.loads(sum_file.read_text(encoding="utf-8"))
+    instance_id = data.get("instance_id")
+    if not instance_id:
+        raise ValueError(f"No instance_id found in {sum_file}")
+
+    patch_file = sum_file.parent / "model_patch.diff"
+    patch_content = patch_file.read_text(encoding="utf-8") if patch_file.is_file() else None
+
+    eval_result = evaluate_patch(
+        instance_id=instance_id,
+        patch_content=patch_content,
+        patch_file=patch_file if patch_file.is_file() else None,
+        reset_to_base=reset_to_base,
+    )
+
+    data["evaluation"] = eval_result
+    data["resolved"] = eval_result["resolved"]
+    sum_file.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return eval_result
+
+
+def evaluate_batch_dir(batch_dir: Path | str) -> list[dict[str, Any]]:
+    """Scan directory recursively for summary.json files and evaluate all runs."""
+    root = Path(batch_dir)
+    results = []
+    summary_files = sorted(root.glob("**/summary.json"))
+
+    print(f"🔍 Found {len(summary_files)} summary files in {root}")
+    for s_file in summary_files:
+        try:
+            print(f"Evaluating {s_file.parent.name}...")
+            res = evaluate_summary_file(s_file, reset_to_base=True)
+            status_emoji = "✅ RESOLVED" if res["resolved"] else "❌ FAILED"
+            tests_cnt = res.get("fail_to_pass_count", 0)
+            dur = res.get("duration_seconds", 0.0)
+            print(f"  -> {status_emoji} ({tests_cnt} tests, {dur}s)")
+            results.append(res)
+        except Exception as e:
+            print(f"  -> ⚠️ Error evaluating {s_file}: {e}")
+            results.append({"summary_file": str(s_file), "resolved": False, "error": str(e)})
+
+    return results
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Lightweight In-Container Evaluator for SWE-bench Lite")
+    parser.add_argument("--instance-id", type=str, help="SWE-bench instance ID to evaluate")
+    parser.add_argument("--patch-file", type=str, help="Path to model_patch.diff")
+    parser.add_argument("--workspace-dir", type=str, help="Path to task repository workspace")
+    parser.add_argument("--summary-file", type=str, help="Path to task summary.json to evaluate and update")
+    parser.add_argument("--batch-dir", type=str, help="Directory containing multiple task runs to evaluate")
+    parser.add_argument("--reset-to-base", action="store_true", help="Hard reset workspace to base commit before evaluation")
+    parser.add_argument("--json", action="store_true", help="Output raw JSON result")
+
+    args = parser.parse_args()
+
+    if args.batch_dir:
+        batch_results = evaluate_batch_dir(args.batch_dir)
+        resolved_count = sum(1 for r in batch_results if r.get("resolved"))
+        print(f"\n📊 Batch Evaluation Complete: {resolved_count}/{len(batch_results)} resolved.")
+        if args.json:
+            print(json.dumps(batch_results, indent=2, ensure_ascii=False))
+        return
+
+    if args.summary_file:
+        res = evaluate_summary_file(args.summary_file, reset_to_base=args.reset_to_base)
+        status_emoji = "✅ RESOLVED" if res["resolved"] else "❌ FAILED"
+        tests_cnt = res.get("fail_to_pass_count", 0)
+        dur = res.get("duration_seconds", 0.0)
+        print(f"\n{status_emoji}: {res['instance_id']} (tests: {tests_cnt}, time: {dur}s)")
+        if args.json:
+            print(json.dumps(res, indent=2, ensure_ascii=False))
+        return
+
+    if args.instance_id:
+        res = evaluate_patch(
+            instance_id=args.instance_id,
+            patch_file=args.patch_file,
+            workspace_dir=args.workspace_dir,
+            reset_to_base=args.reset_to_base,
+        )
+        status_emoji = "✅ RESOLVED" if res["resolved"] else "❌ FAILED"
+        tests_cnt = res.get("fail_to_pass_count", 0)
+        dur = res.get("duration_seconds", 0.0)
+        print(f"\n{status_emoji}: {args.instance_id} (tests: {tests_cnt}, time: {dur}s)")
+        if args.json:
+            print(json.dumps(res, indent=2, ensure_ascii=False))
+        sys.exit(0 if res["resolved"] else 1)
+
+    parser.print_help()
+
+
+if __name__ == "__main__":
+    main()

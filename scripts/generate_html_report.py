@@ -55,6 +55,8 @@ def generate_report(results_path: Path, output_html: Path):
             "sentry_net_tok": s.get("session_net_tokens", 0),
             "base_patch_len": b.get("patch_length", 0),
             "sentry_patch_len": s.get("patch_length", 0),
+            "base_resolved": b.get("resolved"),
+            "sentry_resolved": s.get("resolved"),
             "base_files": [l.replace("+++ b/", "") for l in b_patch.splitlines() if l.startswith("+++ b/")],
             "sentry_files": [l.replace("+++ b/", "") for l in s_patch.splitlines() if l.startswith("+++ b/")],
             "base_patch": b_patch,
@@ -88,6 +90,11 @@ def generate_report(results_path: Path, output_html: Path):
         b_len = f"{t['base_patch_len']:,}"
         s_len = f"{t['sentry_patch_len']:,}"
 
+        b_res = t.get("base_resolved")
+        s_res = t.get("sentry_resolved")
+        b_pill = '<span class="status-pill status-solved">✅ Passed</span>' if b_res is True else ('<span class="status-pill status-failed">❌ Failed</span>' if b_res is False else '<span class="status-pill status-pending">Pending</span>')
+        s_pill = '<span class="status-pill status-solved">✅ Passed</span>' if s_res is True else ('<span class="status-pill status-failed">❌ Failed</span>' if s_res is False else '<span class="status-pill status-pending">Pending</span>')
+
         rows_html += f"""
         <tr>
             <td class="task-id"><strong>{tid}</strong><br><small class="repo-badge">{repo}</small></td>
@@ -107,7 +114,7 @@ def generate_report(results_path: Path, output_html: Path):
             <td>
                 <span class="val-base">{b_len} B</span> / <span class="val-sentry">{s_len} B</span>
             </td>
-            <td><span class="status-pill status-solved">Solved (100%)</span></td>
+            <td>{b_pill} / {s_pill}</td>
         </tr>
         """
 
@@ -290,6 +297,8 @@ def generate_report(results_path: Path, output_html: Path):
             font-weight: 600;
         }}
         .status-solved {{ background: #238636; color: #fff; }}
+        .status-failed {{ background: rgba(248,81,73,0.2); color: #f85149; border: 1px solid rgba(248,81,73,0.4); }}
+        .status-pending {{ background: rgba(139,148,158,0.2); color: #8b949e; }}
         
         .repo-badge {{ color: var(--text-muted); font-size: 11px; }}
         .task-title {{ font-size: 16px; font-weight: 700; color: #fff; margin-right: 8px; }}
@@ -417,7 +426,7 @@ def generate_report(results_path: Path, output_html: Path):
                             <th>Billed Tok (Base/Sentry)</th>
                             <th>Sentry Tokens (Local 0$)</th>
                             <th>Patch Length</th>
-                            <th>Status</th>
+                            <th>Resolved (Base / Sentry)</th>
                         </tr>
                     </thead>
                     <tbody>

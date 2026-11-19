@@ -126,7 +126,16 @@ You can run the entire benchmark suite in a pre-configured Docker container with
 ./run_in_docker.sh batch
 ```
 
-### 4. Interactive Shell inside Docker
+### 4. Evaluate Patch Correctness (Lightweight In-Container)
+```bash
+# Evaluate a single task against hidden test_patch
+./run_in_docker.sh eval psf__requests-2317
+
+# Evaluate all task runs in a batch output directory
+./run_in_docker.sh eval-batch outputs/batch_deepseek_flash
+```
+
+### 5. Interactive Shell inside Docker
 ```bash
 ./run_in_docker.sh shell
 ```

@@ -116,12 +116,20 @@ def run_instance(
     workspace_path = prepare_repo_workspace(instance, workspaces_dir)
 
     # 2. Setup OpenCode with hardened sandbox environment
+    shims_dir = workspaces_dir / ".shims"
+    shims_dir.mkdir(parents=True, exist_ok=True)
+    python_shim = shims_dir / "python"
+    if not python_shim.exists():
+        python_shim.write_text('#!/bin/sh\nexec python3 "$@"\n')
+        python_shim.chmod(0o755)
+
     env = {
         # Strict protection: prevent modifying global/system Python & host environments
         "PIP_REQUIRE_VIRTUALENV": "true",
         "PIP_NO_INDEX": "true",
         "PYTHONNOUSERSITE": "1",
         "NPM_CONFIG_GLOBAL": "false",
+        "PATH": f"{shims_dir}:{os.environ.get('PATH', '')}",
     }
     if os.environ.get("GOOGLE_GENERATIVE_AI_API_KEY"):
         env["GOOGLE_GENERATIVE_AI_API_KEY"] = os.environ["GOOGLE_GENERATIVE_AI_API_KEY"]
@@ -172,7 +180,7 @@ def run_instance(
         "Instructions:\n"
         "1. Locate and inspect the relevant files.\n"
         "2. Identify the root cause and make the minimal necessary fix.\n"
-        "3. Verify your fix if possible.\n"
+        "3. Verify your fix if possible (e.g. via code inspection, syntax check, or unit tests). Do not install packages globally.\n"
         "When finished, summarize your changes."
     )
 
@@ -256,6 +264,22 @@ def run_instance(
     # Save patch
     patch_file = instance_output / "model_patch.diff"
     patch_file.write_text(patch, encoding="utf-8")
+
+    # Save all steps for observability across both Base and Sentry runs
+    steps_file = instance_output / "steps.jsonl"
+    with steps_file.open("w", encoding="utf-8") as f:
+        for st in all_steps:
+            st_dict = {
+                "step_id": st.step_id,
+                "timestamp": st.timestamp.isoformat() if hasattr(st, "timestamp") and st.timestamp else None,
+                "tool_name": st.action.tool_name if hasattr(st, "action") and st.action else None,
+                "raw_action": st.action.raw if hasattr(st, "action") and st.action else None,
+                "tool_args": st.action.tool_args if hasattr(st, "action") and st.action else {},
+                "accepted_by_environment": st.action.accepted_by_environment if hasattr(st, "action") and st.action else None,
+                "observation": (st.observation[:2000] if st.observation else "") if hasattr(st, "observation") else "",
+                "metadata": st.metadata if hasattr(st, "metadata") else {},
+            }
+            f.write(json.dumps(st_dict, ensure_ascii=False) + "\n")
 
     # Save events if Sentry was used
     events = runner.guard.drain_runtime_events() if runner else []

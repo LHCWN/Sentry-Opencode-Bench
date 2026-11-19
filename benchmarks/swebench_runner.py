@@ -67,6 +67,12 @@ def purge_git_future_history(work_dir: Path) -> None:
     subprocess.run(["git", "prune", "--expire=now"], cwd=str(work_dir), check=False)
     subprocess.run(["git", "gc", "--prune=now"], cwd=str(work_dir), check=False)
 
+    # Hard-block network protocols in local repo config
+    subprocess.run(["git", "config", "--local", "protocol.https.allow", "never"], cwd=str(work_dir), check=False)
+    subprocess.run(["git", "config", "--local", "protocol.http.allow", "never"], cwd=str(work_dir), check=False)
+    subprocess.run(["git", "config", "--local", "protocol.ssh.allow", "never"], cwd=str(work_dir), check=False)
+    subprocess.run(["git", "config", "--local", "protocol.git.allow", "never"], cwd=str(work_dir), check=False)
+
 
 def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path, depth: int = 50) -> Path:
     """Prepares workspace by shallow-fetching only the required base commit (and up to depth commits back).
@@ -179,12 +185,33 @@ def run_instance(
         python_shim.write_text('#!/bin/sh\nexec python3 "$@"\n')
         python_shim.chmod(0o755)
 
+    # Git shim: completely intercepts and blocks git pull, fetch, clone, remote
+    git_shim = shims_dir / "git"
+    git_shim.write_text(
+        '#!/bin/bash\n'
+        'for arg in "$@"; do\n'
+        '    case "$arg" in\n'
+        '        pull|fetch|clone|remote|ls-remote)\n'
+        '            echo "fatal: Network operations (git $arg) are disabled in this evaluation environment." >&2\n'
+        '            exit 128\n'
+        '            ;;\n'
+        '    esac\n'
+        'done\n'
+        'REAL_GIT=$(which -a git | grep -v "/.shims/git" | head -n 1)\n'
+        '[ -z "$REAL_GIT" ] && REAL_GIT="/usr/bin/git"\n'
+        'exec "$REAL_GIT" "$@"\n'
+    )
+    git_shim.chmod(0o755)
+
     env = {
         # Strict protection: prevent modifying global/system Python & host environments
         "PIP_REQUIRE_VIRTUALENV": "true",
         "PIP_NO_INDEX": "true",
         "PYTHONNOUSERSITE": "1",
         "NPM_CONFIG_GLOBAL": "false",
+        # Strict Git protection: disallow network protocols entirely
+        "GIT_ALLOW_PROTOCOL": "file",
+        "GIT_TERMINAL_PROMPT": "0",
         "PATH": f"{shims_dir}:{os.environ.get('PATH', '')}",
     }
     if os.environ.get("GOOGLE_GENERATIVE_AI_API_KEY"):

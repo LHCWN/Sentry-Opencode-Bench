@@ -46,17 +46,23 @@ def strip_test_hunks(patch_text: str) -> str:
 
 
 def get_task_data(instance_id: str, split: str = "test") -> dict[str, Any]:
-    """Retrieve task metadata from SWE-bench Lite dataset."""
+    """Retrieve task metadata from local eval_specs or SWE-bench Lite dataset."""
     global _DATASET_CACHE
     if not _DATASET_CACHE:
-        try:
-            from datasets import load_dataset
-        except ImportError:
-            raise RuntimeError("datasets package is required for evaluation. Run inside Docker or pip install datasets.")
-
-        ds = load_dataset("princeton-nlp/SWE-bench_Lite", split=split)
-        for item in ds:
-            _DATASET_CACHE[item["instance_id"]] = item
+        eval_specs_file = Path("benchmarks/data/eval_specs.json")
+        if not eval_specs_file.exists():
+            eval_specs_file = Path("/app/benchmarks/data/eval_specs.json")
+        if eval_specs_file.exists():
+            with open(eval_specs_file, "r", encoding="utf-8") as f:
+                _DATASET_CACHE = json.load(f)
+        else:
+            try:
+                from datasets import load_dataset
+                ds = load_dataset("princeton-nlp/SWE-bench_Lite", split=split)
+                for item in ds:
+                    _DATASET_CACHE[item["instance_id"]] = item
+            except ImportError:
+                raise RuntimeError("Evaluation specs not found and datasets package not available.")
 
     if instance_id not in _DATASET_CACHE:
         raise KeyError(f"Task '{instance_id}' not found in SWE-bench Lite ({split} split)")

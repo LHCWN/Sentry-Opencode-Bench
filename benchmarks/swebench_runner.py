@@ -23,7 +23,19 @@ from benchmarks.opencode_adapter import (
 
 
 def fetch_swebench_instance(instance_id: str | None = None, index: int = 0) -> dict[str, Any]:
-    """Fetch instance from HuggingFace SWE-bench_Lite dataset."""
+    """Fetch instance from sanitized local task dataset (no human patches)."""
+    tasks_file = Path("benchmarks/data/swebench_lite_tasks.json")
+    if not tasks_file.exists():
+        tasks_file = Path("/app/benchmarks/data/swebench_lite_tasks.json")
+    if tasks_file.exists():
+        with open(tasks_file, "r", encoding="utf-8") as f:
+            tasks = json.load(f)
+        if instance_id:
+            if instance_id in tasks:
+                return dict(tasks[instance_id])
+            raise ValueError(f"Instance ID {instance_id} not found in sanitized dataset")
+        return dict(list(tasks.values())[index])
+
     from datasets import load_dataset
     print("Loading SWE-bench Lite dataset split...")
     dataset = load_dataset("princeton-nlp/SWE-bench_Lite", split="test")
@@ -202,6 +214,29 @@ def run_instance(
         'exec "$REAL_GIT" "$@"\n'
     )
     git_shim.chmod(0o755)
+
+    # Shell security shims: block attempts to search external system caches, reports, or eval specs
+    for sh_name in ["bash", "sh"]:
+        sh_shim = shims_dir / sh_name
+        sh_shim.write_text(
+            '#!/bin/bash\n'
+            'for arg in "$@"; do\n'
+            '    if echo "$arg" | grep -qE "(/root|\\b(reports|outputs|\\.cache|huggingface|eval_specs)\\b|\\.arrow)"; then\n'
+            '        echo "bash: access denied: restricted system path or file" >&2\n'
+            '        exit 1\n'
+            '    fi\n'
+            'done\n'
+            f'REAL_SH=$(which -a {sh_name} | grep -v "/.shims/" | head -n 1)\n'
+            f'[ -z "$REAL_SH" ] && REAL_SH="/bin/{sh_name}"\n'
+            'exec "$REAL_SH" "$@"\n'
+        )
+        sh_shim.chmod(0o755)
+
+    # Disable curl and wget in sandbox
+    for net_tool in ["curl", "wget"]:
+        n_shim = shims_dir / net_tool
+        n_shim.write_text('#!/bin/sh\necho "fatal: Network operations are disabled in this evaluation environment." >&2\nexit 128\n')
+        n_shim.chmod(0o755)
 
     env = {
         # Strict protection: prevent modifying global/system Python & host environments

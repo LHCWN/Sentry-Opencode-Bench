@@ -158,7 +158,25 @@ def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path, depth: int 
     }, indent=2), encoding="utf-8")
     print(f"Secured workspace permissions (blocked websearch, webfetch, external_directory) via {opencode_cfg}")
 
-    return work_dir
+def format_action_snippet(action: Any, max_len: int = 80) -> str:
+    """Formats a concise one-line snippet of the action for logging."""
+    args = getattr(action, "tool_args", {}) or {}
+    tool = getattr(action, "tool_name", "") or "unknown"
+    if tool == "bash":
+        cmd = args.get("command", "")
+        clean_cmd = " ".join(cmd.split())
+        snippet = clean_cmd[:max_len] + ("..." if len(clean_cmd) > max_len else "")
+        return f'bash: "{snippet}"'
+    elif tool in ("read", "edit", "write"):
+        path = args.get("filePath") or args.get("path") or ""
+        return f'{tool}: {path}'
+    elif tool in ("glob", "grep", "search"):
+        pat = args.get("pattern") or args.get("query") or args.get("path") or ""
+        return f'{tool}: {pat}'
+    elif args:
+        s = " ".join(str(args).split())
+        return f'{tool}: {s[:max_len]}'
+    return tool
 
 
 def run_instance(
@@ -316,7 +334,8 @@ def run_instance(
         def on_step(step: AgentStep) -> bool:
             nonlocal pending_repair
             all_steps.append(step)
-            print(f"[{instance_id}] Step {step.step_id}: {step.action.tool_name} ok={step.action.accepted_by_environment}")
+            snippet = format_action_snippet(step.action, max_len=75)
+            print(f"[{instance_id}] Step {step.step_id}: {snippet} ok={step.action.accepted_by_environment}")
 
             if len(all_steps) >= max_total_steps:
                 print(f"[{instance_id}] ⚠️ Reached maximum total steps ({max_total_steps}). Ending turn.")

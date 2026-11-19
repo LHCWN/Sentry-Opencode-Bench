@@ -1,0 +1,17 @@
+services:
+  bench:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: opencode-sentry-bench
+    container_name: opencode-sentry-bench
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./reports:/app/reports
+      - ./workspaces:/app/workspaces
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SENTRY_CONFIG=configs/providers/lmstudio_docker.yaml
+    working_dir: /app

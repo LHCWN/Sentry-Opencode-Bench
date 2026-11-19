@@ -107,7 +107,35 @@ Only 2 out of 10 tasks produced non-zero, valid patches in both Base and Sentry 
    - 4 tasks could not be evaluated due to API quota exhaustion (Google AI Studio 500 req/day limit).
    - 2 tasks crashed due to local judge model context limits in LM Studio (`n_ctx` < 8k).
 
-## 🚀 Setup & Installation
+## 🐳 Running in Docker (Recommended, Zero Host Dependencies)
+
+You can run the entire benchmark suite in a pre-configured Docker container with Python 3.11, Node.js 20, OpenCode CLI, git, pytest, and all testing tools preinstalled without touching your host machine:
+
+### 1. Build the Docker Image
+```bash
+./run_in_docker.sh build
+```
+
+### 2. Run a Single Task in Docker
+```bash
+./run_in_docker.sh single psf__requests-2317
+```
+
+### 3. Run the 5-Task Batch Benchmark (Base vs Sentry)
+```bash
+./run_in_docker.sh batch
+```
+
+### 4. Interactive Shell inside Docker
+```bash
+./run_in_docker.sh shell
+```
+
+All patches, execution logs, and HTML reports are automatically written to `./outputs`, `./reports`, and `./workspaces` on your host via Docker volume mounts. Local LM Studio on your host is automatically reachable via `host.docker.internal:1234`.
+
+---
+
+## 🚀 Manual Host Setup (Alternative)
 
 ### 1. Prerequisites
 - Python 3.10 or 3.11
@@ -117,7 +145,7 @@ Only 2 out of 10 tasks produced non-zero, valid patches in both Base and Sentry 
 
 ### 2. Environment Setup
 ```bash
-git clone https://github.com/NixNi/Sentry-Opencode-Bench.git
+git clone https://github.com/LHCWN/Sentry-Opencode-Bench.git
 cd Sentry-Opencode-Bench
 
 python3.11 -m venv .venv

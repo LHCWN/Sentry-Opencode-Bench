@@ -173,6 +173,7 @@ def main():
     parser.add_argument("--sentry-config", type=str, default="configs/providers/lmstudio.yaml", help="Sentry config")
     parser.add_argument("--max-steps", type=int, default=25, help="Max steps per task")
     parser.add_argument("--opencode-bin", type=str, default=None, help="Explicit path to opencode binary")
+    parser.add_argument("--output-dir", type=Path, default=Path("outputs/batch_benchmark"), help="Directory for benchmark results")
     parser.add_argument("--rerun-failed", action="store_true", help="Re-run tasks that previously failed or had 0 steps")
     parser.add_argument("--force", action="store_true", help="Force re-run all tasks from scratch")
     args = parser.parse_args()
@@ -184,6 +185,7 @@ def main():
         openrouter_key=args.key,
         opencode_bin=args.opencode_bin,
         sentry_config_path=args.sentry_config,
+        output_dir=args.output_dir,
         max_steps_per_task=args.max_steps,
         rerun_failed=args.rerun_failed,
         force=args.force,

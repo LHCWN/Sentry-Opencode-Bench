@@ -10,6 +10,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import time
 from dataclasses import dataclass, field
 from http.client import HTTPException
@@ -26,6 +27,7 @@ _PROVIDER_DEFAULTS = {
     "openai_responses": ("https://api.openai.com/v1", "OPENAI_API_KEY"),
     "anthropic": ("https://api.anthropic.com/v1", "ANTHROPIC_API_KEY"),
     "gemini": ("https://generativelanguage.googleapis.com/v1beta", "GEMINI_API_KEY"),
+    "opencode": (None, None),
 }
 _TRANSIENT_STATUS = {408, 409, 429, 500, 502, 503, 504, 529}
 
@@ -159,6 +161,17 @@ urlopen = build_opener(_NoRedirect()).open
 
 
 def _json_object(text: str | bytes) -> dict:
+    if isinstance(text, (str, bytes)):
+        clean = text.decode("utf-8") if isinstance(text, bytes) else text
+        clean = clean.strip()
+        if clean.startswith("```"):
+            lines = clean.splitlines()
+            if lines and lines[0].startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].startswith("```"):
+                lines = lines[:-1]
+            text = "\n".join(lines).strip()
+
     def reject_constant(value):
         raise ValueError("Non-finite JSON number")
 
@@ -192,6 +205,10 @@ class _HTTPModelClient:
     json_mode: str = "native"
     max_retries: int = 0
     last_usage: dict = field(default_factory=dict, init=False)
+    accumulated_usage: dict = field(
+        default_factory=lambda: {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
+        init=False,
+    )
     last_response_metadata: dict = field(default_factory=dict, init=False)
 
     def __post_init__(self) -> None:
@@ -227,10 +244,21 @@ class _HTTPModelClient:
         usage = data.get("usage", data.get("usageMetadata"))
         if isinstance(usage, dict):
             self.last_usage = dict(usage)
+            self.accumulated_usage["prompt_tokens"] += int(usage.get("prompt_tokens", 0))
+            self.accumulated_usage["completion_tokens"] += int(usage.get("completion_tokens", 0))
+            self.accumulated_usage["total_tokens"] += int(usage.get("total_tokens", 0))
         text = self._text(data)
         if not isinstance(text, str) or not text.strip():
             raise RuntimeError("Model endpoint returned empty or non-text content")
         if structured:
+            clean = text.strip()
+            if clean.startswith("```"):
+                lines = clean.splitlines()
+                if lines and lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                text = "\n".join(lines).strip()
             try:
                 _json_object(text)
             except (ValueError, UnicodeError, RecursionError):
@@ -473,10 +501,98 @@ def _text_blocks(blocks, text_type: str) -> list[str]:
     return result
 
 
+@dataclass
+class OpenCodeModelClient:
+    model: str = "default"
+    opencode_bin: str = "/opt/homebrew/bin/opencode"
+    timeout: float = 120.0
+    last_usage: dict = field(default_factory=dict, init=False)
+    last_response_metadata: dict = field(default_factory=dict, init=False)
+
+    def __call__(
+        self, prompt: str, *, temperature: float = 0.0, max_tokens: int = 512,
+        response_format: dict | None = None,
+    ) -> str:
+        self.last_usage = {}
+        self.last_response_metadata = {"model": self.model, "provider": "opencode"}
+        structured = response_format is not None
+
+        if structured and "JSON" not in prompt:
+            prompt += "\n\nReturn exactly one valid JSON object, without Markdown fences or surrounding text."
+
+        cmd = [self.opencode_bin, "run", prompt, "--pure", "--format", "json"]
+        if self.model and self.model != "default":
+            cmd.extend(["--model", self.model])
+
+        try:
+            proc = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=self.timeout,
+                check=False,
+            )
+        except subprocess.TimeoutExpired:
+            raise RuntimeError("OpenCode prompt timed out") from None
+
+        if proc.returncode != 0:
+            raise RuntimeError(f"OpenCode failed with code {proc.returncode}: {proc.stderr}")
+
+        text_parts = []
+        for line in proc.stdout.splitlines():
+            line = line.strip()
+            if not line.startswith("{"):
+                continue
+            try:
+                event = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if event.get("type") == "text":
+                part = event.get("part", {})
+                t = part.get("text", "")
+                if t:
+                    text_parts.append(t)
+            elif event.get("type") == "step_finish":
+                part = event.get("part", {})
+                tokens = part.get("tokens", {})
+                if tokens:
+                    self.last_usage = {
+                        "prompt_tokens": tokens.get("input", 0),
+                        "completion_tokens": tokens.get("output", 0),
+                        "total_tokens": tokens.get("total", 0),
+                    }
+
+        full_text = "".join(text_parts).strip()
+        if not full_text:
+            raise RuntimeError("OpenCode returned empty text")
+
+        if structured:
+            clean = full_text
+            if clean.startswith("```"):
+                lines = clean.splitlines()
+                if lines and lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                clean = "\n".join(lines).strip()
+            try:
+                _json_object(clean)
+            except (ValueError, UnicodeError, RecursionError):
+                raise RuntimeError("OpenCode returned an invalid JSON object") from None
+            return clean
+
+        return full_text
+
+
 def create_client(config: ProviderConfig) -> _HTTPModelClient:
     """Resolve environment credentials and construct an adapter without I/O."""
     if not isinstance(config, ProviderConfig):
         raise TypeError("create_client requires ProviderConfig")
+    if config.provider == "opencode":
+        return OpenCodeModelClient(
+            model=config.model,
+            timeout=config.timeout,
+        )
     base_url, default_key_env = _PROVIDER_DEFAULTS[config.provider]
     key_env = config.api_key_env or default_key_env
     api_key = os.environ.get(key_env, "") if key_env else ""

@@ -1,0 +1,18 @@
+# Sentry configuration using OpenCode free remote model as the LLM judge
+api:
+  provider: opencode
+  model: default
+  timeout: 120.0
+  json_mode: prompt
+  max_retries: 0
+
+model:
+  model: default
+  temperature: 0.0
+  max_tokens: 512
+  structured_outputs: true
+
+task_agent:
+  temperature: 0.7
+  max_tokens: 384
+  structured_outputs: false

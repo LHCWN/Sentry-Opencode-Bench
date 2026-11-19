@@ -30,3 +30,4 @@ data/
 /docs/
 .DS_Store
 tests/
+workspaces/

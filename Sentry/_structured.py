@@ -11,6 +11,15 @@ def json_object(raw: str, fields: set[str]) -> dict | None:
     if not isinstance(raw, str):
         return None
 
+    raw_clean = raw.strip()
+    if raw_clean.startswith("```"):
+        lines = raw_clean.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].startswith("```"):
+            lines = lines[:-1]
+        raw_clean = "\n".join(lines).strip()
+
     def unique_object(pairs):
         result = {}
         for key, value in pairs:
@@ -20,7 +29,7 @@ def json_object(raw: str, fields: set[str]) -> dict | None:
         return result
 
     try:
-        data = json.loads(raw, object_pairs_hook=unique_object)
+        data = json.loads(raw_clean, object_pairs_hook=unique_object)
     except (TypeError, ValueError):
         return None
     if not isinstance(data, dict) or set(data) != fields:

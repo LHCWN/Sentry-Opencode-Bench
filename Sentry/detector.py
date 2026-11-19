@@ -99,6 +99,15 @@ Reasoning & Grounding Failure: the agent introduces unsupported assumptions, dri
 Retrieval labels:
 {reasoning_labels}
 
+Software Engineering & Coding Task Rules:
+- Initial exploration (searching files with grep/find, reading relevant source files for context, or inspecting commit log) is EXPECTED and is NOT a failure. Do NOT intervene during initial exploration.
+- Running tests or commands to inspect behavior or reproduce an issue is NORMAL, even if tests fail.
+- Intervene ONLY when there is genuine failure:
+  * Repeated identical actions or commands producing the same failure in a loop.
+  * Complete stall where the agent repeats unhelpful exploration without refining hypotheses after gathering ample evidence.
+  * Clear hallucination or ungrounded assumptions contradicting direct observations.
+- If the agent is reading relevant code, investigating the issue, or progressing through a multi-step debugging plan, return "intervention_needed": false and "failure_type": "no_failure".
+
 The action has already passed the deterministic schema check. Do not return action_validity_failure.
 
 Output format.

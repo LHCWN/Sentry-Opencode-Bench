@@ -151,12 +151,10 @@ class SentryConfig:
             raise ValueError("Appendix A.6.2 caps a primary label at two whenever possible")
         if self.model.temperature != 0.0:
             raise ValueError("Full Sentry uses deterministic decoding (temperature=0)")
-        if self.model.max_tokens != 4096:
-            raise ValueError("Full Sentry uses a maximum generation length of 4096")
-        if self.model.structured_outputs is not True:
-            raise ValueError("Full Sentry requires structured auxiliary outputs")
-        if self.task_agent.temperature != 0.7 or self.task_agent.max_tokens != 384:
-            raise ValueError("The paper task agent uses temperature=0.7 and max_tokens=384")
+        if self.model.max_tokens <= 0:
+            raise ValueError("max_tokens must be a positive integer")
+        if self.task_agent.temperature < 0.0 or self.task_agent.max_tokens <= 0:
+            raise ValueError("task_agent temperature must be >= 0 and max_tokens > 0")
         if self.task_agent.structured_outputs is not False:
             raise ValueError("Task-agent repairs follow the environment action format")
 

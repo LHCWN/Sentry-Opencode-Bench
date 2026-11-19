@@ -69,6 +69,115 @@ def get_task_data(instance_id: str, split: str = "test") -> dict[str, Any]:
     return _DATASET_CACHE[instance_id]
 
 
+def parse_test_list(raw: Any) -> list[str]:
+    """Parse a test list from JSON string or list."""
+    if not raw:
+        return []
+    if isinstance(raw, str):
+        try:
+            parsed = json.loads(raw)
+            if isinstance(parsed, list):
+                return parsed
+            return [parsed]
+        except Exception:
+            return [raw]
+    return list(raw)
+
+
+def parse_test_metrics(
+    output: str, exit_code: int, fail_to_pass: list[str], pass_to_pass: list[str]
+) -> dict[str, Any]:
+    """Parse test runner output into structured category metrics (FAIL_TO_PASS, PASS_TO_PASS)."""
+    failed_lines = []
+    passed_lines = []
+
+    for line in output.splitlines():
+        line_clean = line.strip()
+        if re.search(r"\b(FAILED|ERROR|FAIL)\b", line_clean) and not line_clean.startswith("="):
+            failed_lines.append(line_clean)
+        elif re.search(r"\b(PASSED|ok)\b", line_clean) and not line_clean.startswith("="):
+            passed_lines.append(line_clean)
+
+    p_match = re.search(r"\b(\d+)\s+passed\b", output)
+    f_match = re.search(r"\b(\d+)\s+failed\b", output)
+    e_match = re.search(r"\b(\d+)\s+error(?:s)?\b", output)
+    s_match = re.search(r"\b(\d+)\s+skipped\b", output)
+
+    django_ran = re.search(r"Ran\s+(\d+)\s+tests?", output)
+    django_fail = re.search(r"failures=(\d+)", output)
+    django_err = re.search(r"errors=(\d+)", output)
+
+    total_passed = int(p_match.group(1)) if p_match else 0
+    total_failed = (int(f_match.group(1)) if f_match else 0) + (int(e_match.group(1)) if e_match else 0)
+    total_skipped = int(s_match.group(1)) if s_match else 0
+
+    if django_ran:
+        ran = int(django_ran.group(1))
+        df = int(django_fail.group(1)) if django_fail else 0
+        de = int(django_err.group(1)) if django_err else 0
+        total_failed = df + de
+        total_passed = max(0, ran - total_failed)
+    elif not p_match and not f_match and exit_code == 0 and len(passed_lines) > 0:
+        total_passed = len(passed_lines)
+
+    def extract_token(test_name: str) -> str:
+        t = test_name.split("::")[-1]
+        m = re.match(r"^(.*?)\s*\(", t)
+        if m:
+            t = m.group(1)
+        m2 = re.match(r"^(.*?)\[", t)
+        if m2:
+            t = m2.group(1)
+        return t.strip()
+
+    def check_test(t_str: str) -> bool:
+        tok = extract_token(t_str)
+        for fl in failed_lines:
+            if tok in fl:
+                return False
+        if exit_code == 0:
+            return True
+        for pl in passed_lines:
+            if tok in pl:
+                return True
+        if total_failed > 0 or exit_code != 0:
+            return False
+        return True
+
+    f2p_succ = [t for t in fail_to_pass if check_test(t)]
+    f2p_fail = [t for t in fail_to_pass if t not in f2p_succ]
+
+    p2p_succ = [t for t in pass_to_pass if check_test(t)]
+    p2p_fail = [t for t in pass_to_pass if t not in p2p_succ]
+
+    resolved = (len(f2p_fail) == 0 and len(p2p_fail) == 0 and exit_code == 0) if fail_to_pass else (exit_code == 0)
+
+    return {
+        "resolved": resolved,
+        "fail_to_pass": {
+            "total": len(fail_to_pass),
+            "passed": len(f2p_succ),
+            "failed": len(f2p_fail),
+            "success": f2p_succ,
+            "failure": f2p_fail,
+        },
+        "pass_to_pass": {
+            "total": len(pass_to_pass),
+            "passed": len(p2p_succ),
+            "failed": len(p2p_fail),
+            "success": p2p_succ,
+            "failure": p2p_fail,
+        },
+        "test_counts": {
+            "total": total_passed + total_failed + total_skipped,
+            "passed": total_passed,
+            "failed": total_failed,
+            "skipped": total_skipped,
+        },
+    }
+
+
+
 def evaluate_patch(
     instance_id: str,
     patch_content: Optional[str] = None,
@@ -93,15 +202,9 @@ def evaluate_patch(
     task = get_task_data(instance_id)
     base_commit = task["base_commit"]
     test_patch = task.get("test_patch", "")
-    fail_to_pass_raw = task.get("FAIL_TO_PASS", [])
+    fail_to_pass = parse_test_list(task.get("FAIL_TO_PASS") or task.get("fail_to_pass", []))
+    pass_to_pass = parse_test_list(task.get("PASS_TO_PASS") or task.get("pass_to_pass", []))
 
-    if isinstance(fail_to_pass_raw, str):
-        try:
-            fail_to_pass = json.loads(fail_to_pass_raw)
-        except json.JSONDecodeError:
-            fail_to_pass = [fail_to_pass_raw]
-    else:
-        fail_to_pass = list(fail_to_pass_raw)
 
     if workspace_dir is None:
         workspace = Path("workspaces") / instance_id
@@ -232,11 +335,11 @@ def evaluate_patch(
                     converted_tests.append(t)
             runtests_script = workspace / "tests" / "runtests.py"
             if runtests_script.exists():
-                cmd = [sys.executable, "tests/runtests.py", "--settings=test_sqlite", "-v", "1"] + converted_tests
+                cmd = [sys.executable, "tests/runtests.py", "--settings=test_sqlite", "-v", "2"] + converted_tests
             else:
-                cmd = [sys.executable, "-c", shimmed_runner] + test_files + ["-k", " or ".join([t.split(" ")[0] for t in fail_to_pass])]
+                cmd = [sys.executable, "-c", shimmed_runner, "-v"] + test_files + ["-k", " or ".join([t.split(" ")[0] for t in fail_to_pass])]
         elif repo.startswith("sympy/"):
-            cmd = [sys.executable, "-c", shimmed_runner] + test_files + ["-k", " or ".join(fail_to_pass)]
+            cmd = [sys.executable, "-c", shimmed_runner, "-v"] + test_files + (["-k", " or ".join(fail_to_pass)] if fail_to_pass else [])
         else:
             test_args = ["-v"] + test_files + (["-k", " or ".join(fail_to_pass)] if fail_to_pass else [])
             cmd = [sys.executable, "-c", shimmed_runner] + test_args
@@ -280,13 +383,16 @@ def evaluate_patch(
                         subprocess.run(["git", "-C", str(workspace), "checkout", "--", line], check=False)
 
     duration = time.time() - start_time
-    resolved = (exit_code == 0)
+    metrics = parse_test_metrics(pytest_output, exit_code, fail_to_pass, pass_to_pass)
 
     return {
         "instance_id": instance_id,
-        "resolved": resolved,
+        "resolved": metrics["resolved"],
         "patch_applied": True,
         "test_patch_applied": test_patch_applied,
+        "fail_to_pass": metrics["fail_to_pass"],
+        "pass_to_pass": metrics["pass_to_pass"],
+        "test_counts": metrics["test_counts"],
         "fail_to_pass_count": len(fail_to_pass),
         "fail_to_pass_tests": fail_to_pass,
         "exit_code": exit_code,
@@ -309,17 +415,28 @@ def evaluate_summary_file(summary_path: Path | str, reset_to_base: bool = True) 
     patch_file = sum_file.parent / "model_patch.diff"
     patch_content = patch_file.read_text(encoding="utf-8") if patch_file.is_file() else None
 
+    workspace_dir = Path("workspaces") / instance_id
+    if not workspace_dir.exists():
+        workspace_dir = Path("/app/workspaces") / instance_id
+    if not workspace_dir.exists():
+        workspace_dir = Path("/app/workspace")
+
     eval_result = evaluate_patch(
         instance_id=instance_id,
         patch_content=patch_content,
         patch_file=patch_file if patch_file.is_file() else None,
+        workspace_dir=workspace_dir,
         reset_to_base=reset_to_base,
     )
 
     data["evaluation"] = eval_result
     data["resolved"] = eval_result["resolved"]
+    data["fail_to_pass"] = eval_result.get("fail_to_pass")
+    data["pass_to_pass"] = eval_result.get("pass_to_pass")
+    data["test_counts"] = eval_result.get("test_counts")
     sum_file.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     return eval_result
+
 
 
 def evaluate_batch_dir(batch_dir: Path | str) -> list[dict[str, Any]]:
@@ -333,16 +450,21 @@ def evaluate_batch_dir(batch_dir: Path | str) -> list[dict[str, Any]]:
         try:
             print(f"Evaluating {s_file.parent.name}...")
             res = evaluate_summary_file(s_file, reset_to_base=True)
-            status_emoji = "✅ RESOLVED" if res["resolved"] else "❌ FAILED"
-            tests_cnt = res.get("fail_to_pass_count", 0)
+            status_emoji = "✅ RESOLVED" if res.get("resolved") else "❌ FAILED"
+            f2p = res.get("fail_to_pass") or {}
+            p2p = res.get("pass_to_pass") or {}
+            counts = res.get("test_counts") or {}
             dur = res.get("duration_seconds", 0.0)
-            print(f"  -> {status_emoji} ({tests_cnt} tests, {dur}s)")
+            f2p_str = f"F2P: {f2p.get('passed',0)}/{f2p.get('total',0)}"
+            p2p_str = f"P2P: {p2p.get('passed',0)}/{p2p.get('total',0)}"
+            print(f"  -> {status_emoji} | {f2p_str} | {p2p_str} | ({counts.get('passed',0)} pass, {counts.get('failed',0)} fail) in {dur}s")
             results.append(res)
         except Exception as e:
             print(f"  -> ⚠️ Error evaluating {s_file}: {e}")
             results.append({"summary_file": str(s_file), "resolved": False, "error": str(e)})
 
     return results
+
 
 
 def main() -> None:

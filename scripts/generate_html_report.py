@@ -3,7 +3,38 @@ import json
 from pathlib import Path
 import html
 
+def format_category_badge(cat):
+    if not cat or not isinstance(cat, dict):
+        return '<span class="status-pill status-pending">-</span>'
+    total = cat.get("total", 0)
+    passed = cat.get("passed", 0)
+    if total == 0:
+        return '<span class="status-pill status-pending">0/0</span>'
+    if passed == total:
+        return f'<span class="status-pill status-solved">{passed}/{total} (100%)</span>'
+    elif passed > 0:
+        pct = round(passed / total * 100)
+        return f'<span class="status-pill status-partial">{passed}/{total} ({pct}%)</span>'
+    else:
+        return f'<span class="status-pill status-failed">0/{total} (0%)</span>'
+
+def format_tests_list(tests, title, color):
+    if not tests:
+        return ""
+    items = "".join(f"<li style='margin-bottom: 2px; word-break: break-all;'><code>{html.escape(t)}</code></li>" for t in tests[:15])
+    more = f"<div style='color: #8b949e; font-size: 11px;'>... and {len(tests)-15} more</div>" if len(tests) > 15 else ""
+    return f"""
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: {color}; font-size: 12px; font-weight: 500;">{title} ({len(tests)})</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            {items}
+        </ul>
+        {more}
+    </details>
+    """
+
 def generate_report(results_path: Path, output_html: Path):
+
     data = json.loads(results_path.read_text(encoding="utf-8"))
     
     tasks = []
@@ -72,6 +103,12 @@ def generate_report(results_path: Path, output_html: Path):
             "sentry_patch_len": s.get("patch_length", 0),
             "base_resolved": b_res,
             "sentry_resolved": s_res,
+            "base_f2p": b.get("fail_to_pass") or {},
+            "sentry_f2p": s.get("fail_to_pass") or {},
+            "base_p2p": b.get("pass_to_pass") or {},
+            "sentry_p2p": s.get("pass_to_pass") or {},
+            "base_cnt": b.get("test_counts") or {},
+            "sentry_cnt": s.get("test_counts") or {},
             "base_files": [l.replace("+++ b/", "") for l in b_patch.splitlines() if l.startswith("+++ b/")],
             "sentry_files": [l.replace("+++ b/", "") for l in s_patch.splitlines() if l.startswith("+++ b/")],
             "base_patch": b_patch,
@@ -107,8 +144,18 @@ def generate_report(results_path: Path, output_html: Path):
 
         b_res = t.get("base_resolved")
         s_res = t.get("sentry_resolved")
-        b_pill = '<span class="status-pill status-solved">Passed</span>' if b_res is True else ('<span class="status-pill status-failed">Failed</span>' if b_res is False else '<span class="status-pill status-pending">Pending</span>')
-        s_pill = '<span class="status-pill status-solved">Passed</span>' if s_res is True else ('<span class="status-pill status-failed">Failed</span>' if s_res is False else '<span class="status-pill status-pending">Pending</span>')
+        b_pill = '<span class="status-pill status-solved">Resolved</span>' if b_res is True else ('<span class="status-pill status-failed">Failed</span>' if b_res is False else '<span class="status-pill status-pending">Pending</span>')
+        s_pill = '<span class="status-pill status-solved">Resolved</span>' if s_res is True else ('<span class="status-pill status-failed">Failed</span>' if s_res is False else '<span class="status-pill status-pending">Pending</span>')
+
+        b_f2p_badge = format_category_badge(t.get("base_f2p"))
+        s_f2p_badge = format_category_badge(t.get("sentry_f2p"))
+        b_p2p_badge = format_category_badge(t.get("base_p2p"))
+        s_p2p_badge = format_category_badge(t.get("sentry_p2p"))
+
+        b_c = t.get("base_cnt") or {}
+        s_c = t.get("sentry_cnt") or {}
+        b_cnt_str = f"{b_c.get('passed',0)}P / {b_c.get('failed',0)}F" if b_c else "-"
+        s_cnt_str = f"{s_c.get('passed',0)}P / {s_c.get('failed',0)}F" if s_c else "-"
 
         rows_html += f"""
         <tr>
@@ -119,19 +166,18 @@ def generate_report(results_path: Path, output_html: Path):
             </td>
             <td><span class="badge {intrv_class}">{intrv}</span></td>
             <td>{b_time}s / {s_time}s</td>
-            <td>{b_net} / {s_net}</td>
             <td>
                 <span class="val-base">{b_billed}</span><br>
                 <span class="val-sentry">{s_billed}</span>
                 <span class="badge {tok_class}">{tok_badge}</span>
             </td>
-            <td><span class="val-sentry">{s_only}</span></td>
-            <td>
-                <span class="val-base">{b_len} B</span> / <span class="val-sentry">{s_len} B</span>
-            </td>
+            <td>{b_f2p_badge} / {s_f2p_badge}</td>
+            <td>{b_p2p_badge} / {s_p2p_badge}</td>
+            <td><span class="val-base">{b_cnt_str}</span> / <span class="val-sentry">{s_cnt_str}</span></td>
             <td>{b_pill} / {s_pill}</td>
         </tr>
         """
+
 
     task_cards_html = ""
     for t in tasks:
@@ -154,6 +200,29 @@ def generate_report(results_path: Path, output_html: Path):
         b_len = t["base_patch_len"]
         s_len = t["sentry_patch_len"]
 
+        b_res = t.get("base_resolved")
+        s_res = t.get("sentry_resolved")
+        b_pill = '<span class="status-pill status-solved">Resolved</span>' if b_res is True else ('<span class="status-pill status-failed">Failed</span>' if b_res is False else '<span class="status-pill status-pending">Pending</span>')
+        s_pill = '<span class="status-pill status-solved">Resolved</span>' if s_res is True else ('<span class="status-pill status-failed">Failed</span>' if s_res is False else '<span class="status-pill status-pending">Pending</span>')
+
+        b_f2p = t.get("base_f2p") or {}
+        s_f2p = t.get("sentry_f2p") or {}
+        b_p2p = t.get("base_p2p") or {}
+        s_p2p = t.get("sentry_p2p") or {}
+        b_cnt = t.get("base_cnt") or {}
+        s_cnt = t.get("sentry_cnt") or {}
+
+        b_f2p_badge = format_category_badge(b_f2p)
+        s_f2p_badge = format_category_badge(s_f2p)
+        b_p2p_badge = format_category_badge(b_p2p)
+        s_p2p_badge = format_category_badge(s_p2p)
+
+        b_f2p_details = format_tests_list(b_f2p.get("success", []), "Passed Tests", "#3fb950") + format_tests_list(b_f2p.get("failure", []), "Failed Tests", "#f85149")
+        s_f2p_details = format_tests_list(s_f2p.get("success", []), "Passed Tests", "#3fb950") + format_tests_list(s_f2p.get("failure", []), "Failed Tests", "#f85149")
+
+        b_cnt_str = f"{b_cnt.get('passed', 0)} passed, {b_cnt.get('failed', 0)} failed, {b_cnt.get('skipped', 0)} skipped" if b_cnt else "-"
+        s_cnt_str = f"{s_cnt.get('passed', 0)} passed, {s_cnt.get('failed', 0)} failed, {s_cnt.get('skipped', 0)} skipped" if s_cnt else "-"
+
         task_cards_html += f"""
         <div class="card task-card" id="{tid}">
             <div class="card-header">
@@ -163,7 +232,7 @@ def generate_report(results_path: Path, output_html: Path):
                 </div>
                 <div class="header-badges">
                     <span class="badge {intrv_class}">{intrv} Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: {s_pill}</span>
                 </div>
             </div>
             <div class="card-body">
@@ -186,10 +255,36 @@ def generate_report(results_path: Path, output_html: Path):
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: {b_pill}</div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> {b_f2p_badge}</div>
+                                {b_f2p_details}
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> {b_p2p_badge}</div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> {b_cnt_str}</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: {s_pill}</div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> {s_f2p_badge}</div>
+                                {s_f2p_details}
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> {s_p2p_badge}</div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> {s_cnt_str}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>{b_files_str}</code> ({b_len} bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>{s_files_str}</code> ({s_len} bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, '{tid}-sentry')">Sentry Patch Diff</button>
@@ -312,8 +407,10 @@ def generate_report(results_path: Path, output_html: Path):
             font-weight: 600;
         }}
         .status-solved {{ background: #238636; color: #fff; }}
+        .status-partial {{ background: rgba(210,153,34,0.2); color: #e3b341; border: 1px solid rgba(210,153,34,0.4); }}
         .status-failed {{ background: rgba(248,81,73,0.2); color: #f85149; border: 1px solid rgba(248,81,73,0.4); }}
         .status-pending {{ background: rgba(139,148,158,0.2); color: #8b949e; }}
+
         
         .repo-badge {{ color: var(--text-muted); font-size: 11px; }}
         .task-title {{ font-size: 16px; font-weight: 700; color: #fff; margin-right: 8px; }}
@@ -380,35 +477,36 @@ def generate_report(results_path: Path, output_html: Path):
 <body>
     <div class="container">
         <header>
-            <h1>Sentry vs Base OpenCode Benchmark</h1>
+            <h1>Sentry vs Base Benchmark Dashboard (DeepSeek Flash)</h1>
             <div class="subtitle">
                 Agent Model: <strong>crazyrouter/deepseek-flash</strong> (variant: high, endpoint: api.lhcwn.pro/v1) &bull;
                 Supervisor: <strong>google/gemma-4-e4b</strong> (Local LM Studio) &bull;
-                Dataset: <strong>SWE-bench Lite (5 tasks)</strong> &bull;
-                Policy: W=5, H=10, Check on error
+                Dataset: <strong>SWE-bench Lite ({len(tasks)} tasks)</strong> &bull;
+                Network Whitelist: <strong>Enforced (Default Deny)</strong> &bull;
+                Repository Isolation: <strong>Isolated /app/workspace</strong>
             </div>
         </header>
 
         <div class="kpi-row">
             <div class="kpi-card">
                 <div class="kpi-title">Evaluated Tasks</div>
-                <div class="kpi-val">5 / 5</div>
-                <div class="kpi-desc">10 total test sessions run</div>
+                <div class="kpi-val">{len(tasks)} / {len(tasks)}</div>
+                <div class="kpi-desc">{len(tasks)*2} total test sessions run</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Resolved Rate (SWE-bench)</div>
-                <div class="kpi-val" style="color: #3fb950;">100%</div>
-                <div class="kpi-desc">10 / 10 runs passed FAIL_TO_PASS</div>
+                <div class="kpi-title">FAIL_TO_PASS Tests (Base / Sentry)</div>
+                <div class="kpi-val" style="color: #3fb950;">{sum(t.get('base_f2p',{}).get('passed',0) for t in tasks)} vs {sum(t.get('sentry_f2p',{}).get('passed',0) for t in tasks)}</div>
+                <div class="kpi-desc">Total F2P tests in suite: {sum(t.get('sentry_f2p',{}).get('total',0) for t in tasks)}</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Sentry Cloud Cost</div>
-                <div class="kpi-val" style="color: #58a6ff;">$0.00</div>
-                <div class="kpi-desc">100% local inference via LM Studio</div>
+                <div class="kpi-title">Net Token Savings</div>
+                <div class="kpi-val" style="color: #3fb950;">{((total_sentry_billed - total_base_billed) / total_base_billed * 100) if total_base_billed else 0:+.1f}%</div>
+                <div class="kpi-desc">{(total_base_billed - total_sentry_billed):,} tokens saved</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Peak Token Savings</div>
-                <div class="kpi-val" style="color: #3fb950;">-42.2%</div>
-                <div class="kpi-desc">pallets__flask-5063 (363k &rarr; 210k)</div>
+                <div class="kpi-title">Execution Steps</div>
+                <div class="kpi-val" style="color: #58a6ff;">{total_base_steps} &rarr; {total_sentry_steps}</div>
+                <div class="kpi-desc">{((total_sentry_steps - total_base_steps) / total_base_steps * 100) if total_base_steps else 0:+.1f}% steps reduction</div>
             </div>
         </div>
 
@@ -427,7 +525,7 @@ def generate_report(results_path: Path, output_html: Path):
 
         <div class="card">
             <div class="card-header">
-                <strong>Comparative Matrix (Base vs Sentry)</strong>
+                <strong>Comparative Matrix: SWE-bench Test Categories & Performance</strong>
             </div>
             <div class="card-body" style="padding:0;">
                 <table>
@@ -437,10 +535,10 @@ def generate_report(results_path: Path, output_html: Path):
                             <th>Steps (Base/Sentry)</th>
                             <th>Interv</th>
                             <th>Elapsed (B/S)</th>
-                            <th>Net Tok (B/S)</th>
                             <th>Billed Tok (Base/Sentry)</th>
-                            <th>Sentry Tokens (Local LM Studio)</th>
-                            <th>Patch Length</th>
+                            <th>FAIL_TO_PASS (Base / Sentry)</th>
+                            <th>PASS_TO_PASS (Base / Sentry)</th>
+                            <th>Tests (Base / Sentry)</th>
                             <th>Resolved (Base / Sentry)</th>
                         </tr>
                     </thead>
@@ -450,6 +548,7 @@ def generate_report(results_path: Path, output_html: Path):
                 </table>
             </div>
         </div>
+
 
         <h2 style="font-size: 20px; margin-bottom: 16px; color:#fff;">Detailed Task Analysis & Diffs</h2>
         {task_cards_html}

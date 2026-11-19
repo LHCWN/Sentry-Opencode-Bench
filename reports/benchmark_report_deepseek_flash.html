@@ -105,8 +105,10 @@
             font-weight: 600;
         }
         .status-solved { background: #238636; color: #fff; }
+        .status-partial { background: rgba(210,153,34,0.2); color: #e3b341; border: 1px solid rgba(210,153,34,0.4); }
         .status-failed { background: rgba(248,81,73,0.2); color: #f85149; border: 1px solid rgba(248,81,73,0.4); }
         .status-pending { background: rgba(139,148,158,0.2); color: #8b949e; }
+
         
         .repo-badge { color: var(--text-muted); font-size: 11px; }
         .task-title { font-size: 16px; font-weight: 700; color: #fff; margin-right: 8px; }
@@ -173,35 +175,36 @@
 <body>
     <div class="container">
         <header>
-            <h1>Sentry vs Base OpenCode Benchmark</h1>
+            <h1>Sentry vs Base Benchmark Dashboard (DeepSeek Flash)</h1>
             <div class="subtitle">
                 Agent Model: <strong>crazyrouter/deepseek-flash</strong> (variant: high, endpoint: api.lhcwn.pro/v1) &bull;
                 Supervisor: <strong>google/gemma-4-e4b</strong> (Local LM Studio) &bull;
-                Dataset: <strong>SWE-bench Lite (5 tasks)</strong> &bull;
-                Policy: W=5, H=10, Check on error
+                Dataset: <strong>SWE-bench Lite (20 tasks)</strong> &bull;
+                Network Whitelist: <strong>Enforced (Default Deny)</strong> &bull;
+                Repository Isolation: <strong>Isolated /app/workspace</strong>
             </div>
         </header>
 
         <div class="kpi-row">
             <div class="kpi-card">
                 <div class="kpi-title">Evaluated Tasks</div>
-                <div class="kpi-val">5 / 5</div>
-                <div class="kpi-desc">10 total test sessions run</div>
+                <div class="kpi-val">20 / 20</div>
+                <div class="kpi-desc">40 total test sessions run</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Resolved Rate (SWE-bench)</div>
-                <div class="kpi-val" style="color: #3fb950;">100%</div>
-                <div class="kpi-desc">10 / 10 runs passed FAIL_TO_PASS</div>
+                <div class="kpi-title">FAIL_TO_PASS Tests (Base / Sentry)</div>
+                <div class="kpi-val" style="color: #3fb950;">3 vs 3</div>
+                <div class="kpi-desc">Total F2P tests in suite: 27</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Sentry Cloud Cost</div>
-                <div class="kpi-val" style="color: #58a6ff;">$0.00</div>
-                <div class="kpi-desc">100% local inference via LM Studio</div>
+                <div class="kpi-title">Net Token Savings</div>
+                <div class="kpi-val" style="color: #3fb950;">-12.4%</div>
+                <div class="kpi-desc">1,673,564 tokens saved</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Peak Token Savings</div>
-                <div class="kpi-val" style="color: #3fb950;">-42.2%</div>
-                <div class="kpi-desc">pallets__flask-5063 (363k &rarr; 210k)</div>
+                <div class="kpi-title">Execution Steps</div>
+                <div class="kpi-val" style="color: #58a6ff;">691 &rarr; 615</div>
+                <div class="kpi-desc">-11.0% steps reduction</div>
             </div>
         </div>
 
@@ -220,7 +223,7 @@
 
         <div class="card">
             <div class="card-header">
-                <strong>Comparative Matrix (Base vs Sentry)</strong>
+                <strong>Comparative Matrix: SWE-bench Test Categories & Performance</strong>
             </div>
             <div class="card-body" style="padding:0;">
                 <table>
@@ -230,10 +233,10 @@
                             <th>Steps (Base/Sentry)</th>
                             <th>Interv</th>
                             <th>Elapsed (B/S)</th>
-                            <th>Net Tok (B/S)</th>
                             <th>Billed Tok (Base/Sentry)</th>
-                            <th>Sentry Tokens (Local LM Studio)</th>
-                            <th>Patch Length</th>
+                            <th>FAIL_TO_PASS (Base / Sentry)</th>
+                            <th>PASS_TO_PASS (Base / Sentry)</th>
+                            <th>Tests (Base / Sentry)</th>
                             <th>Resolved (Base / Sentry)</th>
                         </tr>
                     </thead>
@@ -247,16 +250,14 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>78.5s / 230.6s</td>
-            <td>7,086 / 34,187</td>
             <td>
                 <span class="val-base">294,249</span><br>
                 <span class="val-sentry">465,221</span>
                 <span class="badge tok-more">+58.1%</span>
             </td>
-            <td><span class="val-sentry">26,258</span></td>
-            <td>
-                <span class="val-base">489 B</span> / <span class="val-sentry">1,295 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/120 (0%)</span> / <span class="status-pill status-failed">0/120 (0%)</span></td>
+            <td><span class="val-base">0P / 1F</span> / <span class="val-sentry">0P / 1F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -268,16 +269,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>79.9s / 141.4s</td>
-            <td>1,598 / 7,276</td>
             <td>
                 <span class="val-base">92,188</span><br>
                 <span class="val-sentry">32,078</span>
                 <span class="badge tok-saved">-65.2%</span>
             </td>
-            <td><span class="val-sentry">5,340</span></td>
-            <td>
-                <span class="val-base">1,936 B</span> / <span class="val-sentry">1,961 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/3 (0%)</span> / <span class="status-pill status-failed">0/3 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/19 (0%)</span> / <span class="status-pill status-failed">0/19 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -289,16 +288,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>399.0s / 1192.4s</td>
-            <td>24,815 / 42,033</td>
             <td>
                 <span class="val-base">1,810,024</span><br>
                 <span class="val-sentry">996,748</span>
                 <span class="badge tok-saved">-44.9%</span>
             </td>
-            <td><span class="val-sentry">19,839</span></td>
-            <td>
-                <span class="val-base">1,558 B</span> / <span class="val-sentry">736 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-partial">1/58 (2%)</span> / <span class="status-pill status-partial">1/58 (2%)</span></td>
+            <td><span class="val-base">2P / 1F</span> / <span class="val-sentry">2P / 1F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -310,16 +307,14 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>449.2s / 1376.0s</td>
-            <td>11,062 / 70,641</td>
             <td>
                 <span class="val-base">635,528</span><br>
                 <span class="val-sentry">1,310,117</span>
                 <span class="badge tok-more">+106.1%</span>
             </td>
-            <td><span class="val-sentry">48,890</span></td>
-            <td>
-                <span class="val-base">1,282 B</span> / <span class="val-sentry">1,168 B</span>
-            </td>
+            <td><span class="status-pill status-pending">-</span> / <span class="status-pill status-pending">-</span></td>
+            <td><span class="status-pill status-pending">-</span> / <span class="status-pill status-pending">-</span></td>
+            <td><span class="val-base">-</span> / <span class="val-sentry">-</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -331,16 +326,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>472.3s / 252.9s</td>
-            <td>14,556 / 14,127</td>
             <td>
                 <span class="val-base">603,322</span><br>
                 <span class="val-sentry">131,554</span>
                 <span class="badge tok-saved">-78.2%</span>
             </td>
-            <td><span class="val-sentry">10,119</span></td>
-            <td>
-                <span class="val-base">648 B</span> / <span class="val-sentry">904 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/2 (0%)</span> / <span class="status-pill status-failed">0/2 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/20 (0%)</span> / <span class="status-pill status-failed">0/20 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -352,16 +345,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>254.6s / 306.8s</td>
-            <td>5,591 / 16,022</td>
             <td>
                 <span class="val-base">322,225</span><br>
                 <span class="val-sentry">224,657</span>
                 <span class="badge tok-saved">-30.3%</span>
             </td>
-            <td><span class="val-sentry">12,328</span></td>
-            <td>
-                <span class="val-base">1,991 B</span> / <span class="val-sentry">997 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/18 (0%)</span> / <span class="status-pill status-failed">0/18 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -373,16 +364,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>601.2s / 978.9s</td>
-            <td>19,789 / 48,325</td>
             <td>
                 <span class="val-base">1,010,641</span><br>
                 <span class="val-sentry">896,580</span>
                 <span class="badge tok-saved">-11.3%</span>
             </td>
-            <td><span class="val-sentry">34,980</span></td>
-            <td>
-                <span class="val-base">1,459 B</span> / <span class="val-sentry">843 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/2 (0%)</span> / <span class="status-pill status-failed">0/2 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/147 (0%)</span> / <span class="status-pill status-failed">0/147 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -394,16 +383,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>171.3s / 869.9s</td>
-            <td>2,891 / 27,249</td>
             <td>
                 <span class="val-base">130,853</span><br>
                 <span class="val-sentry">646,377</span>
                 <span class="badge tok-more">+394.0%</span>
             </td>
-            <td><span class="val-sentry">18,709</span></td>
-            <td>
-                <span class="val-base">1,064 B</span> / <span class="val-sentry">3,036 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/3 (0%)</span> / <span class="status-pill status-failed">0/3 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/49 (0%)</span> / <span class="status-pill status-failed">0/49 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -415,17 +402,15 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>103.1s / 617.1s</td>
-            <td>7,034 / 26,197</td>
             <td>
                 <span class="val-base">254,943</span><br>
                 <span class="val-sentry">480,159</span>
                 <span class="badge tok-more">+88.3%</span>
             </td>
-            <td><span class="val-sentry">15,361</span></td>
-            <td>
-                <span class="val-base">1,751 B</span> / <span class="val-sentry">2,326 B</span>
-            </td>
-            <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
+            <td><span class="status-pill status-solved">1/1 (100%)</span> / <span class="status-pill status-solved">1/1 (100%)</span></td>
+            <td><span class="status-pill status-solved">53/53 (100%)</span> / <span class="status-pill status-solved">53/53 (100%)</span></td>
+            <td><span class="val-base">1P / 0F</span> / <span class="val-sentry">1P / 0F</span></td>
+            <td><span class="status-pill status-solved">Resolved</span> / <span class="status-pill status-solved">Resolved</span></td>
         </tr>
         
         <tr>
@@ -436,16 +421,14 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>97.7s / 136.2s</td>
-            <td>7,329 / 20,360</td>
             <td>
                 <span class="val-base">345,937</span><br>
                 <span class="val-sentry">200,526</span>
                 <span class="badge tok-saved">-42.0%</span>
             </td>
-            <td><span class="val-sentry">14,585</span></td>
-            <td>
-                <span class="val-base">1,090 B</span> / <span class="val-sentry">570 B</span>
-            </td>
+            <td><span class="status-pill status-partial">1/2 (50%)</span> / <span class="status-pill status-partial">1/2 (50%)</span></td>
+            <td><span class="status-pill status-failed">0/76 (0%)</span> / <span class="status-pill status-failed">0/76 (0%)</span></td>
+            <td><span class="val-base">1P / 1F</span> / <span class="val-sentry">1P / 1F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -457,16 +440,14 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>136.4s / 241.1s</td>
-            <td>9,703 / 30,825</td>
             <td>
                 <span class="val-base">981,522</span><br>
                 <span class="val-sentry">421,050</span>
                 <span class="badge tok-saved">-57.1%</span>
             </td>
-            <td><span class="val-sentry">25,302</span></td>
-            <td>
-                <span class="val-base">1,221 B</span> / <span class="val-sentry">1,115 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/11 (0%)</span> / <span class="status-pill status-failed">0/11 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -478,16 +459,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>156.9s / 262.0s</td>
-            <td>17,506 / 25,083</td>
             <td>
                 <span class="val-base">739,093</span><br>
                 <span class="val-sentry">494,239</span>
                 <span class="badge tok-saved">-33.1%</span>
             </td>
-            <td><span class="val-sentry">13,587</span></td>
-            <td>
-                <span class="val-base">621 B</span> / <span class="val-sentry">1,935 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/7 (0%)</span> / <span class="status-pill status-failed">0/7 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -499,16 +478,14 @@
             </td>
             <td><span class="badge badge-intrv">2</span></td>
             <td>475.0s / 505.1s</td>
-            <td>20,692 / 37,941</td>
             <td>
                 <span class="val-base">1,222,044</span><br>
                 <span class="val-sentry">639,769</span>
                 <span class="badge tok-saved">-47.6%</span>
             </td>
-            <td><span class="val-sentry">22,782</span></td>
-            <td>
-                <span class="val-base">622 B</span> / <span class="val-sentry">1,476 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/31 (0%)</span> / <span class="status-pill status-failed">0/31 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -520,16 +497,14 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>314.8s / 528.5s</td>
-            <td>17,330 / 55,248</td>
             <td>
                 <span class="val-base">897,933</span><br>
                 <span class="val-sentry">865,818</span>
                 <span class="badge tok-saved">-3.6%</span>
             </td>
-            <td><span class="val-sentry">38,216</span></td>
-            <td>
-                <span class="val-base">1,382 B</span> / <span class="val-sentry">815 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/30 (0%)</span> / <span class="status-pill status-failed">0/30 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -541,17 +516,15 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>710.4s / 1347.6s</td>
-            <td>16,090 / 41,116</td>
             <td>
                 <span class="val-base">585,867</span><br>
                 <span class="val-sentry">616,531</span>
                 <span class="badge tok-more">+5.2%</span>
             </td>
-            <td><span class="val-sentry">23,813</span></td>
-            <td>
-                <span class="val-base">883 B</span> / <span class="val-sentry">1,407 B</span>
-            </td>
-            <td><span class="status-pill status-solved">Passed</span> / <span class="status-pill status-solved">Passed</span></td>
+            <td><span class="status-pill status-solved">1/1 (100%)</span> / <span class="status-pill status-solved">1/1 (100%)</span></td>
+            <td><span class="status-pill status-solved">2/2 (100%)</span> / <span class="status-pill status-solved">2/2 (100%)</span></td>
+            <td><span class="val-base">1P / 0F</span> / <span class="val-sentry">1P / 0F</span></td>
+            <td><span class="status-pill status-solved">Resolved</span> / <span class="status-pill status-solved">Resolved</span></td>
         </tr>
         
         <tr>
@@ -562,16 +535,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>221.5s / 324.4s</td>
-            <td>4,319 / 13,510</td>
             <td>
                 <span class="val-base">265,087</span><br>
                 <span class="val-sentry">320,602</span>
                 <span class="badge tok-more">+20.9%</span>
             </td>
-            <td><span class="val-sentry">8,993</span></td>
-            <td>
-                <span class="val-base">1,105 B</span> / <span class="val-sentry">1,101 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/40 (0%)</span> / <span class="status-pill status-failed">0/40 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -583,16 +554,14 @@
             </td>
             <td><span class="badge badge-zero">0</span></td>
             <td>626.9s / 778.1s</td>
-            <td>18,370 / 121,916</td>
             <td>
                 <span class="val-base">1,304,577</span><br>
                 <span class="val-sentry">1,465,282</span>
                 <span class="badge tok-more">+12.3%</span>
             </td>
-            <td><span class="val-sentry">97,446</span></td>
-            <td>
-                <span class="val-base">0 B</span> / <span class="val-sentry">729 B</span>
-            </td>
+            <td><span class="status-pill status-pending">0/0</span> / <span class="status-pill status-failed">0/2 (0%)</span></td>
+            <td><span class="status-pill status-pending">0/0</span> / <span class="status-pill status-failed">0/123 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 2F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -604,16 +573,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>236.4s / 376.6s</td>
-            <td>6,001 / 14,158</td>
             <td>
                 <span class="val-base">338,210</span><br>
                 <span class="val-sentry">305,627</span>
                 <span class="badge tok-saved">-9.6%</span>
             </td>
-            <td><span class="val-sentry">8,664</span></td>
-            <td>
-                <span class="val-base">1,691 B</span> / <span class="val-sentry">1,946 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/64 (0%)</span> / <span class="status-pill status-failed">0/64 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -625,16 +592,14 @@
             </td>
             <td><span class="badge badge-intrv">2</span></td>
             <td>479.9s / 614.7s</td>
-            <td>13,817 / 48,363</td>
             <td>
                 <span class="val-base">1,154,012</span><br>
                 <span class="val-sentry">946,285</span>
                 <span class="badge tok-saved">-18.0%</span>
             </td>
-            <td><span class="val-sentry">38,459</span></td>
-            <td>
-                <span class="val-base">1,619 B</span> / <span class="val-sentry">1,542 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-pending">0/0</span> / <span class="status-pill status-pending">0/0</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -646,16 +611,14 @@
             </td>
             <td><span class="badge badge-intrv">1</span></td>
             <td>458.6s / 269.3s</td>
-            <td>8,719 / 14,740</td>
             <td>
                 <span class="val-base">471,086</span><br>
                 <span class="val-sentry">326,557</span>
                 <span class="badge tok-saved">-30.7%</span>
             </td>
-            <td><span class="val-sentry">8,579</span></td>
-            <td>
-                <span class="val-base">3,786 B</span> / <span class="val-sentry">2,774 B</span>
-            </td>
+            <td><span class="status-pill status-failed">0/1 (0%)</span> / <span class="status-pill status-failed">0/1 (0%)</span></td>
+            <td><span class="status-pill status-failed">0/62 (0%)</span> / <span class="status-pill status-failed">0/62 (0%)</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 0F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -663,6 +626,7 @@
                 </table>
             </div>
         </div>
+
 
         <h2 style="font-size: 20px; margin-bottom: 16px; color:#fff;">Detailed Task Analysis & Diffs</h2>
         
@@ -674,7 +638,7 @@
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -697,10 +661,52 @@
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_trace</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/120 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 1 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_trace</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/120 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 1 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>sympy/printing/latex.py</code> (489 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>sympy/printing/latex.py, sympy/printing/tests/test_latex.py</code> (1295 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'sympy__sympy-15308-sentry')">Sentry Patch Diff</button>
@@ -773,7 +779,7 @@ index a0eb9779..f8fa2489 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -796,10 +802,52 @@ index a0eb9779..f8fa2489 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/3 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (3)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_ascii_validator (auth_tests.test_validators.UsernameValidatorsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_unicode_validator (auth_tests.test_validators.UsernameValidatorsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_help_text (auth_tests.test_validators.UserAttributeSimilarityValidatorTest)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/19 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/3 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (3)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_ascii_validator (auth_tests.test_validators.UsernameValidatorsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_unicode_validator (auth_tests.test_validators.UsernameValidatorsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_help_text (auth_tests.test_validators.UserAttributeSimilarityValidatorTest)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/19 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/contrib/auth/validators.py, tests/auth_tests/test_validators.py</code> (1936 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/contrib/auth/validators.py, tests/auth_tests/test_validators.py</code> (1961 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-11099-sentry')">Sentry Patch Diff</button>
@@ -912,7 +960,7 @@ index 1c2c6b4..a11cd16 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -935,10 +983,52 @@ index 1c2c6b4..a11cd16 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_sinc</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-partial">1/58 (2%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 2 passed, 1 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_sinc</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-partial">1/58 (2%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 2 passed, 1 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>sympy/simplify/tests/test_trigsimp.py, sympy/simplify/trigsimp.py</code> (1558 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>sympy/simplify/trigsimp.py</code> (736 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'sympy__sympy-11870-sentry')">Sentry Patch Diff</button>
@@ -1024,7 +1114,7 @@ index 34a3bab3f..eb4a960d8 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1047,10 +1137,36 @@ index 34a3bab3f..eb4a960d8 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
+                                
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> -</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
+                                
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> -</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/models/sql/query.py, tests/defer/tests.py</code> (1282 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/models/sql/query.py, tests/defer/tests.py</code> (1168 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-14667-sentry')">Sentry Patch Diff</button>
@@ -1127,7 +1243,7 @@ index 4058fad..cbe8762 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1150,10 +1266,52 @@ index 4058fad..cbe8762 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/2 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (2)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_json_display_for_field (admin_utils.tests.UtilsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_label_for_field (admin_utils.tests.UtilsTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/20 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/2 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (2)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_json_display_for_field (admin_utils.tests.UtilsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_label_for_field (admin_utils.tests.UtilsTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/20 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/contrib/admin/utils.py</code> (648 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/contrib/admin/utils.py</code> (904 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-12308-sentry')">Sentry Patch Diff</button>
@@ -1212,7 +1370,7 @@ index e4ddc8f017..4c079d29db 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1235,10 +1393,52 @@ index e4ddc8f017..4c079d29db 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_send_robust_fail (dispatch.tests.DispatcherTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/18 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_send_robust_fail (dispatch.tests.DispatcherTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/18 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/dispatch/dispatcher.py, tests/dispatch/tests.py</code> (1991 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/dispatch/dispatcher.py</code> (997 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-13768-sentry')">Sentry Patch Diff</button>
@@ -1344,7 +1544,7 @@ index 9b5482e..30d4897 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1367,10 +1567,52 @@ index 9b5482e..30d4897 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/2 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (2)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_boolean_expression_combined (expressions.tests.BasicExpressionsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_boolean_expression_combined_with_empty_Q (expressions.tests.BasicExpressionsTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/147 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/2 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (2)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_boolean_expression_combined (expressions.tests.BasicExpressionsTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_boolean_expression_combined_with_empty_Q (expressions.tests.BasicExpressionsTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/147 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/models/query_utils.py</code> (1459 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/models/query_utils.py</code> (843 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-14017-sentry')">Sentry Patch Diff</button>
@@ -1453,7 +1695,7 @@ index c957ffa..d4ee8df 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1476,10 +1718,52 @@ index c957ffa..d4ee8df 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/3 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (3)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_model_delete_returns_num_rows (delete.tests.DeletionTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/49 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/3 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (3)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_model_delete_returns_num_rows (delete.tests.DeletionTests)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/49 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/models/deletion.py</code> (1064 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/models/deletion.py, tests/delete/tests.py</code> (3036 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-12747-sentry')">Sentry Patch Diff</button>
@@ -1592,7 +1876,7 @@ index 16dff6a..9062343 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-solved">Resolved</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1615,10 +1899,52 @@ index 16dff6a..9062343 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-solved">Resolved</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-solved">1/1 (100%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_curly_matrix_symbol</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-solved">53/53 (100%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-solved">Resolved</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-solved">1/1 (100%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_curly_matrix_symbol</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-solved">53/53 (100%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>sympy/utilities/lambdify.py</code> (1751 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>sympy/utilities/lambdify.py</code> (2326 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'sympy__sympy-15011-sentry')">Sentry Patch Diff</button>
@@ -1734,7 +2060,7 @@ index f71bea25..c010c0eb 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1757,10 +2083,68 @@ index f71bea25..c010c0eb 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-partial">1/2 (50%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_mod_inverse</code></li>
+        </ul>
+        
+    </details>
+    
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_mod</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/76 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 1 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-partial">1/2 (50%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_mod_inverse</code></li>
+        </ul>
+        
+    </details>
+    
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_mod</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/76 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 1 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>sympy/core/mod.py, sympy/core/tests/test_arit.py</code> (1090 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>sympy/core/mod.py</code> (570 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'sympy__sympy-13177-sentry')">Sentry Patch Diff</button>
@@ -1826,7 +2210,7 @@ index 06d65203..8d9e06dd 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1849,10 +2233,52 @@ index 06d65203..8d9e06dd 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>testing/test_nodes.py::test_failure_with_changed_cwd</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/11 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>testing/test_nodes.py::test_failure_with_changed_cwd</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/11 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>src/_pytest/nodes.py</code> (1221 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>src/_pytest/nodes.py</code> (1115 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'pytest-dev__pytest-7220-sentry')">Sentry Patch Diff</button>
@@ -1933,7 +2359,7 @@ index 4a79bc8..cf01b1f 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -1956,10 +2382,52 @@ index 4a79bc8..cf01b1f 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>tests/test_environment_indexentries.py::test_create_single_index</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/7 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>tests/test_environment_indexentries.py::test_create_single_index</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/7 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>sphinx/environment/adapters/indexentries.py</code> (621 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>sphinx/environment/adapters/indexentries.py, tests/test_environment_indexentries.py</code> (1935 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'sphinx-doc__sphinx-7975-sentry')">Sentry Patch Diff</button>
@@ -2036,7 +2504,7 @@ index 5af2139..8df5250 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">2 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2059,10 +2527,52 @@ index 5af2139..8df5250 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/31 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/31 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/models/base.py</code> (622 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/models/base.py, tests/model_fields/tests.py</code> (1476 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-12284-sentry')">Sentry Patch Diff</button>
@@ -2137,7 +2647,7 @@ index 8ea6c05..3c3d14d 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2160,10 +2670,52 @@ index 8ea6c05..3c3d14d 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/30 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/30 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/models/fields/__init__.py</code> (1382 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/models/fields/__init__.py</code> (815 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-11999-sentry')">Sentry Patch Diff</button>
@@ -2228,7 +2780,7 @@ index ee45bb9..a7ccd81 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-solved">Resolved</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2251,10 +2803,52 @@ index ee45bb9..a7ccd81 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-solved">Resolved</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-solved">1/1 (100%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_solve_poly_system</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-solved">2/2 (100%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-solved">Resolved</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-solved">1/1 (100%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_solve_poly_system</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-solved">2/2 (100%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>sympy/solvers/polysys.py</code> (883 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>sympy/solvers/polysys.py, sympy/solvers/tests/test_polysys.py</code> (1407 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'sympy__sympy-22005-sentry')">Sentry Patch Diff</button>
@@ -2338,7 +2932,7 @@ index b9809fd..a0d0c31 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2361,10 +2955,52 @@ index b9809fd..a0d0c31 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/40 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/40 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/models/deletion.py, tests/delete/tests.py</code> (1105 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/models/deletion.py, tests/delete/tests.py</code> (1101 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-11179-sentry')">Sentry Patch Diff</button>
@@ -2443,7 +3079,7 @@ index 55eeb22..276a9bb 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-zero">0 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2466,10 +3102,44 @@ index 55eeb22..276a9bb 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-pending">0/0</span></div>
+                                
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">0/0</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/2 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (2)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_invalid_m2m_related_name (modeladmin.test_checks.ListDisplayTests.test_invalid_m2m_related_name)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_invalid_related_field (modeladmin.test_checks.ListDisplayTests.test_invalid_related_field)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/123 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 2 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>None</code> (0 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/contrib/admin/checks.py</code> (729 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-16816-sentry')">Sentry Patch Diff</button>
@@ -2509,7 +3179,7 @@ index 0fefe65..c51879d 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2532,10 +3202,52 @@ index 0fefe65..c51879d 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_memoryview_content (httpwrappers.tests.HttpResponseTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/64 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_memoryview_content (httpwrappers.tests.HttpResponseTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/64 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/http/response.py, tests/httpwrappers/tests.py</code> (1691 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/http/response.py, tests/httpwrappers/tests.py</code> (1946 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-11133-sentry')">Sentry Patch Diff</button>
@@ -2640,7 +3352,7 @@ index e6c6297..0c81cd0 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">2 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2663,10 +3375,52 @@ index e6c6297..0c81cd0 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_custom_test_name (backends.sqlite.test_creation.TestDbSignatureTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">0/0</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_custom_test_name (backends.sqlite.test_creation.TestDbSignatureTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">0/0</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/db/backends/sqlite3/creation.py, tests/backends/sqlite/tests.py</code> (1619 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/db/backends/sqlite3/creation.py, tests/backends/sqlite/tests.py</code> (1542 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-12113-sentry')">Sentry Patch Diff</button>
@@ -2762,7 +3516,7 @@ index 3447fb6..735b8e0 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
-                    <span class="badge badge-good">SWE-bench: Resolved</span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2785,10 +3539,52 @@ index 3447fb6..735b8e0 100644
                     </div>
                 </div>
 
+                <!-- Ground Truth Test Suite Execution Section -->
+                <div style="margin: 16px 0; background: rgba(0,0,0,0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_verbose_name_inline (admin_inlines.tests.TestVerboseNameInlineForms)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/62 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/1 (0%)</span></div>
+                                
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_verbose_name_inline (admin_inlines.tests.TestVerboseNameInlineForms)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/62 (0%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 0 failed, 0 skipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="files-summary">
                     <div><strong>Base Files Modified:</strong> <code>django/contrib/admin/options.py, tests/admin_inlines/tests.py</code> (3786 bytes)</div>
                     <div><strong>Sentry Files Modified:</strong> <code>django/contrib/admin/options.py, tests/admin_inlines/tests.py</code> (2774 bytes)</div>
                 </div>
+
 
                 <div class="tabs">
                     <button class="tab-btn active" onclick="switchTab(event, 'django__django-13710-sentry')">Sentry Patch Diff</button>

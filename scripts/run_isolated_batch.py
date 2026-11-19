@@ -202,6 +202,9 @@ def process_single_task(
                     results = {}
                 if instance_id in results and "base" in results[instance_id]:
                     results[instance_id]["base"]["resolved"] = ev.get("resolved", False)
+                    results[instance_id]["base"]["fail_to_pass"] = ev.get("fail_to_pass")
+                    results[instance_id]["base"]["pass_to_pass"] = ev.get("pass_to_pass")
+                    results[instance_id]["base"]["test_counts"] = ev.get("test_counts")
                 results_file.write_text(json.dumps(results, indent=2), encoding="utf-8")
 
         sentry_patch = task_data.get("sentry", {}).get("patch_file")
@@ -215,7 +218,11 @@ def process_single_task(
                     results = {}
                 if instance_id in results and "sentry" in results[instance_id]:
                     results[instance_id]["sentry"]["resolved"] = ev.get("resolved", False)
+                    results[instance_id]["sentry"]["fail_to_pass"] = ev.get("fail_to_pass")
+                    results[instance_id]["sentry"]["pass_to_pass"] = ev.get("pass_to_pass")
+                    results[instance_id]["sentry"]["test_counts"] = ev.get("test_counts")
                 results_file.write_text(json.dumps(results, indent=2), encoding="utf-8")
+
 
     # Generate updated HTML report
     with results_lock:

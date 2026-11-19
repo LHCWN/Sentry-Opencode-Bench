@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentry vs Base OpenCode Benchmark Report (DeepSeek Flash)</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --surface-color: #161b22;
+            --border-color: #30363d;
+            --text-color: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-color: #58a6ff;
+            --success-color: #2ea043;
+            --warning-color: #d29922;
+            --danger-color: #f85149;
+            --purple-color: #bc8cff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            padding: 30px 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+        h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+        .subtitle { font-size: 14px; color: var(--text-muted); }
+        
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .kpi-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .kpi-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .kpi-val { font-size: 26px; font-weight: 700; color: #fff; }
+        .kpi-desc { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        
+        .card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card-body { padding: 18px; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: rgba(255,255,255,0.03); color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+        
+        .badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-good { background: rgba(46,160,67,0.2); color: #3fb950; }
+        .badge-intrv { background: rgba(210,153,34,0.2); color: #e3b341; }
+        .badge-zero { background: rgba(139,148,158,0.2); color: #8b949e; }
+        .badge-neutral { background: rgba(139,148,158,0.2); color: #8b949e; }
+        .tok-saved { background: rgba(46,160,67,0.2); color: #3fb950; }
+        .tok-more { background: rgba(139,148,158,0.2); color: #8b949e; }
+        
+        .val-base { color: #79c0ff; font-weight: 600; }
+        .val-sentry { color: #d2a8ff; font-weight: 600; }
+        
+        .status-pill {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .status-solved { background: #238636; color: #fff; }
+        
+        .repo-badge { color: var(--text-muted); font-size: 11px; }
+        .task-title { font-size: 16px; font-weight: 700; color: #fff; margin-right: 8px; }
+        .repo-tag { font-size: 12px; color: var(--text-muted); }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .metric-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        .metric-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+        .metric-val { font-size: 13px; font-weight: 600; color: #fff; }
+        
+        .files-summary {
+            font-size: 13px;
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            background: rgba(88,166,255,0.05);
+            border-left: 3px solid var(--accent-color);
+            border-radius: 0 6px 6px 0;
+        }
+        .files-summary code { color: #e6edf3; background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+        
+        .tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+        .tab-btn {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        
+        .diff-block {
+            background: #090d13;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            font-size: 12px;
+            line-height: 1.45;
+            color: #c9d1d9;
+            max-height: 350px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sentry vs Base OpenCode Benchmark</h1>
+            <div class="subtitle">
+                Model: <strong>crazyrouter/deepseek-flash</strong> (variant: high, endpoint: api.lhcwn.pro/v1) &bull;
+                Supervisor: <strong>google/gemma-4-e4b</strong> (LM Studio) &bull;
+                Dataset: <strong>SWE-bench Lite (5 tasks)</strong> &bull;
+                Policy: W=5, H=10, Check on error
+            </div>
+        </header>
+
+        <div class="kpi-row">
+            <div class="kpi-card">
+                <div class="kpi-title">Evaluated Tasks</div>
+                <div class="kpi-val">5 / 5</div>
+                <div class="kpi-desc">10 total test sessions run</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Success / Patch Rate</div>
+                <div class="kpi-val" style="color: #3fb950;">100%</div>
+                <div class="kpi-desc">All tasks produced valid diffs</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Sentry Interventions</div>
+                <div class="kpi-val" style="color: #e3b341;">4</div>
+                <div class="kpi-desc">Across 4 tasks; 1 task 0 false alarms</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Peak Token Savings</div>
+                <div class="kpi-val" style="color: #3fb950;">-42.2%</div>
+                <div class="kpi-desc">pallets__flask-5063 (363k &rarr; 210k)</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <strong>Comparative Matrix (Base vs Sentry)</strong>
+            </div>
+            <div class="card-body" style="padding:0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Task / Repo</th>
+                            <th>Steps (Base/Sentry)</th>
+                            <th>Interv</th>
+                            <th>Elapsed (B/S)</th>
+                            <th>Net Tok (B/S)</th>
+                            <th>Billed Tok (Base/Sentry)</th>
+                            <th>Sentry Tok</th>
+                            <th>Patch Length</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+        <tr>
+            <td class="task-id"><strong>psf__requests-2317</strong><br><small class="repo-badge">psf/requests</small></td>
+            <td>
+                <span class="val-base">18</span> / <span class="val-sentry">21</span>
+                <span class="badge badge-neutral">+3</span>
+            </td>
+            <td><span class="badge badge-intrv">1</span></td>
+            <td>33.1s / 114.4s</td>
+            <td>2,505 / 15,627</td>
+            <td>
+                <span class="val-base">120,397</span><br>
+                <span class="val-sentry">245,806</span>
+                <span class="badge tok-more">+104.2%</span>
+            </td>
+            <td>12,409</td>
+            <td>
+                <span class="val-base">833 B</span> / <span class="val-sentry">1,365 B</span>
+            </td>
+            <td><span class="status-pill status-solved">Solved (100%)</span></td>
+        </tr>
+        
+        <tr>
+            <td class="task-id"><strong>pallets__flask-4045</strong><br><small class="repo-badge">pallets/flask</small></td>
+            <td>
+                <span class="val-base">25</span> / <span class="val-sentry">22</span>
+                <span class="badge badge-good">-3</span>
+            </td>
+            <td><span class="badge badge-intrv">1</span></td>
+            <td>81.1s / 82.5s</td>
+            <td>4,116 / 14,856</td>
+            <td>
+                <span class="val-base">279,549</span><br>
+                <span class="val-sentry">309,298</span>
+                <span class="badge tok-more">+10.6%</span>
+            </td>
+            <td>11,415</td>
+            <td>
+                <span class="val-base">6,335 B</span> / <span class="val-sentry">6,335 B</span>
+            </td>
+            <td><span class="status-pill status-solved">Solved (100%)</span></td>
+        </tr>
+        
+        <tr>
+            <td class="task-id"><strong>pallets__flask-4992</strong><br><small class="repo-badge">pallets/flask</small></td>
+            <td>
+                <span class="val-base">19</span> / <span class="val-sentry">17</span>
+                <span class="badge badge-good">-2</span>
+            </td>
+            <td><span class="badge badge-intrv">1</span></td>
+            <td>52.1s / 67.4s</td>
+            <td>4,365 / 10,987</td>
+            <td>
+                <span class="val-base">253,597</span><br>
+                <span class="val-sentry">181,031</span>
+                <span class="badge tok-saved">-28.6%</span>
+            </td>
+            <td>6,240</td>
+            <td>
+                <span class="val-base">3,381 B</span> / <span class="val-sentry">2,248 B</span>
+            </td>
+            <td><span class="status-pill status-solved">Solved (100%)</span></td>
+        </tr>
+        
+        <tr>
+            <td class="task-id"><strong>pallets__flask-5063</strong><br><small class="repo-badge">pallets/flask</small></td>
+            <td>
+                <span class="val-base">25</span> / <span class="val-sentry">25</span>
+                <span class="badge badge-good">=</span>
+            </td>
+            <td><span class="badge badge-intrv">1</span></td>
+            <td>156.0s / 183.9s</td>
+            <td>5,304 / 30,776</td>
+            <td>
+                <span class="val-base">363,600</span><br>
+                <span class="val-sentry">210,195</span>
+                <span class="badge tok-saved">-42.2%</span>
+            </td>
+            <td>25,704</td>
+            <td>
+                <span class="val-base">3,957 B</span> / <span class="val-sentry">3,957 B</span>
+            </td>
+            <td><span class="status-pill status-solved">Solved (100%)</span></td>
+        </tr>
+        
+        <tr>
+            <td class="task-id"><strong>psf__requests-1963</strong><br><small class="repo-badge">psf/requests</small></td>
+            <td>
+                <span class="val-base">11</span> / <span class="val-sentry">15</span>
+                <span class="badge badge-neutral">+4</span>
+            </td>
+            <td><span class="badge badge-zero">0</span></td>
+            <td>32.7s / 74.0s</td>
+            <td>3,291 / 13,742</td>
+            <td>
+                <span class="val-base">154,900</span><br>
+                <span class="val-sentry">227,778</span>
+                <span class="badge tok-more">+47.0%</span>
+            </td>
+            <td>10,798</td>
+            <td>
+                <span class="val-base">433 B</span> / <span class="val-sentry">363 B</span>
+            </td>
+            <td><span class="status-pill status-solved">Solved (100%)</span></td>
+        </tr>
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2 style="font-size: 20px; margin-bottom: 16px; color:#fff;">Detailed Task Analysis & Diffs</h2>
+        
+        <div class="card task-card" id="psf__requests-2317">
+            <div class="card-header">
+                <div>
+                    <span class="task-title">psf__requests-2317</span>
+                    <span class="repo-tag">psf/requests</span>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
+                    <span class="badge badge-good">100% Patch Success</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">Execution Steps</div>
+                        <div class="metric-val">Base: 18 | Sentry: 21</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Elapsed Time</div>
+                        <div class="metric-val">Base: 33.1s | Sentry: 114.4s</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Billed Tokens (Base / Sentry)</div>
+                        <div class="metric-val">120,397 vs 245,806</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Sentry Overhead</div>
+                        <div class="metric-val">12,409 tokens</div>
+                    </div>
+                </div>
+
+                <div class="files-summary">
+                    <div><strong>Base Files Modified:</strong> <code>requests/sessions.py</code> (833 bytes)</div>
+                    <div><strong>Sentry Files Modified:</strong> <code>requests/models.py, requests/sessions.py</code> (1365 bytes)</div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'psf__requests-2317-sentry')">Sentry Patch Diff</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'psf__requests-2317-base')">Base Patch Diff</button>
+                </div>
+                <div id="psf__requests-2317-sentry" class="tab-pane active">
+                    <pre class="diff-block"><code>diff --git a/requests/models.py b/requests/models.py
+index 3f6a4f92..06142646 100644
+--- a/requests/models.py
++++ b/requests/models.py
+@@ -329,7 +329,7 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
+         &quot;&quot;&quot;Prepares the given HTTP method.&quot;&quot;&quot;
+         self.method = method
+         if self.method is not None:
+-            self.method = self.method.upper()
++            self.method = to_native_string(self.method.upper())
+ 
+     def prepare_url(self, url, params):
+         &quot;&quot;&quot;Prepares the given HTTP URL.&quot;&quot;&quot;
+diff --git a/requests/sessions.py b/requests/sessions.py
+index d701ff2e..dfce7cf9 100644
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -13,7 +13,7 @@ from collections import Mapping
+ from datetime import datetime
+ 
+ from .auth import _basic_auth_str
+-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str
++from .compat import cookielib, OrderedDict, urljoin, urlparse
+ from .cookies import (
+     cookiejar_from_dict, extract_cookies_to_jar, RequestsCookieJar, merge_cookies)
+ from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT
+@@ -425,7 +425,7 @@ class Session(SessionRedirectMixin):
+             If Tuple, (&#x27;cert&#x27;, &#x27;key&#x27;) pair.
+         &quot;&quot;&quot;
+ 
+-        method = builtin_str(method)
++        method = to_native_string(method)
+ 
+         # Create the Request.
+         req = Request(
+</code></pre>
+                </div>
+                <div id="psf__requests-2317-base" class="tab-pane">
+                    <pre class="diff-block"><code>diff --git a/requests/sessions.py b/requests/sessions.py
+index d701ff2e..dfce7cf9 100644
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -13,7 +13,7 @@ from collections import Mapping
+ from datetime import datetime
+ 
+ from .auth import _basic_auth_str
+-from .compat import cookielib, OrderedDict, urljoin, urlparse, builtin_str
++from .compat import cookielib, OrderedDict, urljoin, urlparse
+ from .cookies import (
+     cookiejar_from_dict, extract_cookies_to_jar, RequestsCookieJar, merge_cookies)
+ from .models import Request, PreparedRequest, DEFAULT_REDIRECT_LIMIT
+@@ -425,7 +425,7 @@ class Session(SessionRedirectMixin):
+             If Tuple, (&#x27;cert&#x27;, &#x27;key&#x27;) pair.
+         &quot;&quot;&quot;
+ 
+-        method = builtin_str(method)
++        method = to_native_string(method)
+ 
+         # Create the Request.
+         req = Request(
+</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card task-card" id="pallets__flask-4045">
+            <div class="card-header">
+                <div>
+                    <span class="task-title">pallets__flask-4045</span>
+                    <span class="repo-tag">pallets/flask</span>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
+                    <span class="badge badge-good">100% Patch Success</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">Execution Steps</div>
+                        <div class="metric-val">Base: 25 | Sentry: 22</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Elapsed Time</div>
+                        <div class="metric-val">Base: 81.1s | Sentry: 82.5s</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Billed Tokens (Base / Sentry)</div>
+                        <div class="metric-val">279,549 vs 309,298</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Sentry Overhead</div>
+                        <div class="metric-val">11,415 tokens</div>
+                    </div>
+                </div>
+
+                <div class="files-summary">
+                    <div><strong>Base Files Modified:</strong> <code>CHANGES.rst, src/flask/blueprints.py, tests/test_basic.py, tests/test_blueprints.py</code> (6335 bytes)</div>
+                    <div><strong>Sentry Files Modified:</strong> <code>CHANGES.rst, src/flask/blueprints.py, tests/test_basic.py, tests/test_blueprints.py</code> (6335 bytes)</div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'pallets__flask-4045-sentry')">Sentry Patch Diff</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'pallets__flask-4045-base')">Base Patch Diff</button>
+                </div>
+                <div id="pallets__flask-4045-sentry" class="tab-pane active">
+                    <pre class="diff-block"><code>diff --git a/CHANGES.rst b/CHANGES.rst
+index d546dcab..c2a42443 100644
+--- a/CHANGES.rst
++++ b/CHANGES.rst
+@@ -15,6 +15,9 @@ Unreleased
+ -   Fix some types that weren&#x27;t available in Python 3.6.0. :issue:`4040`
+ -   Improve typing for ``send_file``, ``send_from_directory``, and
+     ``get_send_file_max_age``. :issue:`4044`, :pr:`4026`
++-   Show an error when a blueprint name contains a dot. The ``.`` has
++    special meaning, it is used to separate (nested) blueprint names and
++    the endpoint name. :issue:`4041`
+ 
+ 
+ Version 2.0.0
+diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py
+index 5fb84d86..823995f6 100644
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@ -188,6 +188,10 @@ class Blueprint(Scaffold):
+             template_folder=template_folder,
+             root_path=root_path,
+         )
++
++        if &quot;.&quot; in name:
++            raise ValueError(&quot;&#x27;name&#x27; may not contain a dot &#x27;.&#x27; character.&quot;)
++
+         self.name = name
+         self.url_prefix = url_prefix
+         self.subdomain = subdomain
+@@ -360,12 +364,12 @@ class Blueprint(Scaffold):
+         &quot;&quot;&quot;Like :meth:`Flask.add_url_rule` but for a blueprint.  The endpoint for
+         the :func:`url_for` function is prefixed with the name of the blueprint.
+         &quot;&quot;&quot;
+-        if endpoint:
+-            assert &quot;.&quot; not in endpoint, &quot;Blueprint endpoints should not contain dots&quot;
+-        if view_func and hasattr(view_func, &quot;__name__&quot;):
+-            assert (
+-                &quot;.&quot; not in view_func.__name__
+-            ), &quot;Blueprint view function name should not contain dots&quot;
++        if endpoint and &quot;.&quot; in endpoint:
++            raise ValueError(&quot;&#x27;endpoint&#x27; may not contain a dot &#x27;.&#x27; character.&quot;)
++
++        if view_func and hasattr(view_func, &quot;__name__&quot;) and &quot;.&quot; in view_func.__name__:
++            raise ValueError(&quot;&#x27;view_func&#x27; name may not contain a dot &#x27;.&#x27; character.&quot;)
++
+         self.record(lambda s: s.add_url_rule(rule, endpoint, view_func, **options))
+ 
+     def app_template_filter(self, name: t.Optional[str] = None) -&gt; t.Callable:
+diff --git a/tests/test_basic.py b/tests/test_basic.py
+index d6ec3fe4..7bdeba1e 100644
+--- a/tests/test_basic.py
++++ b/tests/test_basic.py
+@@ -1631,7 +1631,7 @@ def test_url_processors(app, client):
+ 
+ 
+ def test_inject_blueprint_url_defaults(app):
+-    bp = flask.Blueprint(&quot;foo.bar.baz&quot;, __name__, template_folder=&quot;template&quot;)
++    bp = flask.Blueprint(&quot;foo&quot;, __name__, template_folder=&quot;template&quot;)
+ 
+     @bp.url_defaults
+     def bp_defaults(endpoint, values):
+@@ -1644,12 +1644,12 @@ def test_inject_blueprint_url_defaults(app):
+     app.register_blueprint(bp)
+ 
+     values = dict()
+-    app.inject_url_defaults(&quot;foo.bar.baz.view&quot;, values)
++    app.inject_url_defaults(&quot;foo.view&quot;, values)
+     expected = dict(page=&quot;login&quot;)
+     assert values == expected
+ 
+     with app.test_request_context(&quot;/somepage&quot;):
+-        url = flask.url_for(&quot;foo.bar.baz.view&quot;)
++        url = flask.url_for(&quot;foo.view&quot;)
+     expected = &quot;/login&quot;
+     assert url == expected
+ 
+diff --git a/tests/test_blueprints.py b/tests/test_blueprints.py
+index b986ca02..cfcb43b3 100644
+--- a/tests/test_blueprints.py
++++ b/tests/test_blueprints.py
+@@ -1,5 +1,3 @@
+-import functools
+-
+ import pytest
+ from jinja2 import TemplateNotFound
+ from werkzeug.http import parse_cache_control_header
+@@ -253,28 +251,9 @@ def test_templates_list(test_apps):
+     assert templates == [&quot;admin/index.html&quot;, &quot;frontend/index.html&quot;]
+ 
+ 
+-def test_dotted_names(app, client):
+-    frontend = flask.Blueprint(&quot;myapp.frontend&quot;, __name__)
+-    backend = flask.Blueprint(&quot;myapp.backend&quot;, __name__)
+-
+-    @frontend.route(&quot;/fe&quot;)
+-    def frontend_index():
+-        return flask.url_for(&quot;myapp.backend.backend_index&quot;)
+-
+-    @frontend.route(&quot;/fe2&quot;)
+-    def frontend_page2():
+-        return flask.url_for(&quot;.frontend_index&quot;)
+-
+-    @backend.route(&quot;/be&quot;)
+-    def backend_index():
+-        return flask.url_for(&quot;myapp.frontend.frontend_index&quot;)
+-
+-    app.register_blueprint(frontend)
+-    app.register_blueprint(backend)
+-
+-    assert client.get(&quot;/fe&quot;).data.strip() == b&quot;/be&quot;
+-    assert client.get(&quot;/fe2&quot;).data.strip() == b&quot;/fe&quot;
+-    assert client.get(&quot;/be&quot;).data.strip() == b&quot;/fe&quot;
++def test_dotted_name_not_allowed(app, client):
++    with pytest.raises(ValueError):
++        flask.Blueprint(&quot;app.ui&quot;, __name__)
+ 
+ 
+ def test_dotted_names_from_app(app, client):
+@@ -343,62 +322,19 @@ def test_route_decorator_custom_endpoint(app, client):
+ def test_route_decorator_custom_endpoint_with_dots(app, client):
+     bp = flask.Blueprint(&quot;bp&quot;, __name__)
+ 
+-    @bp.route(&quot;/foo&quot;)
+-    def foo():
+-        return flask.request.endpoint
+-
+-    try:
+-
+-        @bp.route(&quot;/bar&quot;, endpoint=&quot;bar.bar&quot;)
+-        def foo_bar():
+-            return flask.request.endpoint
+-
+-    except AssertionError:
+-        pass
+-    else:
+-        raise AssertionError(&quot;expected AssertionError not raised&quot;)
+-
+-    try:
+-
+-        @bp.route(&quot;/bar/123&quot;, endpoint=&quot;bar.123&quot;)
+-        def foo_bar_foo():
+-            return flask.request.endpoint
+-
+-    except AssertionError:
+-        pass
+-    else:
+-        raise AssertionError(&quot;expected AssertionError not raised&quot;)
+-
+-    def foo_foo_foo():
+-        pass
+-
+-    pytest.raises(
+-        AssertionError,
+-        lambda: bp.add_url_rule(&quot;/bar/123&quot;, endpoint=&quot;bar.123&quot;, view_func=foo_foo_foo),
+-    )
+-
+-    pytest.raises(
+-        AssertionError, bp.route(&quot;/bar/123&quot;, endpoint=&quot;bar.123&quot;), lambda: None
+-    )
+-
+-    foo_foo_foo.__name__ = &quot;bar.123&quot;
++    with pytest.raises(ValueError):
++        bp.route(&quot;/&quot;, endpoint=&quot;a.b&quot;)(lambda: &quot;&quot;)
+ 
+-    pytest.raises(
+-        AssertionError, lambda: bp.add_url_rule(&quot;/bar/123&quot;, view_func=foo_foo_foo)
+-    )
++    with pytest.raises(ValueError):
++        bp.add_url_rule(&quot;/&quot;, endpoint=&quot;a.b&quot;)
+ 
+-    bp.add_url_rule(
+-        &quot;/bar/456&quot;, endpoint=&quot;foofoofoo&quot;, view_func=functools.partial(foo_foo_foo)
+-    )
++    def view():
++        return &quot;&quot;
+ 
+-    app.register_blueprint(bp, url_prefix=&quot;/py&quot;)
++    view.__name__ = &quot;a.b&quot;
+ 
+-    assert client.get(&quot;/py/foo&quot;).data == b&quot;bp.foo&quot;
+-    # The rule&#x27;s didn&#x27;t actually made it through
+-    rv = client.get(&quot;/py/bar&quot;)
+-    assert rv.status_code == 404
+-    rv = client.get(&quot;/py/bar/123&quot;)
+-    assert rv.status_code == 404
++    with pytest.raises(ValueError):
++        bp.add_url_rule(&quot;/&quot;, view_func=view)
+ 
+ 
+ def test_endpoint_decorator(app, client):
+</code></pre>
+                </div>
+                <div id="pallets__flask-4045-base" class="tab-pane">
+                    <pre class="diff-block"><code>diff --git a/CHANGES.rst b/CHANGES.rst
+index d546dcab..c2a42443 100644
+--- a/CHANGES.rst
++++ b/CHANGES.rst
+@@ -15,6 +15,9 @@ Unreleased
+ -   Fix some types that weren&#x27;t available in Python 3.6.0. :issue:`4040`
+ -   Improve typing for ``send_file``, ``send_from_directory``, and
+     ``get_send_file_max_age``. :issue:`4044`, :pr:`4026`
++-   Show an error when a blueprint name contains a dot. The ``.`` has
++    special meaning, it is used to separate (nested) blueprint names and
++    the endpoint name. :issue:`4041`
+ 
+ 
+ Version 2.0.0
+diff --git a/src/flask/blueprints.py b/src/flask/blueprints.py
+index 5fb84d86..823995f6 100644
+--- a/src/flask/blueprints.py
++++ b/src/flask/blueprints.py
+@@ -188,6 +188,10 @@ class Blueprint(Scaffold):
+             template_folder=template_folder,
+             root_path=root_path,
+         )
++
++        if &quot;.&quot; in name:
++            raise ValueError(&quot;&#x27;name&#x27; may not contain a dot &#x27;.&#x27; character.&quot;)
++
+         self.name = name
+         self.url_prefix = url_prefix
+         self.subdomain = subdomain
+@@ -360,12 +364,12 @@ class Blueprint(Scaffold):
+         &quot;&quot;&quot;Like :meth:`Flask.add_url_rule` but for a blueprint.  The endpoint for
+         the :func:`url_for` function is prefixed with the name of the blueprint.
+         &quot;&quot;&quot;
+-        if endpoint:
+-            assert &quot;.&quot; not in endpoint, &quot;Blueprint endpoints should not contain dots&quot;
+-        if view_func and hasattr(view_func, &quot;__name__&quot;):
+-            assert (
+-                &quot;.&quot; not in view_func.__name__
+-            ), &quot;Blueprint view function name should not contain dots&quot;
++        if endpoint and &quot;.&quot; in endpoint:
++            raise ValueError(&quot;&#x27;endpoint&#x27; may not contain a dot &#x27;.&#x27; character.&quot;)
++
++        if view_func and hasattr(view_func, &quot;__name__&quot;) and &quot;.&quot; in view_func.__name__:
++            raise ValueError(&quot;&#x27;view_func&#x27; name may not contain a dot &#x27;.&#x27; character.&quot;)
++
+         self.record(lambda s: s.add_url_rule(rule, endpoint, view_func, **options))
+ 
+     def app_template_filter(self, name: t.Optional[str] = None) -&gt; t.Callable:
+diff --git a/tests/test_basic.py b/tests/test_basic.py
+index d6ec3fe4..7bdeba1e 100644
+--- a/tests/test_basic.py
++++ b/tests/test_basic.py
+@@ -1631,7 +1631,7 @@ def test_url_processors(app, client):
+ 
+ 
+ def test_inject_blueprint_url_defaults(app):
+-    bp = flask.Blueprint(&quot;foo.bar.baz&quot;, __name__, template_folder=&quot;template&quot;)
++    bp = flask.Blueprint(&quot;foo&quot;, __name__, template_folder=&quot;template&quot;)
+ 
+     @bp.url_defaults
+     def bp_defaults(endpoint, values):
+@@ -1644,12 +1644,12 @@ def test_inject_blueprint_url_defaults(app):
+     app.register_blueprint(bp)
+ 
+     values = dict()
+-    app.inject_url_defaults(&quot;foo.bar.baz.view&quot;, values)
++    app.inject_url_defaults(&quot;foo.view&quot;, values)
+     expected = dict(page=&quot;login&quot;)
+     assert values == expected
+ 
+     with app.test_request_context(&quot;/somepage&quot;):
+-        url = flask.url_for(&quot;foo.bar.baz.view&quot;)
++        url = flask.url_for(&quot;foo.view&quot;)
+     expected = &quot;/login&quot;
+     assert url == expected
+ 
+diff --git a/tests/test_blueprints.py b/tests/test_blueprints.py
+index b986ca02..cfcb43b3 100644
+--- a/tests/test_blueprints.py
++++ b/tests/test_blueprints.py
+@@ -1,5 +1,3 @@
+-import functools
+-
+ import pytest
+ from jinja2 import TemplateNotFound
+ from werkzeug.http import parse_cache_control_header
+@@ -253,28 +251,9 @@ def test_templates_list(test_apps):
+     assert templates == [&quot;admin/index.html&quot;, &quot;frontend/index.html&quot;]
+ 
+ 
+-def test_dotted_names(app, client):
+-    frontend = flask.Blueprint(&quot;myapp.frontend&quot;, __name__)
+-    backend = flask.Blueprint(&quot;myapp.backend&quot;, __name__)
+-
+-    @frontend.route(&quot;/fe&quot;)
+-    def frontend_index():
+-        return flask.url_for(&quot;myapp.backend.backend_index&quot;)
+-
+-    @frontend.route(&quot;/fe2&quot;)
+-    def frontend_page2():
+-        return flask.url_for(&quot;.frontend_index&quot;)
+-
+-    @backend.route(&quot;/be&quot;)
+-    def backend_index():
+-        return flask.url_for(&quot;myapp.frontend.frontend_index&quot;)
+-
+-    app.register_blueprint(frontend)
+-    app.register_blueprint(backend)
+-
+-    assert client.get(&quot;/fe&quot;).data.strip() == b&quot;/be&quot;
+-    assert client.get(&quot;/fe2&quot;).data.strip() == b&quot;/fe&quot;
+-    assert client.get(&quot;/be&quot;).data.strip() == b&quot;/fe&quot;
++def test_dotted_name_not_allowed(app, client):
++    with pytest.raises(ValueError):
++        flask.Blueprint(&quot;app.ui&quot;, __name__)
+ 
+ 
+ def test_dotted_names_from_app(app, client):
+@@ -343,62 +322,19 @@ def test_route_decorator_custom_endpoint(app, client):
+ def test_route_decorator_custom_endpoint_with_dots(app, client):
+     bp = flask.Blueprint(&quot;bp&quot;, __name__)
+ 
+-    @bp.route(&quot;/foo&quot;)
+-    def foo():
+-        return flask.request.endpoint
+-
+-    try:
+-
+-        @bp.route(&quot;/bar&quot;, endpoint=&quot;bar.bar&quot;)
+-        def foo_bar():
+-            return flask.request.endpoint
+-
+-    except AssertionError:
+-        pass
+-    else:
+-        raise AssertionError(&quot;expected AssertionError not raised&quot;)
+-
+-    try:
+-
+-        @bp.route(&quot;/bar/123&quot;, endpoint=&quot;bar.123&quot;)
+-        def foo_bar_foo():
+-            return flask.request.endpoint
+-
+-    except AssertionError:
+-        pass
+-    else:
+-        raise AssertionError(&quot;expected AssertionError not raised&quot;)
+-
+-    def foo_foo_foo():
+-        pass
+-
+-    pytest.raises(
+-        AssertionError,
+-        lambda: bp.add_url_rule(&quot;/bar/123&quot;, endpoint=&quot;bar.123&quot;, view_func=foo_foo_foo),
+-    )
+-
+-    pytest.raises(
+-        AssertionError, bp.route(&quot;/bar/123&quot;, endpoint=&quot;bar.123&quot;), lambda: None
+-    )
+-
+-    foo_foo_foo.__name__ = &quot;bar.123&quot;
++    with pytest.raises(ValueError):
++        bp.route(&quot;/&quot;, endpoint=&quot;a.b&quot;)(lambda: &quot;&quot;)
+ 
+-    pytest.raises(
+-        AssertionError, lambda: bp.add_url_rule(&quot;/bar/123&quot;, view_func=foo_foo_foo)
+-    )
++    with pytest.raises(ValueError):
++        bp.add_url_rule(&quot;/&quot;, endpoint=&quot;a.b&quot;)
+ 
+-    bp.add_url_rule(
+-        &quot;/bar/456&quot;, endpoint=&quot;foofoofoo&quot;, view_func=functools.partial(foo_foo_foo)
+-    )
++    def view():
++        return &quot;&quot;
+ 
+-    app.register_blueprint(bp, url_prefix=&quot;/py&quot;)
++    view.__name__ = &quot;a.b&quot;
+ 
+-    assert client.get(&quot;/py/foo&quot;).data == b&quot;bp.foo&quot;
+-    # The rule&#x27;s didn&#x27;t actually made it through
+-    rv = client.get(&quot;/py/bar&quot;)
+-    assert rv.status_code == 404
+-    rv = client.get(&quot;/py/bar/123&quot;)
+-    assert rv.status_code == 404
++    with pytest.raises(ValueError):
++        bp.add_url_rule(&quot;/&quot;, view_func=view)
+ 
+ 
+ def test_endpoint_decorator(app, client):
+</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card task-card" id="pallets__flask-4992">
+            <div class="card-header">
+                <div>
+                    <span class="task-title">pallets__flask-4992</span>
+                    <span class="repo-tag">pallets/flask</span>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
+                    <span class="badge badge-good">100% Patch Success</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">Execution Steps</div>
+                        <div class="metric-val">Base: 19 | Sentry: 17</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Elapsed Time</div>
+                        <div class="metric-val">Base: 52.1s | Sentry: 67.4s</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Billed Tokens (Base / Sentry)</div>
+                        <div class="metric-val">253,597 vs 181,031</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Sentry Overhead</div>
+                        <div class="metric-val">6,240 tokens</div>
+                    </div>
+                </div>
+
+                <div class="files-summary">
+                    <div><strong>Base Files Modified:</strong> <code>CHANGES.rst, src/flask/config.py, tests/static/config.toml, tests/test_config.py</code> (3381 bytes)</div>
+                    <div><strong>Sentry Files Modified:</strong> <code>CHANGES.rst, src/flask/config.py</code> (2248 bytes)</div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'pallets__flask-4992-sentry')">Sentry Patch Diff</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'pallets__flask-4992-base')">Base Patch Diff</button>
+                </div>
+                <div id="pallets__flask-4992-sentry" class="tab-pane active">
+                    <pre class="diff-block"><code>diff --git a/CHANGES.rst b/CHANGES.rst
+index 88bfbc68..ca39f88a 100644
+--- a/CHANGES.rst
++++ b/CHANGES.rst
+@@ -33,6 +33,8 @@ Unreleased
+ -   Use modern packaging metadata with ``pyproject.toml`` instead of ``setup.cfg``.
+     :pr:`4947`
+ -   Ensure subdomains are applied with nested blueprints. :issue:`4834`
++-   ``Config.from_file`` takes a ``text`` parameter to control whether the
++    file is opened in text or binary mode. :issue:`4992`
+ 
+ 
+ Version 2.2.3
+diff --git a/src/flask/config.py b/src/flask/config.py
+index d4fc310f..569515ee 100644
+--- a/src/flask/config.py
++++ b/src/flask/config.py
+@@ -234,6 +234,7 @@ class Config(dict):
+         filename: str,
+         load: t.Callable[[t.IO[t.Any]], t.Mapping],
+         silent: bool = False,
++        text: bool = True,
+     ) -&gt; bool:
+         &quot;&quot;&quot;Update the values in the config from a file that is loaded
+         using the ``load`` parameter. The loaded data is passed to the
+@@ -244,8 +245,8 @@ class Config(dict):
+             import json
+             app.config.from_file(&quot;config.json&quot;, load=json.load)
+ 
+-            import toml
+-            app.config.from_file(&quot;config.toml&quot;, load=toml.load)
++            import tomllib
++            app.config.from_file(&quot;config.toml&quot;, load=tomllib.load, text=False)
+ 
+         :param filename: The path to the data file. This can be an
+             absolute path or relative to the config root path.
+@@ -254,14 +255,19 @@ class Config(dict):
+         :type load: ``Callable[[Reader], Mapping]`` where ``Reader``
+             implements a ``read`` method.
+         :param silent: Ignore the file if it doesn&#x27;t exist.
++        :param text: Open the file in text mode. If ``False``, the file is
++            opened in binary mode. Defaults to ``True``.
+         :return: ``True`` if the file was loaded successfully.
+ 
+         .. versionadded:: 2.0
++
++        .. versionchanged:: 2.3
++            The ``text`` parameter was added.
+         &quot;&quot;&quot;
+         filename = os.path.join(self.root_path, filename)
+ 
+         try:
+-            with open(filename) as f:
++            with open(filename, &quot;r&quot; if text else &quot;rb&quot;) as f:
+                 obj = load(f)
+         except OSError as e:
+             if silent and e.errno in (errno.ENOENT, errno.EISDIR):
+</code></pre>
+                </div>
+                <div id="pallets__flask-4992-base" class="tab-pane">
+                    <pre class="diff-block"><code>diff --git a/CHANGES.rst b/CHANGES.rst
+index 88bfbc68..8159ea45 100644
+--- a/CHANGES.rst
++++ b/CHANGES.rst
+@@ -33,6 +33,8 @@ Unreleased
+ -   Use modern packaging metadata with ``pyproject.toml`` instead of ``setup.cfg``.
+     :pr:`4947`
+ -   Ensure subdomains are applied with nested blueprints. :issue:`4834`
++-   ``config.from_file`` can use ``text=False`` to indicate that the parser wants a
++    binary file instead. :issue:`4989`
+ 
+ 
+ Version 2.2.3
+diff --git a/src/flask/config.py b/src/flask/config.py
+index d4fc310f..5e48be33 100644
+--- a/src/flask/config.py
++++ b/src/flask/config.py
+@@ -234,6 +234,7 @@ class Config(dict):
+         filename: str,
+         load: t.Callable[[t.IO[t.Any]], t.Mapping],
+         silent: bool = False,
++        text: bool = True,
+     ) -&gt; bool:
+         &quot;&quot;&quot;Update the values in the config from a file that is loaded
+         using the ``load`` parameter. The loaded data is passed to the
+@@ -244,8 +245,8 @@ class Config(dict):
+             import json
+             app.config.from_file(&quot;config.json&quot;, load=json.load)
+ 
+-            import toml
+-            app.config.from_file(&quot;config.toml&quot;, load=toml.load)
++            import tomllib
++            app.config.from_file(&quot;config.toml&quot;, load=tomllib.load, text=False)
+ 
+         :param filename: The path to the data file. This can be an
+             absolute path or relative to the config root path.
+@@ -254,14 +255,18 @@ class Config(dict):
+         :type load: ``Callable[[Reader], Mapping]`` where ``Reader``
+             implements a ``read`` method.
+         :param silent: Ignore the file if it doesn&#x27;t exist.
++        :param text: Open the file in text or binary mode.
+         :return: ``True`` if the file was loaded successfully.
+ 
++        .. versionchanged:: 2.3
++            The ``text`` parameter was added.
++
+         .. versionadded:: 2.0
+         &quot;&quot;&quot;
+         filename = os.path.join(self.root_path, filename)
+ 
+         try:
+-            with open(filename) as f:
++            with open(filename, &quot;r&quot; if text else &quot;rb&quot;) as f:
+                 obj = load(f)
+         except OSError as e:
+             if silent and e.errno in (errno.ENOENT, errno.EISDIR):
+diff --git a/tests/static/config.toml b/tests/static/config.toml
+new file mode 100644
+index 00000000..64acdbdd
+--- /dev/null
++++ b/tests/static/config.toml
+@@ -0,0 +1,2 @@
++TEST_KEY=&quot;foo&quot;
++SECRET_KEY=&quot;config&quot;
+diff --git a/tests/test_config.py b/tests/test_config.py
+index 76c5d272..5be539cd 100644
+--- a/tests/test_config.py
++++ b/tests/test_config.py
+@@ -30,13 +30,23 @@ def test_config_from_object():
+     common_object_test(app)
+ 
+ 
+-def test_config_from_file():
++def test_config_from_file_json():
+     app = flask.Flask(__name__)
+     current_dir = os.path.dirname(os.path.abspath(__file__))
+     app.config.from_file(os.path.join(current_dir, &quot;static&quot;, &quot;config.json&quot;), json.load)
+     common_object_test(app)
+ 
+ 
++def test_config_from_file_toml():
++    tomllib = pytest.importorskip(&quot;tomllib&quot;, reason=&quot;tomllib added in 3.11&quot;)
++    app = flask.Flask(__name__)
++    current_dir = os.path.dirname(os.path.abspath(__file__))
++    app.config.from_file(
++        os.path.join(current_dir, &quot;static&quot;, &quot;config.toml&quot;), tomllib.load, text=False
++    )
++    common_object_test(app)
++
++
+ def test_from_prefixed_env(monkeypatch):
+     monkeypatch.setenv(&quot;FLASK_STRING&quot;, &quot;value&quot;)
+     monkeypatch.setenv(&quot;FLASK_BOOL&quot;, &quot;true&quot;)
+</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card task-card" id="pallets__flask-5063">
+            <div class="card-header">
+                <div>
+                    <span class="task-title">pallets__flask-5063</span>
+                    <span class="repo-tag">pallets/flask</span>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-intrv">1 Sentry Intervention(s)</span>
+                    <span class="badge badge-good">100% Patch Success</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">Execution Steps</div>
+                        <div class="metric-val">Base: 25 | Sentry: 25</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Elapsed Time</div>
+                        <div class="metric-val">Base: 156.0s | Sentry: 183.9s</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Billed Tokens (Base / Sentry)</div>
+                        <div class="metric-val">363,600 vs 210,195</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Sentry Overhead</div>
+                        <div class="metric-val">25,704 tokens</div>
+                    </div>
+                </div>
+
+                <div class="files-summary">
+                    <div><strong>Base Files Modified:</strong> <code>CHANGES.rst, src/flask/cli.py</code> (3957 bytes)</div>
+                    <div><strong>Sentry Files Modified:</strong> <code>CHANGES.rst, src/flask/cli.py</code> (3957 bytes)</div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'pallets__flask-5063-sentry')">Sentry Patch Diff</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'pallets__flask-5063-base')">Base Patch Diff</button>
+                </div>
+                <div id="pallets__flask-5063-sentry" class="tab-pane active">
+                    <pre class="diff-block"><code>diff --git a/CHANGES.rst b/CHANGES.rst
+index e75719ee..ddd3f8cc 100644
+--- a/CHANGES.rst
++++ b/CHANGES.rst
+@@ -44,6 +44,8 @@ Unreleased
+     to set the domain, which modern browsers interpret as an exact match rather than
+     a subdomain match. Warnings about ``localhost`` and IP addresses are also removed.
+     :issue:`5051`
++-   The ``routes`` command shows each rule&#x27;s ``subdomain`` or ``host`` when domain
++    matching is in use. :issue:`5004`
+ 
+ 
+ Version 2.2.4
+diff --git a/src/flask/cli.py b/src/flask/cli.py
+index 37a15ff2..6cc36219 100644
+--- a/src/flask/cli.py
++++ b/src/flask/cli.py
+@@ -9,7 +9,7 @@ import sys
+ import traceback
+ import typing as t
+ from functools import update_wrapper
+-from operator import attrgetter
++from operator import itemgetter
+ 
+ import click
+ from click.core import ParameterSource
+@@ -989,49 +989,62 @@ def shell_command() -&gt; None:
+ @click.option(
+     &quot;--sort&quot;,
+     &quot;-s&quot;,
+-    type=click.Choice((&quot;endpoint&quot;, &quot;methods&quot;, &quot;rule&quot;, &quot;match&quot;)),
++    type=click.Choice((&quot;endpoint&quot;, &quot;methods&quot;, &quot;domain&quot;, &quot;rule&quot;, &quot;match&quot;)),
+     default=&quot;endpoint&quot;,
+     help=(
+-        &#x27;Method to sort routes by. &quot;match&quot; is the order that Flask will match &#x27;
+-        &quot;routes when dispatching a request.&quot;
++        &quot;Method to sort routes by. &#x27;match&#x27; is the order that Flask will match routes&quot;
++        &quot; when dispatching a request.&quot;
+     ),
+ )
+ @click.option(&quot;--all-methods&quot;, is_flag=True, help=&quot;Show HEAD and OPTIONS methods.&quot;)
+ @with_appcontext
+ def routes_command(sort: str, all_methods: bool) -&gt; None:
+     &quot;&quot;&quot;Show all registered routes with endpoints and methods.&quot;&quot;&quot;
+-
+     rules = list(current_app.url_map.iter_rules())
++
+     if not rules:
+         click.echo(&quot;No routes were registered.&quot;)
+         return
+ 
+-    ignored_methods = set(() if all_methods else (&quot;HEAD&quot;, &quot;OPTIONS&quot;))
++    ignored_methods = set() if all_methods else {&quot;HEAD&quot;, &quot;OPTIONS&quot;}
++    host_matching = current_app.url_map.host_matching
++    has_domain = any(rule.host if host_matching else rule.subdomain for rule in rules)
++    rows = []
+ 
+-    if sort in (&quot;endpoint&quot;, &quot;rule&quot;):
+-        rules = sorted(rules, key=attrgetter(sort))
+-    elif sort == &quot;methods&quot;:
+-        rules = sorted(rules, key=lambda rule: sorted(rule.methods))  # type: ignore
++    for rule in rules:
++        row = [
++            rule.endpoint,
++            &quot;, &quot;.join(sorted((rule.methods or set()) - ignored_methods)),
++        ]
+ 
+-    rule_methods = [
+-        &quot;, &quot;.join(sorted(rule.methods - ignored_methods))  # type: ignore
+-        for rule in rules
+-    ]
++        if has_domain:
++            row.append((rule.host if host_matching else rule.subdomain) or &quot;&quot;)
+ 
+-    headers = (&quot;Endpoint&quot;, &quot;Methods&quot;, &quot;Rule&quot;)
+-    widths = (
+-        max(len(rule.endpoint) for rule in rules),
+-        max(len(methods) for methods in rule_methods),
+-        max(len(rule.rule) for rule in rules),
+-    )
+-    widths = [max(len(h), w) for h, w in zip(headers, widths)]
+-    row = &quot;{{0:&lt;{0}}}  {{1:&lt;{1}}}  {{2:&lt;{2}}}&quot;.format(*widths)
++        row.append(rule.rule)
++        rows.append(row)
++
++    headers = [&quot;Endpoint&quot;, &quot;Methods&quot;]
++    sorts = [&quot;endpoint&quot;, &quot;methods&quot;]
++
++    if has_domain:
++        headers.append(&quot;Host&quot; if host_matching else &quot;Subdomain&quot;)
++        sorts.append(&quot;domain&quot;)
++
++    headers.append(&quot;Rule&quot;)
++    sorts.append(&quot;rule&quot;)
++
++    try:
++        rows.sort(key=itemgetter(sorts.index(sort)))
++    except ValueError:
++        pass
+ 
+-    click.echo(row.format(*headers).strip())
+-    click.echo(row.format(*(&quot;-&quot; * width for width in widths)))
++    rows.insert(0, headers)
++    widths = [max(len(row[i]) for row in rows) for i in range(len(headers))]
++    rows.insert(1, [&quot;-&quot; * w for w in widths])
++    template = &quot;  &quot;.join(f&quot;{{{i}:&lt;{w}}}&quot; for i, w in enumerate(widths))
+ 
+-    for rule, methods in zip(rules, rule_methods):
+-        click.echo(row.format(rule.endpoint, methods, rule.rule).rstrip())
++    for row in rows:
++        click.echo(template.format(*row))
+ 
+ 
+ cli = FlaskGroup(
+</code></pre>
+                </div>
+                <div id="pallets__flask-5063-base" class="tab-pane">
+                    <pre class="diff-block"><code>diff --git a/CHANGES.rst b/CHANGES.rst
+index e75719ee..ddd3f8cc 100644
+--- a/CHANGES.rst
++++ b/CHANGES.rst
+@@ -44,6 +44,8 @@ Unreleased
+     to set the domain, which modern browsers interpret as an exact match rather than
+     a subdomain match. Warnings about ``localhost`` and IP addresses are also removed.
+     :issue:`5051`
++-   The ``routes`` command shows each rule&#x27;s ``subdomain`` or ``host`` when domain
++    matching is in use. :issue:`5004`
+ 
+ 
+ Version 2.2.4
+diff --git a/src/flask/cli.py b/src/flask/cli.py
+index 37a15ff2..6cc36219 100644
+--- a/src/flask/cli.py
++++ b/src/flask/cli.py
+@@ -9,7 +9,7 @@ import sys
+ import traceback
+ import typing as t
+ from functools import update_wrapper
+-from operator import attrgetter
++from operator import itemgetter
+ 
+ import click
+ from click.core import ParameterSource
+@@ -989,49 +989,62 @@ def shell_command() -&gt; None:
+ @click.option(
+     &quot;--sort&quot;,
+     &quot;-s&quot;,
+-    type=click.Choice((&quot;endpoint&quot;, &quot;methods&quot;, &quot;rule&quot;, &quot;match&quot;)),
++    type=click.Choice((&quot;endpoint&quot;, &quot;methods&quot;, &quot;domain&quot;, &quot;rule&quot;, &quot;match&quot;)),
+     default=&quot;endpoint&quot;,
+     help=(
+-        &#x27;Method to sort routes by. &quot;match&quot; is the order that Flask will match &#x27;
+-        &quot;routes when dispatching a request.&quot;
++        &quot;Method to sort routes by. &#x27;match&#x27; is the order that Flask will match routes&quot;
++        &quot; when dispatching a request.&quot;
+     ),
+ )
+ @click.option(&quot;--all-methods&quot;, is_flag=True, help=&quot;Show HEAD and OPTIONS methods.&quot;)
+ @with_appcontext
+ def routes_command(sort: str, all_methods: bool) -&gt; None:
+     &quot;&quot;&quot;Show all registered routes with endpoints and methods.&quot;&quot;&quot;
+-
+     rules = list(current_app.url_map.iter_rules())
++
+     if not rules:
+         click.echo(&quot;No routes were registered.&quot;)
+         return
+ 
+-    ignored_methods = set(() if all_methods else (&quot;HEAD&quot;, &quot;OPTIONS&quot;))
++    ignored_methods = set() if all_methods else {&quot;HEAD&quot;, &quot;OPTIONS&quot;}
++    host_matching = current_app.url_map.host_matching
++    has_domain = any(rule.host if host_matching else rule.subdomain for rule in rules)
++    rows = []
+ 
+-    if sort in (&quot;endpoint&quot;, &quot;rule&quot;):
+-        rules = sorted(rules, key=attrgetter(sort))
+-    elif sort == &quot;methods&quot;:
+-        rules = sorted(rules, key=lambda rule: sorted(rule.methods))  # type: ignore
++    for rule in rules:
++        row = [
++            rule.endpoint,
++            &quot;, &quot;.join(sorted((rule.methods or set()) - ignored_methods)),
++        ]
+ 
+-    rule_methods = [
+-        &quot;, &quot;.join(sorted(rule.methods - ignored_methods))  # type: ignore
+-        for rule in rules
+-    ]
++        if has_domain:
++            row.append((rule.host if host_matching else rule.subdomain) or &quot;&quot;)
+ 
+-    headers = (&quot;Endpoint&quot;, &quot;Methods&quot;, &quot;Rule&quot;)
+-    widths = (
+-        max(len(rule.endpoint) for rule in rules),
+-        max(len(methods) for methods in rule_methods),
+-        max(len(rule.rule) for rule in rules),
+-    )
+-    widths = [max(len(h), w) for h, w in zip(headers, widths)]
+-    row = &quot;{{0:&lt;{0}}}  {{1:&lt;{1}}}  {{2:&lt;{2}}}&quot;.format(*widths)
++        row.append(rule.rule)
++        rows.append(row)
++
++    headers = [&quot;Endpoint&quot;, &quot;Methods&quot;]
++    sorts = [&quot;endpoint&quot;, &quot;methods&quot;]
++
++    if has_domain:
++        headers.append(&quot;Host&quot; if host_matching else &quot;Subdomain&quot;)
++        sorts.append(&quot;domain&quot;)
++
++    headers.append(&quot;Rule&quot;)
++    sorts.append(&quot;rule&quot;)
++
++    try:
++        rows.sort(key=itemgetter(sorts.index(sort)))
++    except ValueError:
++        pass
+ 
+-    click.echo(row.format(*headers).strip())
+-    click.echo(row.format(*(&quot;-&quot; * width for width in widths)))
++    rows.insert(0, headers)
++    widths = [max(len(row[i]) for row in rows) for i in range(len(headers))]
++    rows.insert(1, [&quot;-&quot; * w for w in widths])
++    template = &quot;  &quot;.join(f&quot;{{{i}:&lt;{w}}}&quot; for i, w in enumerate(widths))
+ 
+-    for rule, methods in zip(rules, rule_methods):
+-        click.echo(row.format(rule.endpoint, methods, rule.rule).rstrip())
++    for row in rows:
++        click.echo(template.format(*row))
+ 
+ 
+ cli = FlaskGroup(
+</code></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card task-card" id="psf__requests-1963">
+            <div class="card-header">
+                <div>
+                    <span class="task-title">psf__requests-1963</span>
+                    <span class="repo-tag">psf/requests</span>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-zero">0 Sentry Intervention(s)</span>
+                    <span class="badge badge-good">100% Patch Success</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <div class="metric-label">Execution Steps</div>
+                        <div class="metric-val">Base: 11 | Sentry: 15</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Elapsed Time</div>
+                        <div class="metric-val">Base: 32.7s | Sentry: 74.0s</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Billed Tokens (Base / Sentry)</div>
+                        <div class="metric-val">154,900 vs 227,778</div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-label">Sentry Overhead</div>
+                        <div class="metric-val">10,798 tokens</div>
+                    </div>
+                </div>
+
+                <div class="files-summary">
+                    <div><strong>Base Files Modified:</strong> <code>requests/sessions.py</code> (433 bytes)</div>
+                    <div><strong>Sentry Files Modified:</strong> <code>requests/sessions.py</code> (363 bytes)</div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab(event, 'psf__requests-1963-sentry')">Sentry Patch Diff</button>
+                    <button class="tab-btn" onclick="switchTab(event, 'psf__requests-1963-base')">Base Patch Diff</button>
+                </div>
+                <div id="psf__requests-1963-sentry" class="tab-pane active">
+                    <pre class="diff-block"><code>diff --git a/requests/sessions.py b/requests/sessions.py
+index 425db22c..5162d269 100644
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -181,6 +181,7 @@ class SessionRedirectMixin(object):
+             extract_cookies_to_jar(self.cookies, prepared_request, resp.raw)
+ 
+             i += 1
++            req = prepared_request
+             yield resp
+ 
+ 
+</code></pre>
+                </div>
+                <div id="psf__requests-1963-base" class="tab-pane">
+                    <pre class="diff-block"><code>diff --git a/requests/sessions.py b/requests/sessions.py
+index 425db22c..e1a2ed39 100644
+--- a/requests/sessions.py
++++ b/requests/sessions.py
+@@ -180,6 +180,9 @@ class SessionRedirectMixin(object):
+ 
+             extract_cookies_to_jar(self.cookies, prepared_request, resp.raw)
+ 
++            # https://github.com/kennethreitz/requests/issues/1963
++            req = prepared_request
++
+             i += 1
+             yield resp
+ 
+</code></pre>
+                </div>
+            </div>
+        </div>
+        
+
+    </div>
+
+    <script>
+        function switchTab(evt, tabId) {
+            const card = evt.target.closest('.card-body');
+            card.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            card.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            evt.target.classList.add('active');
+            const pane = document.getElementById(tabId);
+            if (pane) pane.classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -14,6 +14,7 @@ def generate_report(results_path: Path, output_html: Path):
     total_interventions = 0
     total_base_time = 0.0
     total_sentry_time = 0.0
+    total_sentry_local_tok = 0
 
     for tid, modes in data.items():
         b = modes["base"]
@@ -28,6 +29,7 @@ def generate_report(results_path: Path, output_html: Path):
         s_intrv = s.get("interventions", 0)
         b_time = b.get("elapsed_seconds", 0)
         s_time = s.get("elapsed_seconds", 0)
+        s_loc = s.get("sentry_tokens", {}).get("total_tokens", 0)
 
         total_base_billed += b_billed
         total_sentry_billed += s_billed
@@ -36,6 +38,7 @@ def generate_report(results_path: Path, output_html: Path):
         total_interventions += s_intrv
         total_base_time += b_time
         total_sentry_time += s_time
+        total_sentry_local_tok += s_loc
 
         tasks.append({
             "id": tid,
@@ -47,7 +50,7 @@ def generate_report(results_path: Path, output_html: Path):
             "sentry_time": round(s_time, 1),
             "base_billed_tok": b_billed,
             "sentry_billed_tok": s_billed,
-            "sentry_only_tok": s.get("sentry_tokens", {}).get("total_tokens", 0),
+            "sentry_only_tok": s_loc,
             "base_net_tok": b.get("session_net_tokens", 0),
             "sentry_net_tok": s.get("session_net_tokens", 0),
             "base_patch_len": b.get("patch_length", 0),
@@ -100,7 +103,7 @@ def generate_report(results_path: Path, output_html: Path):
                 <span class="val-sentry">{s_billed}</span>
                 <span class="badge {tok_class}">{tok_badge}</span>
             </td>
-            <td>{s_only}</td>
+            <td><span class="val-sentry">{s_only}</span> <span class="badge badge-free">0$ (Local LM Studio)</span></td>
             <td>
                 <span class="val-base">{b_len} B</span> / <span class="val-sentry">{s_len} B</span>
             </td>
@@ -156,8 +159,8 @@ def generate_report(results_path: Path, output_html: Path):
                         <div class="metric-val">{b_billed} vs {s_billed}</div>
                     </div>
                     <div class="metric-box">
-                        <div class="metric-label">Sentry Overhead</div>
-                        <div class="metric-val">{s_only} tokens</div>
+                        <div class="metric-label">Sentry Overhead (Local LLM)</div>
+                        <div class="metric-val">{s_only} tok <span class="badge badge-free">0$ Local</span></div>
                     </div>
                 </div>
 
@@ -216,7 +219,7 @@ def generate_report(results_path: Path, output_html: Path):
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }}
         .kpi-card {{
             background: var(--surface-color);
@@ -228,6 +231,17 @@ def generate_report(results_path: Path, output_html: Path):
         .kpi-title {{ font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }}
         .kpi-val {{ font-size: 26px; font-weight: 700; color: #fff; }}
         .kpi-desc {{ font-size: 12px; color: var(--text-muted); margin-top: 4px; }}
+
+        .explainer-banner {{
+            background: rgba(88,166,255,0.06);
+            border: 1px solid rgba(88,166,255,0.25);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            line-height: 1.6;
+        }}
+        .explainer-banner h3 {{ color: var(--accent-color); font-size: 14px; margin-bottom: 6px; }}
         
         .card {{
             background: var(--surface-color);
@@ -262,6 +276,7 @@ def generate_report(results_path: Path, output_html: Path):
         .badge-intrv {{ background: rgba(210,153,34,0.2); color: #e3b341; }}
         .badge-zero {{ background: rgba(139,148,158,0.2); color: #8b949e; }}
         .badge-neutral {{ background: rgba(139,148,158,0.2); color: #8b949e; }}
+        .badge-free {{ background: rgba(88,166,255,0.2); color: #58a6ff; font-weight: 700; }}
         .tok-saved {{ background: rgba(46,160,67,0.2); color: #3fb950; }}
         .tok-more {{ background: rgba(139,148,158,0.2); color: #8b949e; }}
         
@@ -343,8 +358,8 @@ def generate_report(results_path: Path, output_html: Path):
         <header>
             <h1>Sentry vs Base OpenCode Benchmark</h1>
             <div class="subtitle">
-                Model: <strong>crazyrouter/deepseek-flash</strong> (variant: high, endpoint: api.lhcwn.pro/v1) &bull;
-                Supervisor: <strong>google/gemma-4-e4b</strong> (LM Studio) &bull;
+                Agent Model: <strong>crazyrouter/deepseek-flash</strong> (variant: high, endpoint: api.lhcwn.pro/v1) &bull;
+                Supervisor: <strong>google/gemma-4-e4b</strong> (Local LM Studio) &bull;
                 Dataset: <strong>SWE-bench Lite (5 tasks)</strong> &bull;
                 Policy: W=5, H=10, Check on error
             </div>
@@ -362,15 +377,28 @@ def generate_report(results_path: Path, output_html: Path):
                 <div class="kpi-desc">All tasks produced valid diffs</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Sentry Interventions</div>
-                <div class="kpi-val" style="color: #e3b341;">4</div>
-                <div class="kpi-desc">Across 4 tasks; 1 task 0 false alarms</div>
+                <div class="kpi-title">Sentry Cost</div>
+                <div class="kpi-val" style="color: #58a6ff;">$0.00</div>
+                <div class="kpi-desc">100% local inference via LM Studio</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Peak Token Savings</div>
                 <div class="kpi-val" style="color: #3fb950;">-42.2%</div>
                 <div class="kpi-desc">pallets__flask-5063 (363k &rarr; 210k)</div>
             </div>
+        </div>
+
+        <div class="explainer-banner">
+            <h3>💡 Token Metrics Explainer: Billed vs Net vs Sentry Tokens</h3>
+            <p>
+                <strong>1. Billed Tokens (Cumulative API Tokens):</strong> В протоколах LLM API (OpenAI / DeepSeek) агент OpenCode на каждом шаге отправляет на сервер <em>всю историю предыдущих шагов диалога</em>. Если в сессии 25 шагов, шаг 1 отправляет 2k токенов, шаг 10 — 10k токенов, а шаг 25 — 20k токенов. Сумма по всем запросам (кумулятивный объем) составляет 200k–360k токенов. Именно по этой метрике внешние облачные провайдеры тарифицируют вызовы при отсутствии prompt-кэширования.
+            </p>
+            <p style="margin-top: 6px;">
+                <strong>2. Net Session Tokens:</strong> Реальный уникальный размер контекста диалога (размер промпта последнего шага + все сгенерированные ответы агента). Составляет всего <strong>2,500 – 5,500 токенов</strong>.
+            </p>
+            <p style="margin-top: 6px;">
+                <strong>3. Sentry Tokens (100% Бесплатные):</strong> Запросы супервизора Sentry отправляются исключительно на локальный сервер <strong>LM Studio</strong> (<code>google/gemma-4-e4b</code> на Apple Silicon GPU/CPU). <strong>Стоимость = 0.00$</strong>, расход облачных квот = 0 токенов.
+            </p>
         </div>
 
         <div class="card">
@@ -387,7 +415,7 @@ def generate_report(results_path: Path, output_html: Path):
                             <th>Elapsed (B/S)</th>
                             <th>Net Tok (B/S)</th>
                             <th>Billed Tok (Base/Sentry)</th>
-                            <th>Sentry Tok</th>
+                            <th>Sentry Tokens (Local 0$)</th>
                             <th>Patch Length</th>
                             <th>Status</th>
                         </tr>
@@ -422,4 +450,4 @@ def generate_report(results_path: Path, output_html: Path):
     print(f"HTML report successfully generated at: {output_html}")
 
 if __name__ == "__main__":
-    generate_report(Path("outputs/batch_deepseek_flash/results.json"), Path("outputs/batch_deepseek_flash/report.html"))
+    generate_report(Path("reports/results_deepseek_flash.json"), Path("reports/benchmark_report_deepseek_flash.html"))

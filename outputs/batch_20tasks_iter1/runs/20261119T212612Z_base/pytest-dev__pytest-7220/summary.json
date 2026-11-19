@@ -1,0 +1,30 @@
+{
+  "instance_id": "pytest-dev__pytest-7220",
+  "repo": "pytest-dev/pytest",
+  "use_sentry": false,
+  "opencode_model": "crazyrouter/deepseek-flash",
+  "sentry_model": null,
+  "elapsed_seconds": 136.4367127418518,
+  "total_steps": 44,
+  "interventions": 0,
+  "patch_length": 1221,
+  "patch_file": "outputs/batch_20tasks_iter1/runs/20261119T212612Z_base/pytest-dev__pytest-7220/model_patch.diff",
+  "opencode_tokens": {
+    "cumulative_input": 22749,
+    "cumulative_output": 4710,
+    "cumulative_reasoning": 4303,
+    "cumulative_total": 981522,
+    "max_context_window": 2063,
+    "last_step_input": 690,
+    "total_generated": 9013,
+    "net_session_tokens": 9703,
+    "input": 22749,
+    "output": 4710,
+    "reasoning": 4303,
+    "total": 981522
+  },
+  "sentry_tokens": {},
+  "cumulative_tokens": 981522,
+  "session_net_tokens": 9703,
+  "total_tokens": 981522
+}

@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     ca-certificates \
     procps \
+    iptables \
+    iproute2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js 20 LTS
@@ -40,7 +42,13 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     tomli \
     requests \
     pandas \
-    numpy
+    numpy \
+    mpmath \
+    asgiref \
+    sqlparse
+
+# Backward compatibility for legacy python code (collections ABCs in Python 3.11)
+RUN python3 -c "import site, pathlib; p = pathlib.Path(site.getsitepackages()[0]) / 'sitecustomize.py'; p.write_text('import collections, collections.abc\nfor attr in [\"MutableSet\", \"MutableMapping\", \"MutableSequence\", \"Mapping\", \"Sequence\", \"Set\", \"Iterable\", \"Callable\", \"Iterator\", \"Container\", \"Hashable\"]:\n    if not hasattr(collections, attr) and hasattr(collections.abc, attr):\n        setattr(collections, attr, getattr(collections.abc, attr))\n')"
 
 # Copy project files
 COPY pyproject.toml /app/

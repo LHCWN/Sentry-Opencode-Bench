@@ -32,7 +32,7 @@ def run_batch(
     opencode_bin: str | None = None,
     sentry_config_path: str = "configs/providers/lmstudio.yaml",
     output_dir: Path = Path("outputs/batch_benchmark"),
-    max_steps_per_task: int = 25,
+    max_steps_per_task: int = 60,
     check_interval: int = 5,
     check_on_error: bool = True,
     rerun_failed: bool = False,
@@ -193,7 +193,7 @@ def main():
     parser.add_argument("--variant", type=str, default=None, help="Reasoning effort variant for OpenCode (e.g. low, high, max)")
     parser.add_argument("--key", type=str, default=None, help="OpenRouter Key")
     parser.add_argument("--sentry-config", type=str, default="configs/providers/lmstudio.yaml", help="Sentry config")
-    parser.add_argument("--max-steps", type=int, default=25, help="Max steps per task")
+    parser.add_argument("--max-steps", type=int, default=60, help="Max steps per task")
     parser.add_argument("--opencode-bin", type=str, default=None, help="Explicit path to opencode binary")
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/batch_benchmark"), help="Directory for benchmark results")
     parser.add_argument("--rerun-failed", action="store_true", help="Re-run tasks that previously failed or had 0 steps")

@@ -1,0 +1,30 @@
+{
+  "instance_id": "django__django-12308",
+  "repo": "django/django",
+  "use_sentry": false,
+  "opencode_model": "crazyrouter/deepseek-flash",
+  "sentry_model": null,
+  "elapsed_seconds": 472.3251528739929,
+  "total_steps": 37,
+  "interventions": 0,
+  "patch_length": 648,
+  "patch_file": "outputs/batch_20tasks_iter1/runs/20261119T205336Z_base/django__django-12308/model_patch.diff",
+  "opencode_tokens": {
+    "cumulative_input": 14434,
+    "cumulative_output": 3550,
+    "cumulative_reasoning": 10746,
+    "cumulative_total": 603322,
+    "max_context_window": 2248,
+    "last_step_input": 260,
+    "total_generated": 14296,
+    "net_session_tokens": 14556,
+    "input": 14434,
+    "output": 3550,
+    "reasoning": 10746,
+    "total": 603322
+  },
+  "sentry_tokens": {},
+  "cumulative_tokens": 603322,
+  "session_net_tokens": 14556,
+  "total_tokens": 603322
+}

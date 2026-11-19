@@ -221,6 +221,7 @@ def evaluate_patch(
         )
 
         repo = task.get("repo", "")
+        test_files = [f for f in re.findall(r"diff --git a/(.*?) b/", test_patch) if f.endswith(".py")]
         if repo.startswith("django/"):
             converted_tests = []
             for t in fail_to_pass:
@@ -233,11 +234,11 @@ def evaluate_patch(
             if runtests_script.exists():
                 cmd = [sys.executable, "tests/runtests.py", "--settings=test_sqlite", "-v", "1"] + converted_tests
             else:
-                cmd = [sys.executable, "-c", shimmed_runner, "-k", " or ".join([t.split(" ")[0] for t in fail_to_pass])]
+                cmd = [sys.executable, "-c", shimmed_runner] + test_files + ["-k", " or ".join([t.split(" ")[0] for t in fail_to_pass])]
         elif repo.startswith("sympy/"):
-            cmd = [sys.executable, "-c", shimmed_runner, "-k", " or ".join(fail_to_pass)]
+            cmd = [sys.executable, "-c", shimmed_runner] + test_files + ["-k", " or ".join(fail_to_pass)]
         else:
-            test_args = ["-v"] + fail_to_pass
+            test_args = ["-v"] + test_files + (["-k", " or ".join(fail_to_pass)] if fail_to_pass else [])
             cmd = [sys.executable, "-c", shimmed_runner] + test_args
 
         env = os.environ.copy()

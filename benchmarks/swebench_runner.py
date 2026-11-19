@@ -86,7 +86,12 @@ def purge_git_future_history(work_dir: Path) -> None:
     subprocess.run(["git", "config", "--local", "protocol.git.allow", "never"], cwd=str(work_dir), check=False)
 
 
-def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path, depth: int = 50) -> Path:
+def prepare_repo_workspace(
+    instance: dict[str, Any],
+    base_dir: Path | None = None,
+    work_dir: Path | None = None,
+    depth: int = 50,
+) -> Path:
     """Prepares workspace by shallow-fetching only the required base commit (and up to depth commits back).
     This eliminates massive downloads (reduces gigabytes to megabytes), speeds up setup to ~5-10s,
     and guarantees zero future commit leaks.
@@ -94,7 +99,12 @@ def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path, depth: int 
     repo_name = instance["repo"]  # e.g., "django/django", "sympy/sympy"
     instance_id = instance["instance_id"]
     base_commit = instance["base_commit"]
-    work_dir = base_dir / instance_id
+    if work_dir is None:
+        if base_dir is None:
+            base_dir = Path("workspaces")
+        work_dir = base_dir / instance_id
+    else:
+        work_dir = Path(work_dir)
     git_url = f"https://github.com/{repo_name}.git"
 
     def setup_shallow_repo() -> None:
@@ -191,9 +201,10 @@ def run_instance(
     openrouter_key: str | None = None,
     opencode_bin: str | None = None,
     workspaces_dir: Path = Path("workspaces"),
+    workspace_path: Path | None = None,
     output_dir: Path = Path("outputs/swebench"),
     max_interventions: int = 5,
-    max_total_steps: int = 30,
+    max_total_steps: int = 60,
     check_interval: int = 5,
     check_on_error: bool = True,
 ) -> dict[str, Any]:
@@ -207,10 +218,13 @@ def run_instance(
     instance_output.mkdir(parents=True, exist_ok=True)
 
     # 1. Prepare Workspace
-    workspace_path = prepare_repo_workspace(instance, workspaces_dir)
+    workspace_path = prepare_repo_workspace(instance, base_dir=workspaces_dir, work_dir=workspace_path)
 
     # 2. Setup OpenCode with hardened sandbox environment
-    shims_dir = workspaces_dir / ".shims"
+    if Path("/app/.shims").is_dir():
+        shims_dir = Path("/app/.shims")
+    else:
+        shims_dir = workspaces_dir.resolve() / ".shims"
     shims_dir.mkdir(parents=True, exist_ok=True)
     python_shim = shims_dir / "python"
     if not python_shim.exists():
@@ -352,7 +366,10 @@ def run_instance(
                 should_check = (check_on_error and is_error) or (len(all_steps) % check_interval == 0)
 
                 if not should_check:
-                    runner.guard.observe_step(step)
+                    try:
+                        runner.guard.observe_step(step)
+                    except Exception as e:
+                        print(f"Warning: Sentry observe_step error: {e}")
                     return True
 
                 print(f"[{instance_id}] 🔍 Triggering Sentry evaluation at step {step.step_id} (error={is_error}, step_count={len(all_steps)})...")
@@ -467,7 +484,9 @@ def main():
     parser.add_argument("--check-interval", type=int, default=5, help="Steps between Sentry evaluations")
     parser.add_argument("--check-on-error", action="store_true", default=True, help="Evaluate Sentry immediately on tool errors")
     parser.add_argument("--opencode-bin", type=str, default=None, help="Explicit path to opencode binary")
+    parser.add_argument("--max-steps", type=int, default=60, help="Maximum agent steps per task")
     parser.add_argument("--workspaces", type=Path, default=Path("workspaces"), help="Workspaces directory")
+    parser.add_argument("--workspace-path", type=Path, default=None, help="Explicit path to repository workspace")
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/swebench"), help="Outputs directory")
     args = parser.parse_args()
 
@@ -484,9 +503,11 @@ def main():
         opencode_variant=args.opencode_variant,
         openrouter_key=args.openrouter_key,
         opencode_bin=args.opencode_bin,
+        max_total_steps=args.max_steps,
         check_interval=args.check_interval,
         check_on_error=args.check_on_error,
         workspaces_dir=args.workspaces,
+        workspace_path=args.workspace_path,
         output_dir=args.output_dir,
     )
     print(json.dumps(result, indent=2))

@@ -1,0 +1,27 @@
+diff --git a/sympy/solvers/polysys.py b/sympy/solvers/polysys.py
+index b9809fd..a0d0c31 100644
+--- a/sympy/solvers/polysys.py
++++ b/sympy/solvers/polysys.py
+@@ -46,6 +46,9 @@ def solve_poly_system(seq, *gens, **args):
+     [(0, 0), (2, -sqrt(2)), (2, sqrt(2))]
+ 
+     """
++    if not isinstance(seq, (list, tuple, set)):
++        seq = [seq]
++
+     try:
+         polys, opt = parallel_poly_from_expr(seq, *gens, **args)
+     except PolificationFailed as exc:
+@@ -248,6 +251,12 @@ def _solve_reduced_system(system, gens, entry=False):
+                 (finite number of solutions)
+                 '''))
+ 
++        if len(basis) == 1 and len(gens) > 1:
++            raise NotImplementedError(filldedent('''
++                only zero-dimensional systems supported
++                (finite number of solutions)
++                '''))
++
+         gens = f.gens
+         gen = gens[-1]
+ 

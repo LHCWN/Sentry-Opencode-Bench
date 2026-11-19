@@ -1,0 +1,36 @@
+diff --git a/django/db/backends/sqlite3/creation.py b/django/db/backends/sqlite3/creation.py
+index d97052f..6ffbc26 100644
+--- a/django/db/backends/sqlite3/creation.py
++++ b/django/db/backends/sqlite3/creation.py
+@@ -95,7 +95,7 @@ class DatabaseCreation(BaseDatabaseCreation):
+         TEST NAME. See https://www.sqlite.org/inmemorydb.html
+         """
+         test_database_name = self._get_test_db_name()
+-        sig = [self.connection.settings_dict['NAME']]
++        sig = [test_database_name]
+         if self.is_in_memory_db(test_database_name):
+             sig.append(self.connection.alias)
+         return tuple(sig)
+diff --git a/tests/backends/sqlite/tests.py b/tests/backends/sqlite/tests.py
+index 3447fb6..735b8e0 100644
+--- a/tests/backends/sqlite/tests.py
++++ b/tests/backends/sqlite/tests.py
+@@ -76,6 +76,18 @@ class Tests(TestCase):
+         creation = DatabaseWrapper(settings_dict).creation
+         self.assertEqual(creation._get_test_db_name(), creation.connection.settings_dict['TEST']['NAME'])
+ 
++    def test_persistent_test_db_signature(self):
++        """TEST['NAME'] is used to build the test database signature."""
++        from django.db.backends.sqlite3.base import DatabaseWrapper
++        signatures = [
++            DatabaseWrapper({
++                'NAME': '',
++                'TEST': {'NAME': 'test_%s.sqlite3' % alias},
++            }).creation.test_db_signature()
++            for alias in ('default', 'other')
++        ]
++        self.assertNotEqual(signatures[0], signatures[1])
++
+     def test_regexp_function(self):
+         tests = (
+             ('test', r'[0-9]+', False),

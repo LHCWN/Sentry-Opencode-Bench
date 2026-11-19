@@ -1,0 +1,23 @@
+diff --git a/sympy/simplify/trigsimp.py b/sympy/simplify/trigsimp.py
+index 34a3bab3f..448bfe388 100644
+--- a/sympy/simplify/trigsimp.py
++++ b/sympy/simplify/trigsimp.py
+@@ -480,6 +480,9 @@ def trigsimp(expr, **opts):
+     except AttributeError:
+         pass
+ 
++    if expr.has(I) and expr.has(exp, S.Exp1):
++        expr = exptrigsimp(expr)
++
+     old = opts.pop('old', False)
+     if not old:
+         opts.pop('deep', None)
+@@ -537,7 +540,7 @@ def exp_trig(e):
+         choices = [e]
+         if e.has(*_trigs):
+             choices.append(e.rewrite(exp))
+-        choices.append(e.rewrite(cos))
++        choices.append(e.rewrite(cos).expand())
+         return min(*choices, key=count_ops)
+     newexpr = bottom_up(expr, exp_trig)
+ 

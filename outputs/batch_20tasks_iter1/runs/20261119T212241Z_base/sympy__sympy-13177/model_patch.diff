@@ -1,0 +1,29 @@
+diff --git a/sympy/core/mod.py b/sympy/core/mod.py
+index 11c80070..df07143c 100644
+--- a/sympy/core/mod.py
++++ b/sympy/core/mod.py
+@@ -39,7 +39,8 @@ def doit(p, q):
+             if p.is_infinite or q.is_infinite or p is nan or q is nan:
+                 return nan
+             if (p == q or p == -q or
+-                    p.is_Pow and p.exp.is_Integer and p.base == q or
++                    p.is_Pow and p.exp.is_Integer and p.base == q and
++                        p.exp.is_positive and p.base.is_integer or
+                     p.is_integer and q == 1):
+                 return S.Zero
+ 
+diff --git a/sympy/core/tests/test_arit.py b/sympy/core/tests/test_arit.py
+index 06d65203..8d9e06dd 100644
+--- a/sympy/core/tests/test_arit.py
++++ b/sympy/core/tests/test_arit.py
+@@ -1607,6 +1607,10 @@ def test_Mod():
+     # issue 10963
+     assert (x**6000%400).args[1] == 400
+ 
++    # a power of a non-integer base is not necessarily zero mod its base
++    assert Mod(x**2, x) != 0
++    assert Mod((S(3)/2)**2, S(3)/2) == S(3)/4
++
+ 
+ def test_Mod_is_integer():
+     p = Symbol('p', integer=True)

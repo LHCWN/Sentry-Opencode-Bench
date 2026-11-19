@@ -1,0 +1,41 @@
+diff --git a/sphinx/environment/adapters/indexentries.py b/sphinx/environment/adapters/indexentries.py
+index 5af2139..06f5468 100644
+--- a/sphinx/environment/adapters/indexentries.py
++++ b/sphinx/environment/adapters/indexentries.py
+@@ -110,6 +110,10 @@ class IndexEntries:
+                 lckey = lckey[1:]
+             if lckey[0:1].isalpha() or lckey.startswith('_'):
+                 lckey = chr(127) + lckey
++            else:
++                # put all symbols before the letters, even those following
++                # the letters in Unicode
++                lckey = chr(0) + lckey
+             # ensure a determinstic order *within* letters by also sorting on
+             # the entry itself
+             return (lckey, entry[0])
+diff --git a/tests/test_environment_indexentries.py b/tests/test_environment_indexentries.py
+index 7f6003d..7c4440b 100644
+--- a/tests/test_environment_indexentries.py
++++ b/tests/test_environment_indexentries.py
+@@ -41,6 +41,21 @@ def test_create_single_index(app):
+     assert index[5] == ('ת', [('‏תירבע‎', [[('', '#index-7')], [], None])])
+ 
+ 
++@pytest.mark.sphinx('dummy', freshenv=True)
++def test_create_single_index_with_unicode_symbols(app):
++    text = (".. index:: @-symbol\n"
++            ".. index:: £-symbol\n"
++            ".. index:: ←-symbol\n"
++            ".. index:: Python\n")
++    restructuredtext.parse(app, text)
++    index = IndexEntries(app.env).create_index(app.builder)
++    assert len(index) == 2
++    assert index[0] == ('Symbols', [('@-symbol', [[('', '#index-0')], [], None]),
++                                    ('£-symbol', [[('', '#index-1')], [], None]),
++                                    ('←-symbol', [[('', '#index-2')], [], None])])
++    assert index[1] == ('P', [('Python', [[('', '#index-3')], [], None])])
++
++
+ @pytest.mark.sphinx('dummy', freshenv=True)
+ def test_create_pair_index(app):
+     text = (".. index:: pair: docutils; reStructuredText\n"

@@ -164,13 +164,22 @@ def _json_object(text: str | bytes) -> dict:
     if isinstance(text, (str, bytes)):
         clean = text.decode("utf-8") if isinstance(text, bytes) else text
         clean = clean.strip()
-        if clean.startswith("```"):
-            lines = clean.splitlines()
-            if lines and lines[0].startswith("```"):
-                lines = lines[1:]
-            if lines and lines[-1].startswith("```"):
-                lines = lines[:-1]
-            text = "\n".join(lines).strip()
+        if "```" in clean:
+            match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", clean, re.DOTALL)
+            if match:
+                clean = match.group(1).strip()
+            else:
+                lines = clean.splitlines()
+                if lines and lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                clean = "\n".join(lines).strip()
+        if not clean.startswith("{"):
+            match = re.search(r"(\{.*\})", clean, re.DOTALL)
+            if match:
+                clean = match.group(1).strip()
+        text = clean
 
     def reject_constant(value):
         raise ValueError("Non-finite JSON number")
@@ -251,16 +260,9 @@ class _HTTPModelClient:
         if not isinstance(text, str) or not text.strip():
             raise RuntimeError("Model endpoint returned empty or non-text content")
         if structured:
-            clean = text.strip()
-            if clean.startswith("```"):
-                lines = clean.splitlines()
-                if lines and lines[0].startswith("```"):
-                    lines = lines[1:]
-                if lines and lines[-1].startswith("```"):
-                    lines = lines[:-1]
-                text = "\n".join(lines).strip()
             try:
-                _json_object(text)
+                parsed = _json_object(text)
+                text = json.dumps(parsed)
             except (ValueError, UnicodeError, RecursionError):
                 raise RuntimeError("Model endpoint returned an invalid JSON object") from None
         return text

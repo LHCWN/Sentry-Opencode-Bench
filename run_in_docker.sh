@@ -30,6 +30,13 @@ if [ -t 0 ] && [ -t 1 ]; then
     DOCKER_FLAGS="-it"
 fi
 
+# Common network flags for strict whitelist and host access
+NET_FLAGS=(
+    --cap-add=NET_ADMIN
+    --add-host=host.docker.internal:host-gateway
+    --add-host=api.lhcwn.pro:80.71.236.197
+)
+
 # Common volume mounts
 VOLUMES=(
     -v "${SCRIPT_DIR}/benchmarks:/app/benchmarks"
@@ -48,15 +55,23 @@ case "$MODE" in
         INSTANCE_ID="${1:-psf__requests-2317}"
         shift || true
         echo "🚀 Running single SWE-bench instance in Docker: ${INSTANCE_ID}"
+        mkdir -p "${SCRIPT_DIR}/workspaces/${INSTANCE_ID}" "${SCRIPT_DIR}/workspaces/.shims"
         docker run --rm ${DOCKER_FLAGS} \
-            --add-host=host.docker.internal:host-gateway \
-            "${VOLUMES[@]}" \
+            "${NET_FLAGS[@]}" \
+            -v "${SCRIPT_DIR}/benchmarks:/app/benchmarks" \
+            -v "${SCRIPT_DIR}/scripts:/app/scripts" \
+            -v "${SCRIPT_DIR}/outputs:/app/outputs" \
+            -v "${SCRIPT_DIR}/reports:/app/reports" \
+            -v "${SCRIPT_DIR}/workspaces/${INSTANCE_ID}:/app/workspace" \
+            -v "${SCRIPT_DIR}/workspaces/.shims:/app/.shims" \
             "${IMAGE_NAME}" \
-            python benchmarks/swebench_runner.py \
+            bash /app/scripts/setup_network_whitelist.sh python benchmarks/swebench_runner.py \
                 --instance-id "${INSTANCE_ID}" \
+                --workspace-path "/app/workspace" \
                 --opencode-model "crazyrouter/deepseek-flash" \
                 --opencode-variant high \
                 --config "configs/providers/lmstudio_docker.yaml" \
+                --max-steps 60 \
                 --check-interval 5 \
                 --check-on-error \
                 "$@"
@@ -64,19 +79,8 @@ case "$MODE" in
 
     batch)
         shift || true
-        echo "🚀 Running 5-task Batch Benchmark (Base vs Sentry) in Docker..."
-        docker run --rm ${DOCKER_FLAGS} \
-            --add-host=host.docker.internal:host-gateway \
-            "${VOLUMES[@]}" \
-            "${IMAGE_NAME}" \
-            python benchmarks/run_batch_benchmark.py \
-                --tasks psf__requests-2317 pallets__flask-4045 pallets__flask-4992 pallets__flask-5063 psf__requests-1963 \
-                --model "crazyrouter/deepseek-flash" \
-                --variant high \
-                --sentry-config "configs/providers/lmstudio_docker.yaml" \
-                --output-dir "outputs/batch_deepseek_flash" \
-                --max-steps 25 \
-                "$@"
+        echo "🚀 Running Batch Benchmark (Base vs Sentry) across isolated Docker containers..."
+        python3 "${SCRIPT_DIR}/scripts/run_isolated_batch.py" "$@"
         ;;
 
     report)
@@ -92,18 +96,24 @@ case "$MODE" in
         shift
         INSTANCE_ID="${1:-psf__requests-2317}"
         shift || true
-        PATCH_FILE="${1:-}"
+        PATCH_FILE=""
         EXTRA_ARGS=()
-        if [ -n "${PATCH_FILE}" ]; then
-            EXTRA_ARGS+=(--patch-file "${PATCH_FILE}")
+        if [ -n "$1" ] && [[ "$1" != --* ]]; then
+            PATCH_FILE="$1"
             shift || true
+            EXTRA_ARGS+=(--patch-file "${PATCH_FILE}")
         fi
         echo "🧪 Evaluating patch for ${INSTANCE_ID} in Docker..."
         docker run --rm ${DOCKER_FLAGS} \
-            "${VOLUMES[@]}" \
+            -v "${SCRIPT_DIR}/benchmarks:/app/benchmarks" \
+            -v "${SCRIPT_DIR}/scripts:/app/scripts" \
+            -v "${SCRIPT_DIR}/outputs:/app/outputs" \
+            -v "${SCRIPT_DIR}/reports:/app/reports" \
+            -v "${SCRIPT_DIR}/workspaces/${INSTANCE_ID}:/app/workspace" \
             "${IMAGE_NAME}" \
             python benchmarks/evaluator.py \
                 --instance-id "${INSTANCE_ID}" \
+                --workspace-dir "/app/workspace" \
                 "${EXTRA_ARGS[@]}" \
                 "$@"
         ;;
@@ -125,7 +135,7 @@ case "$MODE" in
         shift || true
         echo "🐚 Opening interactive shell inside Docker container..."
         docker run --rm ${DOCKER_FLAGS} \
-            --add-host=host.docker.internal:host-gateway \
+            "${NET_FLAGS[@]}" \
             "${VOLUMES[@]}" \
             "${IMAGE_NAME}" \
             bash
@@ -134,7 +144,7 @@ case "$MODE" in
     run)
         shift
         docker run --rm ${DOCKER_FLAGS} \
-            --add-host=host.docker.internal:host-gateway \
+            "${NET_FLAGS[@]}" \
             "${VOLUMES[@]}" \
             "${IMAGE_NAME}" \
             "$@"

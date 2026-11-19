@@ -1,0 +1,40 @@
+diff --git a/sympy/simplify/tests/test_trigsimp.py b/sympy/simplify/tests/test_trigsimp.py
+index 67694b477..04e8d525d 100644
+--- a/sympy/simplify/tests/test_trigsimp.py
++++ b/sympy/simplify/tests/test_trigsimp.py
+@@ -367,6 +367,9 @@ def valid(a, b):
+     assert exptrigsimp(exp(x) - exp(-x)) == 2*sinh(x)
+     assert exptrigsimp((2*exp(x)-2*exp(-x))/(exp(x)+exp(-x))) == 2*tanh(x)
+     assert exptrigsimp((2*exp(2*x)-2)/(exp(2*x)+1)) == 2*tanh(x)
++    assert exptrigsimp(-I*exp(I*x)/2 + I*exp(-I*x)/2) == sin(x)
++    assert exptrigsimp(
++        -I*exp(I*x)/(2*x) + I*exp(-I*x)/(2*x)) == sin(x)/x
+     e = [cos(x) + I*sin(x), cos(x) - I*sin(x),
+          cosh(x) - sinh(x), cosh(x) + sinh(x)]
+     ok = [exp(I*x), exp(-I*x), exp(-x), exp(x)]
+diff --git a/sympy/simplify/trigsimp.py b/sympy/simplify/trigsimp.py
+index 34a3bab3f..eb4a960d8 100644
+--- a/sympy/simplify/trigsimp.py
++++ b/sympy/simplify/trigsimp.py
+@@ -510,6 +510,9 @@ def traverse(e):
+         'old': lambda x: trigsimp_old(x, **opts),
+                    }[method]
+ 
++    if not expr.has(*_trigs) and expr.has(exp):
++        expr = exptrigsimp(expr)
++
+     return trigsimpfunc(expr)
+ 
+ 
+@@ -537,7 +540,10 @@ def exp_trig(e):
+         choices = [e]
+         if e.has(*_trigs):
+             choices.append(e.rewrite(exp))
+-        choices.append(e.rewrite(cos))
++        rewritten = e.rewrite(cos)
++        choices.append(rewritten)
++        if e.has(exp):
++            choices.append(expand_mul(rewritten))
+         return min(*choices, key=count_ops)
+     newexpr = bottom_up(expr, exp_trig)
+ 

@@ -1,0 +1,53 @@
+diff --git a/sympy/utilities/lambdify.py b/sympy/utilities/lambdify.py
+index f71bea25..4dc5575c 100644
+--- a/sympy/utilities/lambdify.py
++++ b/sympy/utilities/lambdify.py
+@@ -531,7 +531,7 @@ def lambdastr(args, expr, printer=None, dummify=False):
+     'lambda _0,_1: (lambda x,y,z: (x + y))(_0,_1[0],_1[1])'
+     """
+     # Transforming everything to strings.
+-    from sympy.matrices import DeferredVector
++    from sympy.matrices import DeferredVector, MatrixSymbol
+     from sympy import Dummy, sympify, Symbol, Function, flatten
+ 
+     if printer is not None:
+@@ -556,8 +556,11 @@ def sub_args(args, dummies_dict):
+             return ",".join(str(a) for a in dummies)
+         else:
+             #Sub in dummy variables for functions or symbols
+-            if isinstance(args, (Function, Symbol)):
+-                dummies = Dummy()
++            if isinstance(args, (Function, Symbol, MatrixSymbol)):
++                if isinstance(args, MatrixSymbol):
++                    dummies = MatrixSymbol(Dummy().name, *args.shape)
++                else:
++                    dummies = Dummy()
+                 dummies_dict.update({args : dummies})
+                 return str(dummies)
+             else:
+@@ -708,7 +711,7 @@ def _preprocess(self, args, expr):
+         Returns string form of args, and updated expr.
+         """
+         from sympy import Dummy, Symbol, Function, flatten
+-        from sympy.matrices import DeferredVector
++        from sympy.matrices import DeferredVector, MatrixSymbol
+ 
+         dummify = self._dummify
+ 
+@@ -725,11 +728,14 @@ def _preprocess(self, args, expr):
+                 argstrs.append(nested_argstrs)
+             elif isinstance(arg, DeferredVector):
+                 argstrs.append(str(arg))
+-            elif isinstance(arg, Symbol):
++            elif isinstance(arg, (Symbol, MatrixSymbol)):
+                 argrep = self._argrepr(arg)
+ 
+                 if dummify or not self._is_safe_ident(argrep):
+-                    dummy = Dummy()
++                    if isinstance(arg, MatrixSymbol):
++                        dummy = MatrixSymbol(Dummy().name, *arg.shape)
++                    else:
++                        dummy = Dummy()
+                     argstrs.append(self._argrepr(dummy))
+                     expr = self._subexpr(expr, {arg: dummy})
+                 else:

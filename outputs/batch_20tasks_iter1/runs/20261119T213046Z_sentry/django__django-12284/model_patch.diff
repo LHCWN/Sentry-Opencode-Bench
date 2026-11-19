@@ -1,0 +1,38 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 8ea6c05..58fd4e4 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -945,6 +945,7 @@ class Model(metaclass=ModelBase):
+ 
+     def _get_FIELD_display(self, field):
+         value = getattr(self, field.attname)
++        field = self._meta.get_field(field.name)
+         choices_dict = dict(make_hashable(field.flatchoices))
+         # force_str() to coerce lazy strings.
+         return force_str(choices_dict.get(make_hashable(value), value), strings_only=True)
+diff --git a/tests/model_fields/tests.py b/tests/model_fields/tests.py
+index a3b8054..ce0ed86 100644
+--- a/tests/model_fields/tests.py
++++ b/tests/model_fields/tests.py
+@@ -178,6 +178,21 @@ class GetFieldDisplayTests(SimpleTestCase):
+         f = FooBar(foo_bar=1)
+         self.assertEqual(f.get_foo_bar_display(), 'something')
+ 
++    def test_inherited_choices(self):
++        class InheritedChoicesFoo(models.Model):
++            foo = models.IntegerField(choices=[(1, 'One')])
++
++            class Meta:
++                abstract = True
++
++        class InheritedChoicesBar(InheritedChoicesFoo):
++            foo = models.IntegerField(choices=[(1, 'One'), (2, 'Two')])
++
++            class Meta:
++                app_label = 'model_fields'
++
++        self.assertEqual(InheritedChoicesBar(foo=2).get_foo_display(), 'Two')
++
+     def test_iterator_choices(self):
+         """
+         get_choices() works with Iterators.

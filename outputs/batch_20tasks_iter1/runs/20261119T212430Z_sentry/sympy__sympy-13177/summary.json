@@ -1,0 +1,34 @@
+{
+  "instance_id": "sympy__sympy-13177",
+  "repo": "sympy/sympy",
+  "use_sentry": true,
+  "opencode_model": "crazyrouter/deepseek-flash",
+  "sentry_model": "google/gemma-4-e4b",
+  "elapsed_seconds": 136.17646479606628,
+  "total_steps": 15,
+  "interventions": 0,
+  "patch_length": 570,
+  "patch_file": "outputs/batch_20tasks_iter1/runs/20261119T212430Z_sentry/sympy__sympy-13177/model_patch.diff",
+  "opencode_tokens": {
+    "cumulative_input": 7859,
+    "cumulative_output": 1536,
+    "cumulative_reasoning": 4002,
+    "cumulative_total": 185941,
+    "max_context_window": 2453,
+    "last_step_input": 237,
+    "total_generated": 5538,
+    "net_session_tokens": 5775,
+    "input": 7859,
+    "output": 1536,
+    "reasoning": 4002,
+    "total": 185941
+  },
+  "sentry_tokens": {
+    "prompt_tokens": 13758,
+    "completion_tokens": 827,
+    "total_tokens": 14585
+  },
+  "cumulative_tokens": 200526,
+  "session_net_tokens": 20360,
+  "total_tokens": 200526
+}

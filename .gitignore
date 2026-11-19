@@ -17,8 +17,10 @@ dist/
 .coverage
 htmlcov/
 # Local runs and raw benchmark material
-outputs/
+outputs/*
+!outputs/batch_20tasks_iter1/
 experiments/outputs/
+
 Results/
 logs/
 data/

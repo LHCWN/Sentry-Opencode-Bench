@@ -1,0 +1,14 @@
+diff --git a/django/db/models/base.py b/django/db/models/base.py
+index 8ea6c05..3c3d14d 100644
+--- a/django/db/models/base.py
++++ b/django/db/models/base.py
+@@ -944,6 +944,9 @@ class Model(metaclass=ModelBase):
+     delete.alters_data = True
+ 
+     def _get_FIELD_display(self, field):
++        # Look up the field on the model to use choices defined on an
++        # overriding field rather than the inherited one.
++        field = self._meta.get_field(field.name)
+         value = getattr(self, field.attname)
+         choices_dict = dict(make_hashable(field.flatchoices))
+         # force_str() to coerce lazy strings.

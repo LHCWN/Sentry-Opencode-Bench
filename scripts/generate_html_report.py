@@ -474,4 +474,17 @@ def generate_report(results_path: Path, output_html: Path):
     print(f"HTML report successfully generated at: {output_html}")
 
 if __name__ == "__main__":
-    generate_report(Path("reports/results_deepseek_flash.json"), Path("reports/benchmark_report_deepseek_flash.html"))
+    import argparse
+    parser = argparse.ArgumentParser(description="Generate benchmark HTML report")
+    parser.add_argument("--results", type=str, default="outputs/batch_20tasks_iter1/results.json", help="Path to results.json")
+    parser.add_argument("--output", type=str, default="reports/benchmark_report_deepseek_flash.html", help="Output HTML path")
+    args = parser.parse_args()
+
+    results_file = Path(args.results)
+    if not results_file.exists():
+        fallback = Path("reports/results_deepseek_flash.json")
+        if fallback.exists():
+            results_file = fallback
+
+    generate_report(results_file, Path(args.output))
+

@@ -14,7 +14,11 @@ from typing import Any
 from Sentry.config import PlaybookConfig, SentryConfig
 from Sentry.integration import SentryRunner
 from Sentry.models import AgentStep
-from benchmarks.opencode_adapter import OPENCODE_ACTION_SCHEMA, OpenCodeRunner
+from benchmarks.opencode_adapter import (
+    OPENCODE_ACTION_SCHEMA,
+    OpenCodeExecutionError,
+    OpenCodeRunner,
+)
 
 
 def fetch_swebench_instance(instance_id: str | None = None, index: int = 0) -> dict[str, Any]:
@@ -153,6 +157,10 @@ def run_instance(
             all_steps.append(step)
             print(f"[{instance_id}] Step {step.step_id}: {step.action.tool_name} ok={step.action.accepted_by_environment}")
 
+            if len(all_steps) >= max_total_steps:
+                print(f"[{instance_id}] ⚠️ Reached maximum total steps ({max_total_steps}). Ending turn.")
+                return False
+
             if runner is not None:
                 is_error = (
                     not step.action.accepted_by_environment
@@ -175,7 +183,11 @@ def run_instance(
                     print(f"Warning: Sentry runner step error: {e}")
             return True
 
-        opencode.run_prompt(current_prompt, is_continuation=is_continuation, on_step=on_step)
+        try:
+            opencode.run_prompt(current_prompt, is_continuation=is_continuation, on_step=on_step)
+        except OpenCodeExecutionError as e:
+            print(f"[{instance_id}] ❌ OpenCode Execution Error: {e}")
+            raise
         is_continuation = True
 
         if pending_repair is not None:
@@ -184,12 +196,21 @@ def run_instance(
             print(f"⚡ [GUIDANCE]: {pending_repair.prompt_text}\n")
             current_prompt = (
                 f"[SENTRY GUIDANCE]:\n{pending_repair.prompt_text}\n\n"
-                "Please adjust your approach accordingly and continue."
+                "Please adjust your approach accordingly and continue to implement the fix."
             )
         else:
             # Turn ended without any new intervention needed
-            print(f"[{instance_id}] Turn ended with no further interventions.")
-            break
+            patch = opencode.get_git_diff()
+            if not patch.strip() and len(all_steps) < max_total_steps:
+                print(f"[{instance_id}] Turn ended without code changes. Prompting agent to implement fix...")
+                current_prompt = (
+                    "You have inspected the codebase, but have not made any file changes yet to resolve the issue. "
+                    "Please locate the specific file, use the edit or write tool to apply the minimal fix, "
+                    "and verify your solution."
+                )
+            else:
+                print(f"[{instance_id}] Turn concluded with patch length={len(patch)} bytes.")
+                break
 
     if runner is not None:
         runner.finalize()

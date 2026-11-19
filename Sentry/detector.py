@@ -122,16 +122,25 @@ Return only this JSON object with fixed fields:
 """
 
 
-def render_trajectory(steps) -> str:
+def render_trajectory(steps, max_obs_chars: int = 1500) -> str:
     lines: list[str] = []
     for step in steps:
+        obs = str(step.observation or "")
+        if len(obs) > max_obs_chars:
+            obs = obs[:max_obs_chars] + f"\n... [truncated {len(obs) - max_obs_chars} chars] ..."
+        reasoning = str(step.reasoning or "")
+        if len(reasoning) > 600:
+            reasoning = reasoning[:600] + "... [truncated] ..."
+        action_raw = str(step.action.raw if hasattr(step, "action") and hasattr(step.action, "raw") else "")
+        if len(action_raw) > 600:
+            action_raw = action_raw[:600] + "... [truncated] ..."
         lines.append(
             "\n".join(
                 (
                     f"Cycle {step.step_id}:",
-                    f"Reasoning: {step.reasoning}",
-                    f"Action: {step.action.raw}",
-                    f"Observation: {step.observation}",
+                    f"Reasoning: {reasoning}",
+                    f"Action: {action_raw}",
+                    f"Observation: {obs}",
                 )
             )
         )

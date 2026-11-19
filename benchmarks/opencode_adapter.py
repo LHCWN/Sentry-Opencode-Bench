@@ -29,6 +29,11 @@ class OpenCodeEvent:
     timestamp: int
 
 
+class OpenCodeExecutionError(RuntimeError):
+    """Raised when OpenCode CLI fails, crashes, or encounters an API error."""
+    pass
+
+
 class OpenCodeRunner:
     """Manages execution of OpenCode CLI sessions with step-by-step Sentry monitoring."""
 
@@ -95,6 +100,7 @@ class OpenCodeRunner:
 
         steps: list[AgentStep] = []
         current_reasoning = ""
+        terminated_by_caller = False
 
         try:
             for line in iter(process.stdout.readline, ""):
@@ -112,7 +118,12 @@ class OpenCodeRunner:
                 if sid:
                     self.session_id = sid
 
-                if event_type == "text":
+                if event_type == "error":
+                    err_info = event_data.get("error", {})
+                    err_msg = json.dumps(err_info, ensure_ascii=False) if isinstance(err_info, dict) else str(err_info)
+                    raise OpenCodeExecutionError(f"OpenCode API error: {err_msg}")
+
+                elif event_type == "text":
                     text_content = part.get("text", "")
                     if text_content:
                         current_reasoning += text_content + "\n"
@@ -152,6 +163,7 @@ class OpenCodeRunner:
                     if on_step is not None:
                         should_continue = on_step(step)
                         if should_continue is False:
+                            terminated_by_caller = True
                             process.terminate()
                             break
 
@@ -182,6 +194,12 @@ class OpenCodeRunner:
                         self.token_usage["output"] = self.token_usage["cumulative_output"]
                         self.token_usage["reasoning"] = self.token_usage["cumulative_reasoning"]
                         self.token_usage["total"] = self.token_usage["cumulative_total"]
+
+                    if reason in ("error", "unknown") and not steps:
+                        err_info = part.get("error") or event_data.get("error")
+                        if err_info:
+                            raise OpenCodeExecutionError(f"OpenCode step failed with error: {err_info}")
+
                     # If stopped without tool calls and there was pending reasoning/text, record as final step
                     if reason == "stop" and current_reasoning.strip() and not steps:
                         step = agent_step_from_parts(
@@ -205,6 +223,16 @@ class OpenCodeRunner:
         finally:
             if process.poll() is None:
                 process.terminate()
+            try:
+                _, stderr_data = process.communicate(timeout=5)
+            except Exception:
+                stderr_data = ""
+
+            if not terminated_by_caller and process.returncode not in (0, None):
+                err_text = (stderr_data or "").strip()
+                if "Quota exceeded" in err_text or "rate limit" in err_text.lower():
+                    raise OpenCodeExecutionError(f"OpenCode API Quota/Rate Limit Exceeded: {err_text}")
+                raise OpenCodeExecutionError(f"OpenCode CLI process exited with code {process.returncode}: {err_text}")
 
         return steps
 

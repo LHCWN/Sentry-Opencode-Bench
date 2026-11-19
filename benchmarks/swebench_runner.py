@@ -157,6 +157,8 @@ def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path, depth: int 
         }
     }, indent=2), encoding="utf-8")
     print(f"Secured workspace permissions (blocked websearch, webfetch, external_directory) via {opencode_cfg}")
+    return work_dir
+
 
 def format_action_snippet(action: Any, max_len: int = 80) -> str:
     """Formats a concise one-line snippet of the action for logging."""

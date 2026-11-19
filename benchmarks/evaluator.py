@@ -214,8 +214,25 @@ def evaluate_patch(
             "sys.exit(pytest.main(args))\n"
         )
 
-        test_args = ["-v"] + fail_to_pass
-        cmd = [sys.executable, "-c", shimmed_runner] + test_args
+        repo = task.get("repo", "")
+        if repo.startswith("django/"):
+            converted_tests = []
+            for t in fail_to_pass:
+                m = re.match(r"^(.*?)\s*\((.*?)\)$", t.strip())
+                if m:
+                    converted_tests.append(f"{m.group(2)}.{m.group(1)}")
+                else:
+                    converted_tests.append(t)
+            runtests_script = workspace / "tests" / "runtests.py"
+            if runtests_script.exists():
+                cmd = [sys.executable, "tests/runtests.py", "--settings=test_sqlite", "-v", "1"] + converted_tests
+            else:
+                cmd = [sys.executable, "-c", shimmed_runner, "-k", " or ".join([t.split(" ")[0] for t in fail_to_pass])]
+        elif repo.startswith("sympy/"):
+            cmd = [sys.executable, "-c", shimmed_runner, "-k", " or ".join(fail_to_pass)]
+        else:
+            test_args = ["-v"] + fail_to_pass
+            cmd = [sys.executable, "-c", shimmed_runner] + test_args
 
         env = os.environ.copy()
         env["PYTHONPATH"] = f".:{env.get('PYTHONPATH', '')}"

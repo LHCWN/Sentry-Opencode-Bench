@@ -1,0 +1,19 @@
+api:
+  provider: openai_compatible
+  model: qwen2.5-coder:7b
+  base_url: http://127.0.0.1:11434/v1
+  api_key_env: null
+  json_mode: prompt
+  timeout: 120.0
+  max_retries: 2
+
+model:
+  model: qwen2.5-coder:7b
+  temperature: 0.0
+  max_tokens: 1536
+  structured_outputs: true
+
+task_agent:
+  temperature: 0.7
+  max_tokens: 1024
+  structured_outputs: false

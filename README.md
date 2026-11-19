@@ -279,6 +279,30 @@ And pass `--opencode-model "google/gemini-3.5-flash-lite"`.
   - The net unique tokens across the session is $\approx \text{final\_input} + \text{total\_generated}$.
 - Both metrics are now explicitly tracked in `summary.json` as `cumulative_tokens` (billing perspective) and `session_net_tokens` (context perspective).
 
+### 7. Sandbox & Host System Protection
+To ensure benchmarks run safely without polluting the host or global Python/Node environments:
+- **`PIP_REQUIRE_VIRTUALENV=true`**: Agents are strictly forbidden from installing packages into the host/system Python (`ERROR: Could not find an activated virtualenv`).
+- **`PIP_NO_INDEX=true`**: Prevents agents from downloading untracked external packages from PyPI over the network.
+- **`PYTHONNOUSERSITE=1`**: Prevents agents from installing to or reading packages from `~/.local/lib/pythonX.Y/site-packages`.
+- **`NPM_CONFIG_GLOBAL=false`**: Blocks global npm package installations.
+- **`external_directory: "deny"`**: OpenCode strictly blocks any tool execution or file reads outside the designated `workspaces/<instance_id>` folder.
+
+### 8. Re-running Benchmarks in Another Contour
+When transferring the repo to another machine or running with alternative models:
+```bash
+# Re-run only tasks that previously failed (errored or stopped with 0 steps)
+python benchmarks/run_batch_benchmark.py \
+  --model "openrouter/deepseek/deepseek-chat" \
+  --sentry-config "configs/providers/vllm.yaml" \
+  --rerun-failed
+
+# Force re-run all 10 tasks from scratch
+python benchmarks/run_batch_benchmark.py \
+  --model "openrouter/deepseek/deepseek-chat" \
+  --sentry-config "configs/providers/vllm.yaml" \
+  --force
+```
+
 ---
 
 ## 📄 License

@@ -48,6 +48,11 @@ def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path) -> Path:
     else:
         print(f"Repo already exists in {work_dir}")
 
+    # Remove stale git index lock if present from previous interrupted runs
+    index_lock = work_dir / ".git" / "index.lock"
+    if index_lock.exists():
+        index_lock.unlink(missing_ok=True)
+
     # Reset and checkout base_commit
     base_commit = instance["base_commit"]
     print(f"Checking out base commit {base_commit}...")
@@ -55,15 +60,16 @@ def prepare_repo_workspace(instance: dict[str, Any], base_dir: Path) -> Path:
     subprocess.run(["git", "clean", "-fdx"], cwd=str(work_dir), check=True)
     subprocess.run(["git", "checkout", "-f", base_commit], cwd=str(work_dir), check=True)
 
-    # Disable websearch and webfetch so the agent cannot search web or peek at answers
+    # Disable websearch, webfetch, and external directory access so the agent cannot escape workspace
     opencode_cfg = work_dir / "opencode.json"
     opencode_cfg.write_text(json.dumps({
         "permission": {
             "websearch": "deny",
-            "webfetch": "deny"
+            "webfetch": "deny",
+            "external_directory": "deny"
         }
     }, indent=2), encoding="utf-8")
-    print(f"Blocked websearch and webfetch tools via {opencode_cfg}")
+    print(f"Secured workspace permissions (blocked websearch, webfetch, external_directory) via {opencode_cfg}")
 
     return work_dir
 
@@ -94,14 +100,26 @@ def run_instance(
     # 1. Prepare Workspace
     workspace_path = prepare_repo_workspace(instance, workspaces_dir)
 
-    # 2. Setup OpenCode with env
-    env = {}
+    # 2. Setup OpenCode with hardened sandbox environment
+    env = {
+        # Strict protection: prevent modifying global/system Python & host environments
+        "PIP_REQUIRE_VIRTUALENV": "true",
+        "PIP_NO_INDEX": "true",
+        "PYTHONNOUSERSITE": "1",
+        "NPM_CONFIG_GLOBAL": "false",
+    }
     if os.environ.get("GOOGLE_GENERATIVE_AI_API_KEY"):
         env["GOOGLE_GENERATIVE_AI_API_KEY"] = os.environ["GOOGLE_GENERATIVE_AI_API_KEY"]
     if openrouter_key:
         env["OPENROUTER_API_KEY"] = openrouter_key
     elif os.environ.get("OPENROUTER_API_KEY"):
         env["OPENROUTER_API_KEY"] = os.environ["OPENROUTER_API_KEY"]
+    if os.environ.get("CLOUDFLARE_API_KEY"):
+        env["CLOUDFLARE_API_KEY"] = os.environ["CLOUDFLARE_API_KEY"]
+    if os.environ.get("ANTHROPIC_API_KEY"):
+        env["ANTHROPIC_API_KEY"] = os.environ["ANTHROPIC_API_KEY"]
+    if os.environ.get("OPENAI_API_KEY"):
+        env["OPENAI_API_KEY"] = os.environ["OPENAI_API_KEY"]
 
     opencode = OpenCodeRunner(
         workspace_path,

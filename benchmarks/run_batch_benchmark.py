@@ -33,6 +33,8 @@ def run_batch(
     max_steps_per_task: int = 25,
     check_interval: int = 5,
     check_on_error: bool = True,
+    rerun_failed: bool = False,
+    force: bool = False,
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     results_file = output_dir / "results.json"
@@ -65,8 +67,13 @@ def run_batch(
             print(f"Error fetching instance {instance_id}: {e}")
             continue
 
-        # 1. Run Base (without Sentry) if not already done
-        if "base" not in task_data:
+        # 1. Run Base (without Sentry)
+        need_base = (
+            force
+            or "base" not in task_data
+            or (rerun_failed and ("error" in task_data.get("base", {}) or task_data.get("base", {}).get("total_steps", 0) == 0))
+        )
+        if need_base:
             print(f"\n--- Running BASE (no Sentry) for {instance_id} ---")
             t0 = time.time()
             try:
@@ -86,8 +93,13 @@ def run_batch(
         else:
             print(f"BASE run already completed for {instance_id}.")
 
-        # 2. Run Sentry if not already done
-        if "sentry" not in task_data:
+        # 2. Run Sentry
+        need_sentry = (
+            force
+            or "sentry" not in task_data
+            or (rerun_failed and ("error" in task_data.get("sentry", {}) or task_data.get("sentry", {}).get("total_steps", 0) == 0))
+        )
+        if need_sentry:
             print(f"\n--- Running SENTRY for {instance_id} ---")
             t0 = time.time()
             try:
@@ -153,6 +165,8 @@ def main():
     parser.add_argument("--key", type=str, default=None, help="OpenRouter Key")
     parser.add_argument("--sentry-config", type=str, default="configs/providers/lmstudio.yaml", help="Sentry config")
     parser.add_argument("--max-steps", type=int, default=25, help="Max steps per task")
+    parser.add_argument("--rerun-failed", action="store_true", help="Re-run tasks that previously failed or had 0 steps")
+    parser.add_argument("--force", action="store_true", help="Force re-run all tasks from scratch")
     args = parser.parse_args()
 
     run_batch(
@@ -161,6 +175,8 @@ def main():
         openrouter_key=args.key,
         sentry_config_path=args.sentry_config,
         max_steps_per_task=args.max_steps,
+        rerun_failed=args.rerun_failed,
+        force=args.force,
     )
 
 

@@ -20,4 +20,4 @@ task_agent:
 
 trace:
   window_size: 5
-  post_rescue_horizon: 3
+  post_rescue_horizon: 10

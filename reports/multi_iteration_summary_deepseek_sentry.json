@@ -6,6 +6,9 @@
     3,
     4
   ],
+  "total_sentry_evaluations": 607,
+  "total_sentry_interventions": 46,
+  "overall_intervention_rate_pct": 7.6,
   "iteration_stats": {
     "1": {
       "total_tasks": 20,
@@ -17,7 +20,9 @@
       "base_tokens": 11728845,
       "sentry_tokens": 12831034,
       "token_savings_pct": 9.4,
-      "sentry_interventions": 11
+      "sentry_evaluations": 146,
+      "sentry_interventions": 11,
+      "intervention_rate_pct": 7.5
     },
     "2": {
       "total_tasks": 20,
@@ -29,7 +34,9 @@
       "base_tokens": 13018175,
       "sentry_tokens": 12923738,
       "token_savings_pct": -0.7,
-      "sentry_interventions": 9
+      "sentry_evaluations": 160,
+      "sentry_interventions": 9,
+      "intervention_rate_pct": 5.6
     },
     "3": {
       "total_tasks": 20,
@@ -41,7 +48,9 @@
       "base_tokens": 11042674,
       "sentry_tokens": 12288194,
       "token_savings_pct": 11.3,
-      "sentry_interventions": 11
+      "sentry_evaluations": 162,
+      "sentry_interventions": 11,
+      "intervention_rate_pct": 6.8
     },
     "4": {
       "total_tasks": 20,
@@ -53,7 +62,9 @@
       "base_tokens": 12803301,
       "sentry_tokens": 11609932,
       "token_savings_pct": -9.3,
-      "sentry_interventions": 15
+      "sentry_evaluations": 139,
+      "sentry_interventions": 15,
+      "intervention_rate_pct": 10.8
     }
   },
   "pass_at_k": {
@@ -144,6 +155,12 @@
         96796,
         81948
       ],
+      "sentry_evaluations": [
+        2,
+        2,
+        2,
+        2
+      ],
       "sentry_interventions": [
         0,
         0,
@@ -198,6 +215,12 @@
         218839,
         120735
       ],
+      "sentry_evaluations": [
+        4,
+        2,
+        4,
+        3
+      ],
       "sentry_interventions": [
         0,
         0,
@@ -251,6 +274,12 @@
         74054,
         227045,
         93045
+      ],
+      "sentry_evaluations": [
+        2,
+        1,
+        4,
+        1
       ],
       "sentry_interventions": [
         0,
@@ -308,6 +337,12 @@
         174234,
         225567
       ],
+      "sentry_evaluations": [
+        14,
+        6,
+        5,
+        3
+      ],
       "sentry_interventions": [
         1,
         0,
@@ -362,6 +397,12 @@
         833671,
         699436,
         656359
+      ],
+      "sentry_evaluations": [
+        7,
+        10,
+        11,
+        6
       ],
       "sentry_interventions": [
         1,
@@ -418,6 +459,12 @@
         467467,
         389921
       ],
+      "sentry_evaluations": [
+        4,
+        9,
+        10,
+        8
+      ],
       "sentry_interventions": [
         0,
         0,
@@ -468,6 +515,12 @@
         285324,
         148422,
         480465
+      ],
+      "sentry_evaluations": [
+        6,
+        6,
+        2,
+        6
       ],
       "sentry_interventions": [
         0,
@@ -525,6 +578,12 @@
         618582,
         965959
       ],
+      "sentry_evaluations": [
+        8,
+        6,
+        6,
+        11
+      ],
       "sentry_interventions": [
         0,
         0,
@@ -579,6 +638,12 @@
         250544,
         241430
       ],
+      "sentry_evaluations": [
+        7,
+        3,
+        3,
+        3
+      ],
       "sentry_interventions": [
         0,
         0,
@@ -631,6 +696,12 @@
         290214,
         151061,
         188400
+      ],
+      "sentry_evaluations": [
+        6,
+        3,
+        4,
+        5
       ],
       "sentry_interventions": [
         1,
@@ -686,6 +757,12 @@
         480620,
         385657
       ],
+      "sentry_evaluations": [
+        7,
+        9,
+        7,
+        6
+      ],
       "sentry_interventions": [
         0,
         1,
@@ -733,6 +810,12 @@
         670613,
         939163,
         710655
+      ],
+      "sentry_evaluations": [
+        7,
+        8,
+        9,
+        13
       ],
       "sentry_interventions": [
         2,
@@ -784,6 +867,12 @@
         1400238,
         1732290
       ],
+      "sentry_evaluations": [
+        9,
+        14,
+        13,
+        11
+      ],
       "sentry_interventions": [
         1,
         1,
@@ -829,6 +918,12 @@
         1265683,
         1078707,
         988179
+      ],
+      "sentry_evaluations": [
+        10,
+        16,
+        11,
+        14
       ],
       "sentry_interventions": [
         2,
@@ -876,6 +971,12 @@
         410039,
         661211
       ],
+      "sentry_evaluations": [
+        6,
+        15,
+        11,
+        8
+      ],
       "sentry_interventions": [
         1,
         0,
@@ -922,6 +1023,12 @@
         1749187,
         1766289
       ],
+      "sentry_evaluations": [
+        14,
+        14,
+        17,
+        14
+      ],
       "sentry_interventions": [
         0,
         1,
@@ -967,6 +1074,12 @@
         435508,
         382307,
         250892
+      ],
+      "sentry_evaluations": [
+        7,
+        7,
+        7,
+        3
       ],
       "sentry_interventions": [
         1,
@@ -1024,6 +1137,12 @@
         1356198,
         1118010
       ],
+      "sentry_evaluations": [
+        10,
+        15,
+        16,
+        14
+      ],
       "sentry_interventions": [
         0,
         1,
@@ -1069,6 +1188,12 @@
         1095298,
         702660,
         552920
+      ],
+      "sentry_evaluations": [
+        12,
+        8,
+        11,
+        8
       ],
       "sentry_interventions": [
         1,
@@ -1123,6 +1248,12 @@
         354317,
         886392,
         736649,
+        0
+      ],
+      "sentry_evaluations": [
+        4,
+        6,
+        9,
         0
       ],
       "sentry_interventions": [

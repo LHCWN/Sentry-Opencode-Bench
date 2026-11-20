@@ -29,7 +29,7 @@ def load_iteration_results(outputs_dir: Path, max_iters: int = 5, pattern: str =
     return iterations
 
 
-def aggregate_metrics(iterations: dict[int, dict]) -> dict:
+def aggregate_metrics(iterations: dict[int, dict], outputs_dir: Path | None = None) -> dict:
     if not iterations:
         return {}
 
@@ -49,6 +49,7 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
             "sentry_steps": [],
             "base_tokens": [],
             "sentry_tokens": [],
+            "sentry_evaluations": [],
             "sentry_interventions": [],
         }
         for it_num, it_data in sorted(iterations.items()):
@@ -80,11 +81,29 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
             summary_per_task[tid]["base_tokens"].append(b_tok)
             summary_per_task[tid]["sentry_tokens"].append(s_tok)
 
-            summary_per_task[tid]["sentry_interventions"].append(s.get("interventions", s.get("interventions_count", 0)))
+            s_intrv = s.get("interventions", s.get("interventions_count", 0))
+            summary_per_task[tid]["sentry_interventions"].append(s_intrv)
+
+            eval_count = 0
+            pf = s.get("patch_file", "")
+            if pf and outputs_dir:
+                rel = pf.replace("/app/outputs/", "")
+                ev_file = outputs_dir / rel
+                ev_file = ev_file.parent / "sentry_events.jsonl"
+                if ev_file.is_file():
+                    try:
+                        for l in ev_file.read_text(encoding="utf-8").splitlines():
+                            if '"type": "sentry_diagnosis"' in l:
+                                eval_count += 1
+                    except Exception:
+                        pass
+            if eval_count == 0 and s_intrv > 0:
+                eval_count = s_intrv
+            summary_per_task[tid]["sentry_evaluations"].append(eval_count)
 
     # Overall stats
     iter_stats = {}
-    for it_num, it_data in sorted(iterations.items()):
+    for idx, (it_num, it_data) in enumerate(sorted(iterations.items())):
         b_res_count = sum(1 for d in it_data.values() if (d.get("base") or {}).get("resolved"))
         s_res_count = sum(1 for d in it_data.values() if (d.get("sentry") or {}).get("resolved"))
         b_steps = sum((d.get("base") or {}).get("total_steps", 0) for d in it_data.values())
@@ -92,6 +111,7 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
         b_toks = sum((d.get("base") or {}).get("total_tokens", 0) for d in it_data.values())
         s_toks = sum((d.get("sentry") or {}).get("total_tokens", 0) for d in it_data.values())
         s_intrv = sum((d.get("sentry") or {}).get("interventions", (d.get("sentry") or {}).get("interventions_count", 0)) for d in it_data.values())
+        s_evals = sum(summary_per_task[tid]["sentry_evaluations"][idx] for tid in task_list if idx < len(summary_per_task[tid]["sentry_evaluations"]))
 
         iter_stats[it_num] = {
             "total_tasks": len(it_data),
@@ -103,16 +123,25 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
             "base_tokens": b_toks,
             "sentry_tokens": s_toks,
             "token_savings_pct": round(((s_toks - b_toks) / b_toks * 100), 1) if b_toks else 0.0,
+            "sentry_evaluations": s_evals,
             "sentry_interventions": s_intrv,
+            "intervention_rate_pct": round(((s_intrv / s_evals) * 100), 1) if s_evals else 0.0,
         }
 
     # Best-of-K (Pass@k: at least one run resolved)
     b_any_resolved = [tid for tid, d in summary_per_task.items() if len(d["base_resolved_iters"]) > 0]
     s_any_resolved = [tid for tid, d in summary_per_task.items() if len(d["sentry_resolved_iters"]) > 0]
 
+    tot_evals = sum(st["sentry_evaluations"] for st in iter_stats.values())
+    tot_intrv = sum(st["sentry_interventions"] for st in iter_stats.values())
+    overall_intrv_rate = round((tot_intrv / tot_evals * 100), 1) if tot_evals else 0.0
+
     return {
         "num_iterations": len(iterations),
         "iterations_present": list(iterations.keys()),
+        "total_sentry_evaluations": tot_evals,
+        "total_sentry_interventions": tot_intrv,
+        "overall_intervention_rate_pct": overall_intrv_rate,
         "iteration_stats": iter_stats,
         "pass_at_k": {
             "base_resolved_count": len(b_any_resolved),
@@ -149,6 +178,7 @@ def generate_html_summary(agg: dict, output_path: Path):
         tok_color = "#3fb950" if tok_diff < 0 else "#f85149"
 
         avg_intrv = round(sum(tinfo["sentry_interventions"]) / len(tinfo["sentry_interventions"]), 1) if tinfo["sentry_interventions"] else 0
+        avg_evals = round(sum(tinfo.get("sentry_evaluations", [])) / len(tinfo.get("sentry_evaluations", [1])), 1) if tinfo.get("sentry_evaluations") else 0
 
         table_rows.append(f"""
         <tr>
@@ -157,7 +187,7 @@ def generate_html_summary(agg: dict, output_path: Path):
             <td>{s_badge} ({s_res_str})</td>
             <td>{avg_b_steps} / {avg_s_steps}</td>
             <td>{avg_b_tok:,} / {avg_s_tok:,} <span style="color: {tok_color}; font-weight: 600;">({tok_diff:+.1f}%)</span></td>
-            <td><span class="badge">{avg_intrv}</span></td>
+            <td><span class="badge">{avg_intrv} / {avg_evals}</span></td>
         </tr>
         """)
 
@@ -172,7 +202,8 @@ def generate_html_summary(agg: dict, output_path: Path):
             <div class="kpi-val" style="font-size: 20px;">Resolved: {st.get('base_resolved', 0)} vs {st.get('sentry_resolved', 0)}</div>
             <div class="kpi-desc">
                 Steps: {st.get('base_steps')} &rarr; {st.get('sentry_steps')} ({st.get('step_reduction_pct'):+.1f}%)<br>
-                Tokens: <span style="color:{tok_color}; font-weight:600;">{tok_diff:+.1f}%</span> | Interventions: {st.get('sentry_interventions', 0)}
+                Tokens: <span style="color:{tok_color}; font-weight:600;">{tok_diff:+.1f}%</span><br>
+                Interventions: <strong>{st.get('sentry_interventions', 0)} / {st.get('sentry_evaluations', 0)} checks</strong> ({st.get('intervention_rate_pct', 0.0):.1f}%)
             </div>
         </div>
         """)
@@ -242,6 +273,11 @@ def generate_html_summary(agg: dict, output_path: Path):
                 <div class="kpi-val" style="color: #3fb950;">Base: {pass_k.get('base_resolved_count',0)} | Sentry: {pass_k.get('sentry_resolved_count',0)}</div>
                 <div class="kpi-desc">Out of {pass_k.get('total_tasks', 20)} distinct tasks</div>
             </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Sentry Runtime Supervision</div>
+                <div class="kpi-val" style="color: #e3b341;">{agg.get('total_sentry_interventions', 0)} / {agg.get('total_sentry_evaluations', 0)}</div>
+                <div class="kpi-desc">Interventions across {agg.get('total_sentry_evaluations', 0)} checks ({agg.get('overall_intervention_rate_pct', 0.0):.1f}%)</div>
+            </div>
         </div>
 
         <h3 style="color:#fff; margin-bottom: 12px;">Iteration-by-Iteration Performance</h3>
@@ -259,7 +295,7 @@ def generate_html_summary(agg: dict, output_path: Path):
                         <th>Sentry (Resolved / Total Iters)</th>
                         <th>Avg Steps (B / S)</th>
                         <th>Avg Billed Tokens (B / S)</th>
-                        <th>Avg Sentry Interventions</th>
+                        <th>Avg Interventions / Checks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -290,7 +326,7 @@ def main():
         print("No iteration results found.")
         sys.exit(1)
 
-    agg = aggregate_metrics(iters_data)
+    agg = aggregate_metrics(iters_data, outputs_dir=args.outputs_dir)
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
     args.output_json.write_text(json.dumps(agg, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"✅ Aggregated stats saved to {args.output_json}")

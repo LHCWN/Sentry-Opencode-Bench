@@ -11,6 +11,7 @@ An evaluation and reproduction harness integrating **[Sentry](https://arxiv.org/
 
 > 📊 **Interactive Benchmark Dashboards**:
 > - 🚀 **[Multi-Run DeepSeek Sentry Report (4 Iterations)](reports/multi_iteration_report_deepseek_sentry.html)** — **Pass@4: Sentry 75.0% vs Base 70.0%**
+> - 🔬 **[In-Depth Causal Analysis & Ablation Study](reports/causal_analysis.md)** — Analysis of intervened vs non-intervened tasks & anomaly decomposition
 > - 🖥️ **[Live DeepSeek Sentry Dashboard (Latest Run)](reports/benchmark_report_deepseek_sentry.html)**
 > - 📄 **[Raw JSON DeepSeek Sentry Metrics](reports/multi_iteration_summary_deepseek_sentry.json)**
 > - 🏛️ **[Local Gemma Sentry Dashboard (Host GPU Run)](reports/benchmark_report_deepseek_flash.html)** — Sentry 65.0% vs Base 55.0%
@@ -102,6 +103,7 @@ All Sentry supervisor tokens are treated as billed API costs and included in tot
 2. **Consistent Outperformance in Complex Runs**: Sentry achieved a +10% absolute boost in resolved rate in both Iteration 2 (60% vs 50%) and Iteration 4 (65% vs 55%).
 3. **Execution Efficiency in Iteration 4**: Under identical 1200s timeouts, Sentry slashed execution steps by **-16.4%** and net token consumption by **-9.3%**, proving that early intervention and rescue prompts curb unproductive model loops even when paying for supervisor API calls.
 4. **Active Failure Detection (46 Interventions across 607 Sentry Checks = 7.6% Intervention Rate)**: Sentry performed 607 automated evaluations (triggered every 5 steps and on environment errors). In 92.4% of checks, the supervisor correctly confirmed normal progress (`no_failure`), while in 46 instances (7.6%) it stepped in to abort non-progress loops, path probing outside `/app/workspace`, and planning stalls with targeted RescuePrompts.
+5. **Causal Validation & Zero-Interference Control Group**: On tasks with 0 interventions across all 4 runs (16 task sessions), Base and Sentry exhibited strictly identical Pass Rates (81.3% vs 81.3%) and identical average step counts (14.4 vs 14.3 steps), proving that passive monitoring incurs zero behavioral drift. Read the full [🔬 Causal Analysis Report](reports/causal_analysis.md).
 
 ---
 

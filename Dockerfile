@@ -28,7 +28,7 @@ RUN npm install -g opencode-ai
 WORKDIR /app
 
 # Install base Python dependencies
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
+RUN pip install --no-cache-dir --upgrade pip "setuptools<70" wheel && \
     pip install --no-cache-dir \
     datasets \
     huggingface_hub \
@@ -36,7 +36,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     tqdm \
     pytest \
     "werkzeug<3.0" \
-    jinja2 \
+    "jinja2<3.1" \
     itsdangerous \
     blinker \
     tomli \
@@ -45,10 +45,17 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     numpy \
     mpmath \
     asgiref \
-    sqlparse
+    sqlparse \
+    pytz \
+    attrs \
+    docutils \
+    roman \
+    html5lib \
+    packaging \
+    more-itertools
 
-# Backward compatibility for legacy python code (collections ABCs in Python 3.11)
-RUN python3 -c "import site, pathlib; p = pathlib.Path(site.getsitepackages()[0]) / 'sitecustomize.py'; p.write_text('import collections, collections.abc\nfor attr in [\"MutableSet\", \"MutableMapping\", \"MutableSequence\", \"Mapping\", \"Sequence\", \"Set\", \"Iterable\", \"Callable\", \"Iterator\", \"Container\", \"Hashable\"]:\n    if not hasattr(collections, attr) and hasattr(collections.abc, attr):\n        setattr(collections, attr, getattr(collections.abc, attr))\n')"
+# Backward compatibility for legacy python code (collections ABCs in Python 3.11, jinja2 filters)
+RUN python3 -c "import site, pathlib; p = pathlib.Path(site.getsitepackages()[0]) / 'sitecustomize.py'; p.write_text('import collections, collections.abc\nfor attr in [\"MutableSet\", \"MutableMapping\", \"MutableSequence\", \"Mapping\", \"Sequence\", \"Set\", \"Iterable\", \"Callable\", \"Iterator\", \"Container\", \"Hashable\"]:\n    if not hasattr(collections, attr) and hasattr(collections.abc, attr):\n        setattr(collections, attr, getattr(collections.abc, attr))\ntry:\n    import jinja2\n    if hasattr(jinja2, \"pass_environment\") and not hasattr(jinja2, \"environmentfilter\"):\n        jinja2.environmentfilter = jinja2.pass_environment\nexcept Exception:\n    pass\n')"
 
 # Copy project files
 COPY pyproject.toml /app/

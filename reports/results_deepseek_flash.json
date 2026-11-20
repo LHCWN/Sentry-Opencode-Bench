@@ -383,24 +383,23 @@
       "cumulative_tokens": 92188,
       "session_net_tokens": 1598,
       "total_tokens": 92188,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 3,
-        "passed": 0,
-        "failed": 3,
-        "success": [],
-        "failure": [
+        "passed": 3,
+        "failed": 0,
+        "success": [
           "test_ascii_validator (auth_tests.test_validators.UsernameValidatorsTests)",
           "test_unicode_validator (auth_tests.test_validators.UsernameValidatorsTests)",
           "test_help_text (auth_tests.test_validators.UserAttributeSimilarityValidatorTest)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 19,
-        "passed": 0,
-        "failed": 19,
-        "success": [],
-        "failure": [
+        "passed": 19,
+        "failed": 0,
+        "success": [
           "test_help_text (auth_tests.test_validators.MinimumLengthValidatorTest)",
           "test_validate (auth_tests.test_validators.MinimumLengthValidatorTest)",
           "test_help_text (auth_tests.test_validators.NumericPasswordValidatorTest)",
@@ -420,11 +419,12 @@
           "test_validate (auth_tests.test_validators.CommonPasswordValidatorTest)",
           "test_validate_custom_list (auth_tests.test_validators.CommonPasswordValidatorTest)",
           "test_validate_django_supplied_file (auth_tests.test_validators.CommonPasswordValidatorTest)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 3,
+        "passed": 3,
         "failed": 0,
         "skipped": 0
       }
@@ -462,24 +462,23 @@
       "cumulative_tokens": 32078,
       "session_net_tokens": 7276,
       "total_tokens": 32078,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 3,
-        "passed": 0,
-        "failed": 3,
-        "success": [],
-        "failure": [
+        "passed": 3,
+        "failed": 0,
+        "success": [
           "test_ascii_validator (auth_tests.test_validators.UsernameValidatorsTests)",
           "test_unicode_validator (auth_tests.test_validators.UsernameValidatorsTests)",
           "test_help_text (auth_tests.test_validators.UserAttributeSimilarityValidatorTest)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 19,
-        "passed": 0,
-        "failed": 19,
-        "success": [],
-        "failure": [
+        "passed": 19,
+        "failed": 0,
+        "success": [
           "test_help_text (auth_tests.test_validators.MinimumLengthValidatorTest)",
           "test_validate (auth_tests.test_validators.MinimumLengthValidatorTest)",
           "test_help_text (auth_tests.test_validators.NumericPasswordValidatorTest)",
@@ -499,11 +498,12 @@
           "test_validate (auth_tests.test_validators.CommonPasswordValidatorTest)",
           "test_validate_custom_list (auth_tests.test_validators.CommonPasswordValidatorTest)",
           "test_validate_django_supplied_file (auth_tests.test_validators.CommonPasswordValidatorTest)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 3,
+        "passed": 3,
         "failed": 0,
         "skipped": 0
       }
@@ -772,9 +772,58 @@
       "session_net_tokens": 11062,
       "total_tokens": 635528,
       "resolved": false,
-      "fail_to_pass": null,
-      "pass_to_pass": null,
-      "test_counts": null
+      "fail_to_pass": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "success": [],
+        "failure": [
+          "test_defer_only_chaining (defer.tests.DeferTests)"
+        ]
+      },
+      "pass_to_pass": {
+        "total": 29,
+        "passed": 0,
+        "failed": 29,
+        "success": [],
+        "failure": [
+          "test_custom_refresh_on_deferred_loading (defer.tests.TestDefer2)",
+          "When an inherited model is fetched from the DB, its PK is also fetched.",
+          "Ensure select_related together with only on a proxy model behaves",
+          "test_eq (defer.tests.TestDefer2)",
+          "test_refresh_not_loading_deferred_fields (defer.tests.TestDefer2)",
+          "test_defer_baseclass_when_subclass_has_added_field (defer.tests.BigChildDeferTests)",
+          "test_defer_subclass (defer.tests.BigChildDeferTests)",
+          "test_defer_subclass_both (defer.tests.BigChildDeferTests)",
+          "test_only_baseclass_when_subclass_has_added_field (defer.tests.BigChildDeferTests)",
+          "test_only_subclass (defer.tests.BigChildDeferTests)",
+          "test_defer (defer.tests.DeferTests)",
+          "test_defer_baseclass_when_subclass_has_no_added_fields (defer.tests.DeferTests)",
+          "test_defer_extra (defer.tests.DeferTests)",
+          "test_defer_foreign_keys_are_deferred_and_not_traversed (defer.tests.DeferTests)",
+          "test_defer_none_to_clear_deferred_set (defer.tests.DeferTests)",
+          "test_defer_of_overridden_scalar (defer.tests.DeferTests)",
+          "test_defer_on_an_already_deferred_field (defer.tests.DeferTests)",
+          "test_defer_only_clear (defer.tests.DeferTests)",
+          "test_defer_select_related_raises_invalid_query (defer.tests.DeferTests)",
+          "test_defer_values_does_not_defer (defer.tests.DeferTests)",
+          "test_defer_with_select_related (defer.tests.DeferTests)",
+          "test_get (defer.tests.DeferTests)",
+          "test_only (defer.tests.DeferTests)",
+          "test_only_baseclass_when_subclass_has_no_added_fields (defer.tests.DeferTests)",
+          "test_only_none_raises_error (defer.tests.DeferTests)",
+          "test_only_select_related_raises_invalid_query (defer.tests.DeferTests)",
+          "test_only_values_does_not_defer (defer.tests.DeferTests)",
+          "test_only_with_select_related (defer.tests.DeferTests)",
+          "test_saving_object_with_deferred_field (defer.tests.DeferTests)"
+        ]
+      },
+      "test_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
     },
     "sentry": {
       "instance_id": "django__django-14667",
@@ -810,9 +859,58 @@
       "session_net_tokens": 70641,
       "total_tokens": 1310117,
       "resolved": false,
-      "fail_to_pass": null,
-      "pass_to_pass": null,
-      "test_counts": null
+      "fail_to_pass": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "success": [],
+        "failure": [
+          "test_defer_only_chaining (defer.tests.DeferTests)"
+        ]
+      },
+      "pass_to_pass": {
+        "total": 29,
+        "passed": 0,
+        "failed": 29,
+        "success": [],
+        "failure": [
+          "test_custom_refresh_on_deferred_loading (defer.tests.TestDefer2)",
+          "When an inherited model is fetched from the DB, its PK is also fetched.",
+          "Ensure select_related together with only on a proxy model behaves",
+          "test_eq (defer.tests.TestDefer2)",
+          "test_refresh_not_loading_deferred_fields (defer.tests.TestDefer2)",
+          "test_defer_baseclass_when_subclass_has_added_field (defer.tests.BigChildDeferTests)",
+          "test_defer_subclass (defer.tests.BigChildDeferTests)",
+          "test_defer_subclass_both (defer.tests.BigChildDeferTests)",
+          "test_only_baseclass_when_subclass_has_added_field (defer.tests.BigChildDeferTests)",
+          "test_only_subclass (defer.tests.BigChildDeferTests)",
+          "test_defer (defer.tests.DeferTests)",
+          "test_defer_baseclass_when_subclass_has_no_added_fields (defer.tests.DeferTests)",
+          "test_defer_extra (defer.tests.DeferTests)",
+          "test_defer_foreign_keys_are_deferred_and_not_traversed (defer.tests.DeferTests)",
+          "test_defer_none_to_clear_deferred_set (defer.tests.DeferTests)",
+          "test_defer_of_overridden_scalar (defer.tests.DeferTests)",
+          "test_defer_on_an_already_deferred_field (defer.tests.DeferTests)",
+          "test_defer_only_clear (defer.tests.DeferTests)",
+          "test_defer_select_related_raises_invalid_query (defer.tests.DeferTests)",
+          "test_defer_values_does_not_defer (defer.tests.DeferTests)",
+          "test_defer_with_select_related (defer.tests.DeferTests)",
+          "test_get (defer.tests.DeferTests)",
+          "test_only (defer.tests.DeferTests)",
+          "test_only_baseclass_when_subclass_has_no_added_fields (defer.tests.DeferTests)",
+          "test_only_none_raises_error (defer.tests.DeferTests)",
+          "test_only_select_related_raises_invalid_query (defer.tests.DeferTests)",
+          "test_only_values_does_not_defer (defer.tests.DeferTests)",
+          "test_only_with_select_related (defer.tests.DeferTests)",
+          "test_saving_object_with_deferred_field (defer.tests.DeferTests)"
+        ]
+      },
+      "test_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
     }
   },
   "django__django-12308": {
@@ -885,9 +983,9 @@
         ]
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
-        "failed": 0,
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
         "skipped": 0
       }
     },
@@ -924,23 +1022,22 @@
       "cumulative_tokens": 131554,
       "session_net_tokens": 14127,
       "total_tokens": 131554,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 2,
-        "passed": 0,
-        "failed": 2,
-        "success": [],
-        "failure": [
+        "passed": 2,
+        "failed": 0,
+        "success": [
           "test_json_display_for_field (admin_utils.tests.UtilsTests)",
           "test_label_for_field (admin_utils.tests.UtilsTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 20,
-        "passed": 0,
-        "failed": 20,
-        "success": [],
-        "failure": [
+        "passed": 20,
+        "failed": 0,
+        "success": [
           "test_cyclic (admin_utils.tests.NestedObjectsTests)",
           "test_non_added_parent (admin_utils.tests.NestedObjectsTests)",
           "test_on_delete_do_nothing (admin_utils.tests.NestedObjectsTests)",
@@ -961,11 +1058,12 @@
           "test_related_name (admin_utils.tests.UtilsTests)",
           "test_safestring_in_field_label (admin_utils.tests.UtilsTests)",
           "test_values_from_lookup_field (admin_utils.tests.UtilsTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 2,
+        "passed": 2,
         "failed": 0,
         "skipped": 0
       }
@@ -1001,22 +1099,21 @@
       "cumulative_tokens": 322225,
       "session_net_tokens": 5591,
       "total_tokens": 322225,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_send_robust_fail (dispatch.tests.DispatcherTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 18,
-        "passed": 0,
-        "failed": 18,
-        "success": [],
-        "failure": [
+        "passed": 18,
+        "failed": 0,
+        "success": [
           "test_receiver_signal_list (dispatch.tests.ReceiverTestCase)",
           "test_receiver_single_signal (dispatch.tests.ReceiverTestCase)",
           "test_cached_garbaged_collected (dispatch.tests.DispatcherTests)",
@@ -1035,11 +1132,12 @@
           "test_send_robust_success (dispatch.tests.DispatcherTests)",
           "test_uid_registration (dispatch.tests.DispatcherTests)",
           "test_values_returned_by_disconnection (dispatch.tests.DispatcherTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -1077,22 +1175,21 @@
       "cumulative_tokens": 224657,
       "session_net_tokens": 16022,
       "total_tokens": 224657,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_send_robust_fail (dispatch.tests.DispatcherTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 18,
-        "passed": 0,
-        "failed": 18,
-        "success": [],
-        "failure": [
+        "passed": 18,
+        "failed": 0,
+        "success": [
           "test_receiver_signal_list (dispatch.tests.ReceiverTestCase)",
           "test_receiver_single_signal (dispatch.tests.ReceiverTestCase)",
           "test_cached_garbaged_collected (dispatch.tests.DispatcherTests)",
@@ -1111,11 +1208,12 @@
           "test_send_robust_success (dispatch.tests.DispatcherTests)",
           "test_uid_registration (dispatch.tests.DispatcherTests)",
           "test_values_returned_by_disconnection (dispatch.tests.DispatcherTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -1151,23 +1249,22 @@
       "cumulative_tokens": 1010641,
       "session_net_tokens": 19789,
       "total_tokens": 1010641,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 2,
-        "passed": 0,
-        "failed": 2,
-        "success": [],
-        "failure": [
+        "passed": 2,
+        "failed": 0,
+        "success": [
           "test_boolean_expression_combined (expressions.tests.BasicExpressionsTests)",
           "test_boolean_expression_combined_with_empty_Q (expressions.tests.BasicExpressionsTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 147,
-        "passed": 0,
-        "failed": 147,
-        "success": [],
-        "failure": [
+        "passed": 147,
+        "failed": 0,
+        "success": [
           "test_resolve_output_field (expressions.tests.CombinedExpressionTests)",
           "test_deconstruct (expressions.tests.FTests)",
           "test_deepcopy (expressions.tests.FTests)",
@@ -1315,11 +1412,12 @@
           "test_update_with_fk (expressions.tests.BasicExpressionsTests)",
           "test_update_with_none (expressions.tests.BasicExpressionsTests)",
           "test_uuid_pk_subquery (expressions.tests.BasicExpressionsTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 2,
+        "passed": 2,
         "failed": 0,
         "skipped": 0
       }
@@ -1357,23 +1455,22 @@
       "cumulative_tokens": 896580,
       "session_net_tokens": 48325,
       "total_tokens": 896580,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 2,
-        "passed": 0,
-        "failed": 2,
-        "success": [],
-        "failure": [
+        "passed": 2,
+        "failed": 0,
+        "success": [
           "test_boolean_expression_combined (expressions.tests.BasicExpressionsTests)",
           "test_boolean_expression_combined_with_empty_Q (expressions.tests.BasicExpressionsTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 147,
-        "passed": 0,
-        "failed": 147,
-        "success": [],
-        "failure": [
+        "passed": 147,
+        "failed": 0,
+        "success": [
           "test_resolve_output_field (expressions.tests.CombinedExpressionTests)",
           "test_deconstruct (expressions.tests.FTests)",
           "test_deepcopy (expressions.tests.FTests)",
@@ -1521,11 +1618,12 @@
           "test_update_with_fk (expressions.tests.BasicExpressionsTests)",
           "test_update_with_none (expressions.tests.BasicExpressionsTests)",
           "test_uuid_pk_subquery (expressions.tests.BasicExpressionsTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 2,
+        "passed": 2,
         "failed": 0,
         "skipped": 0
       }
@@ -1561,24 +1659,23 @@
       "cumulative_tokens": 130853,
       "session_net_tokens": 2891,
       "total_tokens": 130853,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 3,
-        "passed": 0,
-        "failed": 3,
-        "success": [],
-        "failure": [
+        "passed": 3,
+        "failed": 0,
+        "success": [
           "test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)",
           "test_model_delete_returns_num_rows (delete.tests.DeletionTests)",
           "test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 49,
-        "passed": 0,
-        "failed": 49,
-        "success": [],
-        "failure": [
+        "passed": 49,
+        "failed": 0,
+        "success": [
           "test_fast_delete_combined_relationships (delete.tests.FastDeleteTests)",
           "test_fast_delete_fk (delete.tests.FastDeleteTests)",
           "test_fast_delete_inheritance (delete.tests.FastDeleteTests)",
@@ -1628,11 +1725,12 @@
           "test_only_referenced_fields_selected (delete.tests.DeletionTests)",
           "test_proxied_model_duplicate_queries (delete.tests.DeletionTests)",
           "test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 3,
+        "passed": 3,
         "failed": 0,
         "skipped": 0
       }
@@ -1670,24 +1768,23 @@
       "cumulative_tokens": 646377,
       "session_net_tokens": 27249,
       "total_tokens": 646377,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 3,
-        "passed": 0,
-        "failed": 3,
-        "success": [],
-        "failure": [
+        "passed": 3,
+        "failed": 0,
+        "success": [
           "test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)",
           "test_model_delete_returns_num_rows (delete.tests.DeletionTests)",
           "test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 49,
-        "passed": 0,
-        "failed": 49,
-        "success": [],
-        "failure": [
+        "passed": 49,
+        "failed": 0,
+        "success": [
           "test_fast_delete_combined_relationships (delete.tests.FastDeleteTests)",
           "test_fast_delete_fk (delete.tests.FastDeleteTests)",
           "test_fast_delete_inheritance (delete.tests.FastDeleteTests)",
@@ -1737,11 +1834,12 @@
           "test_only_referenced_fields_selected (delete.tests.DeletionTests)",
           "test_proxied_model_duplicate_queries (delete.tests.DeletionTests)",
           "test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 3,
+        "passed": 3,
         "failed": 0,
         "skipped": 0
       }
@@ -2532,60 +2630,9 @@
       "session_net_tokens": 20692,
       "total_tokens": 1222044,
       "resolved": false,
-      "fail_to_pass": {
-        "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
-          "test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)"
-        ]
-      },
-      "pass_to_pass": {
-        "total": 31,
-        "passed": 0,
-        "failed": 31,
-        "success": [],
-        "failure": [
-          "test_blank_in_choices (model_fields.tests.GetChoicesTests)",
-          "test_blank_in_grouped_choices (model_fields.tests.GetChoicesTests)",
-          "test_empty_choices (model_fields.tests.GetChoicesTests)",
-          "test_lazy_strings_not_evaluated (model_fields.tests.GetChoicesTests)",
-          "test_choices_and_field_display (model_fields.tests.GetFieldDisplayTests)",
-          "test_empty_iterator_choices (model_fields.tests.GetFieldDisplayTests)",
-          "A translated display value is coerced to str.",
-          "test_iterator_choices (model_fields.tests.GetFieldDisplayTests)",
-          "test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)",
-          "test_check (model_fields.tests.ChoicesTests)",
-          "test_choices (model_fields.tests.ChoicesTests)",
-          "test_flatchoices (model_fields.tests.ChoicesTests)",
-          "test_formfield (model_fields.tests.ChoicesTests)",
-          "test_invalid_choice (model_fields.tests.ChoicesTests)",
-          "test_get_choices (model_fields.tests.GetChoicesLimitChoicesToTests)",
-          "test_get_choices_reverse_related_field (model_fields.tests.GetChoicesLimitChoicesToTests)",
-          "Can supply a custom choices form class to Field.formfield()",
-          "deconstruct() uses __qualname__ for nested class support.",
-          "Field instances can be pickled.",
-          "test_field_name (model_fields.tests.BasicFieldTests)",
-          "Fields are ordered based on their creation.",
-          "test_field_repr (model_fields.tests.BasicFieldTests)",
-          "__repr__() uses __qualname__ for nested class support.",
-          "test_field_str (model_fields.tests.BasicFieldTests)",
-          "test_field_verbose_name (model_fields.tests.BasicFieldTests)",
-          "Field.formfield() sets disabled for fields with choices.",
-          "test_show_hidden_initial (model_fields.tests.BasicFieldTests)",
-          "test_get_choices (model_fields.tests.GetChoicesOrderingTests)",
-          "test_get_choices_default_ordering (model_fields.tests.GetChoicesOrderingTests)",
-          "test_get_choices_reverse_related_field (model_fields.tests.GetChoicesOrderingTests)",
-          "test_get_choices_reverse_related_field_default_ordering (model_fields.tests.GetChoicesOrderingTests)"
-        ]
-      },
-      "test_counts": {
-        "total": 0,
-        "passed": 0,
-        "failed": 0,
-        "skipped": 0
-      }
+      "fail_to_pass": null,
+      "pass_to_pass": null,
+      "test_counts": null
     },
     "sentry": {
       "instance_id": "django__django-12284",
@@ -2621,60 +2668,9 @@
       "session_net_tokens": 37941,
       "total_tokens": 639769,
       "resolved": false,
-      "fail_to_pass": {
-        "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
-          "test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)"
-        ]
-      },
-      "pass_to_pass": {
-        "total": 31,
-        "passed": 0,
-        "failed": 31,
-        "success": [],
-        "failure": [
-          "test_blank_in_choices (model_fields.tests.GetChoicesTests)",
-          "test_blank_in_grouped_choices (model_fields.tests.GetChoicesTests)",
-          "test_empty_choices (model_fields.tests.GetChoicesTests)",
-          "test_lazy_strings_not_evaluated (model_fields.tests.GetChoicesTests)",
-          "test_choices_and_field_display (model_fields.tests.GetFieldDisplayTests)",
-          "test_empty_iterator_choices (model_fields.tests.GetFieldDisplayTests)",
-          "A translated display value is coerced to str.",
-          "test_iterator_choices (model_fields.tests.GetFieldDisplayTests)",
-          "test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)",
-          "test_check (model_fields.tests.ChoicesTests)",
-          "test_choices (model_fields.tests.ChoicesTests)",
-          "test_flatchoices (model_fields.tests.ChoicesTests)",
-          "test_formfield (model_fields.tests.ChoicesTests)",
-          "test_invalid_choice (model_fields.tests.ChoicesTests)",
-          "test_get_choices (model_fields.tests.GetChoicesLimitChoicesToTests)",
-          "test_get_choices_reverse_related_field (model_fields.tests.GetChoicesLimitChoicesToTests)",
-          "Can supply a custom choices form class to Field.formfield()",
-          "deconstruct() uses __qualname__ for nested class support.",
-          "Field instances can be pickled.",
-          "test_field_name (model_fields.tests.BasicFieldTests)",
-          "Fields are ordered based on their creation.",
-          "test_field_repr (model_fields.tests.BasicFieldTests)",
-          "__repr__() uses __qualname__ for nested class support.",
-          "test_field_str (model_fields.tests.BasicFieldTests)",
-          "test_field_verbose_name (model_fields.tests.BasicFieldTests)",
-          "Field.formfield() sets disabled for fields with choices.",
-          "test_show_hidden_initial (model_fields.tests.BasicFieldTests)",
-          "test_get_choices (model_fields.tests.GetChoicesOrderingTests)",
-          "test_get_choices_default_ordering (model_fields.tests.GetChoicesOrderingTests)",
-          "test_get_choices_reverse_related_field (model_fields.tests.GetChoicesOrderingTests)",
-          "test_get_choices_reverse_related_field_default_ordering (model_fields.tests.GetChoicesOrderingTests)"
-        ]
-      },
-      "test_counts": {
-        "total": 0,
-        "passed": 0,
-        "failed": 0,
-        "skipped": 0
-      }
+      "fail_to_pass": null,
+      "pass_to_pass": null,
+      "test_counts": null
     }
   },
   "django__django-11999": {
@@ -2707,22 +2703,21 @@
       "cumulative_tokens": 897933,
       "session_net_tokens": 17330,
       "total_tokens": 897933,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 30,
-        "passed": 0,
-        "failed": 30,
-        "success": [],
-        "failure": [
+        "passed": 30,
+        "failed": 0,
+        "success": [
           "test_blank_in_choices (model_fields.tests.GetChoicesTests)",
           "test_blank_in_grouped_choices (model_fields.tests.GetChoicesTests)",
           "test_empty_choices (model_fields.tests.GetChoicesTests)",
@@ -2753,11 +2748,12 @@
           "test_get_choices_default_ordering (model_fields.tests.GetChoicesOrderingTests)",
           "test_get_choices_reverse_related_field (model_fields.tests.GetChoicesOrderingTests)",
           "test_get_choices_reverse_related_field_default_ordering (model_fields.tests.GetChoicesOrderingTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -2795,22 +2791,21 @@
       "cumulative_tokens": 865818,
       "session_net_tokens": 55248,
       "total_tokens": 865818,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_overriding_FIELD_display (model_fields.tests.GetFieldDisplayTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 30,
-        "passed": 0,
-        "failed": 30,
-        "success": [],
-        "failure": [
+        "passed": 30,
+        "failed": 0,
+        "success": [
           "test_blank_in_choices (model_fields.tests.GetChoicesTests)",
           "test_blank_in_grouped_choices (model_fields.tests.GetChoicesTests)",
           "test_empty_choices (model_fields.tests.GetChoicesTests)",
@@ -2841,11 +2836,12 @@
           "test_get_choices_default_ordering (model_fields.tests.GetChoicesOrderingTests)",
           "test_get_choices_reverse_related_field (model_fields.tests.GetChoicesOrderingTests)",
           "test_get_choices_reverse_related_field_default_ordering (model_fields.tests.GetChoicesOrderingTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -2999,22 +2995,21 @@
       "cumulative_tokens": 265087,
       "session_net_tokens": 4319,
       "total_tokens": 265087,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 40,
-        "passed": 0,
-        "failed": 40,
-        "success": [],
-        "failure": [
+        "passed": 40,
+        "failed": 0,
+        "success": [
           "test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)",
           "test_fast_delete_fk (delete.tests.FastDeleteTests)",
           "test_fast_delete_inheritance (delete.tests.FastDeleteTests)",
@@ -3055,11 +3050,12 @@
           "test_proxied_model_duplicate_queries (delete.tests.DeletionTests)",
           "test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)",
           "test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -3097,22 +3093,21 @@
       "cumulative_tokens": 320602,
       "session_net_tokens": 13510,
       "total_tokens": 320602,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_fast_delete_instance_set_pk_none (delete.tests.FastDeleteTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 40,
-        "passed": 0,
-        "failed": 40,
-        "success": [],
-        "failure": [
+        "passed": 40,
+        "failed": 0,
+        "success": [
           "test_fast_delete_empty_no_update_can_self_select (delete.tests.FastDeleteTests)",
           "test_fast_delete_fk (delete.tests.FastDeleteTests)",
           "test_fast_delete_inheritance (delete.tests.FastDeleteTests)",
@@ -3153,11 +3148,12 @@
           "test_proxied_model_duplicate_queries (delete.tests.DeletionTests)",
           "test_queryset_delete_returns_num_rows (delete.tests.DeletionTests)",
           "test_relational_post_delete_signals_happen_before_parent_object (delete.tests.DeletionTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -3428,22 +3424,21 @@
       "cumulative_tokens": 338210,
       "session_net_tokens": 6001,
       "total_tokens": 338210,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_memoryview_content (httpwrappers.tests.HttpResponseTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 64,
-        "passed": 0,
-        "failed": 64,
-        "success": [],
-        "failure": [
+        "passed": 64,
+        "failed": 0,
+        "success": [
           "test_streaming_response (httpwrappers.tests.StreamingHttpResponseTests)",
           "test_cookie_edgecases (httpwrappers.tests.CookieTests)",
           "Semicolons and commas are decoded.",
@@ -3508,11 +3503,12 @@
           "Regression test for #8278: QueryDict.update(QueryDict)",
           "test_urlencode (httpwrappers.tests.QueryDictTests)",
           "test_urlencode_int (httpwrappers.tests.QueryDictTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -3550,22 +3546,21 @@
       "cumulative_tokens": 305627,
       "session_net_tokens": 14158,
       "total_tokens": 305627,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_memoryview_content (httpwrappers.tests.HttpResponseTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 64,
-        "passed": 0,
-        "failed": 64,
-        "success": [],
-        "failure": [
+        "passed": 64,
+        "failed": 0,
+        "success": [
           "test_streaming_response (httpwrappers.tests.StreamingHttpResponseTests)",
           "test_cookie_edgecases (httpwrappers.tests.CookieTests)",
           "Semicolons and commas are decoded.",
@@ -3630,11 +3625,12 @@
           "Regression test for #8278: QueryDict.update(QueryDict)",
           "test_urlencode (httpwrappers.tests.QueryDictTests)",
           "test_urlencode_int (httpwrappers.tests.QueryDictTests)"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -3688,9 +3684,9 @@
         "failure": []
       },
       "test_counts": {
-        "total": 0,
+        "total": 1,
         "passed": 0,
-        "failed": 0,
+        "failed": 1,
         "skipped": 0
       }
     },
@@ -3727,15 +3723,15 @@
       "cumulative_tokens": 946285,
       "session_net_tokens": 48363,
       "total_tokens": 946285,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_custom_test_name (backends.sqlite.test_creation.TestDbSignatureTests)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 0,
@@ -3745,8 +3741,8 @@
         "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -3782,22 +3778,21 @@
       "cumulative_tokens": 471086,
       "session_net_tokens": 8719,
       "total_tokens": 471086,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_verbose_name_inline (admin_inlines.tests.TestVerboseNameInlineForms)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 62,
-        "passed": 0,
-        "failed": 62,
-        "success": [],
-        "failure": [
+        "passed": 62,
+        "failed": 0,
+        "success": [
           "Regression for #9362",
           "test_deleting_inline_with_protected_delete_does_not_validate (admin_inlines.tests.TestInlineProtectedOnDelete)",
           "test_all_inline_media (admin_inlines.tests.TestInlineMedia)",
@@ -3860,11 +3855,12 @@
           "Inlines `show_change_link` disabled by default.",
           "Tabular inlines use ModelForm.Meta.help_texts and labels for read-only",
           "non_field_errors are displayed correctly, including the correct value"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }
@@ -3902,22 +3898,21 @@
       "cumulative_tokens": 326557,
       "session_net_tokens": 14740,
       "total_tokens": 326557,
-      "resolved": false,
+      "resolved": true,
       "fail_to_pass": {
         "total": 1,
-        "passed": 0,
-        "failed": 1,
-        "success": [],
-        "failure": [
+        "passed": 1,
+        "failed": 0,
+        "success": [
           "test_verbose_name_inline (admin_inlines.tests.TestVerboseNameInlineForms)"
-        ]
+        ],
+        "failure": []
       },
       "pass_to_pass": {
         "total": 62,
-        "passed": 0,
-        "failed": 62,
-        "success": [],
-        "failure": [
+        "passed": 62,
+        "failed": 0,
+        "success": [
           "Regression for #9362",
           "test_deleting_inline_with_protected_delete_does_not_validate (admin_inlines.tests.TestInlineProtectedOnDelete)",
           "test_all_inline_media (admin_inlines.tests.TestInlineMedia)",
@@ -3980,11 +3975,12 @@
           "Inlines `show_change_link` disabled by default.",
           "Tabular inlines use ModelForm.Meta.help_texts and labels for read-only",
           "non_field_errors are displayed correctly, including the correct value"
-        ]
+        ],
+        "failure": []
       },
       "test_counts": {
-        "total": 0,
-        "passed": 0,
+        "total": 1,
+        "passed": 1,
         "failed": 0,
         "skipped": 0
       }

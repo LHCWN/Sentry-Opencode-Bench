@@ -1,13 +1,14 @@
 {
-  "num_iterations": 1,
+  "num_iterations": 2,
   "iterations_present": [
-    1
+    1,
+    2
   ],
   "iteration_stats": {
     "1": {
       "total_tasks": 20,
-      "base_resolved": 2,
-      "sentry_resolved": 2,
+      "base_resolved": 10,
+      "sentry_resolved": 12,
       "base_steps": 691,
       "sentry_steps": 615,
       "step_reduction_pct": -11.0,
@@ -15,16 +16,46 @@
       "sentry_tokens": 11785777,
       "token_savings_pct": -12.4,
       "sentry_interventions": 0
+    },
+    "2": {
+      "total_tasks": 10,
+      "base_resolved": 0,
+      "sentry_resolved": 0,
+      "base_steps": 0,
+      "sentry_steps": 0,
+      "step_reduction_pct": 0.0,
+      "base_tokens": 0,
+      "sentry_tokens": 0,
+      "token_savings_pct": 0.0,
+      "sentry_interventions": 0
     }
   },
   "pass_at_k": {
-    "base_resolved_count": 2,
-    "sentry_resolved_count": 2,
+    "base_resolved_count": 10,
+    "sentry_resolved_count": 12,
     "base_resolved_tasks": [
+      "django__django-11099",
+      "django__django-11133",
+      "django__django-11179",
+      "django__django-11999",
+      "django__django-12747",
+      "django__django-13710",
+      "django__django-13768",
+      "django__django-14017",
       "sympy__sympy-15011",
       "sympy__sympy-22005"
     ],
     "sentry_resolved_tasks": [
+      "django__django-11099",
+      "django__django-11133",
+      "django__django-11179",
+      "django__django-11999",
+      "django__django-12113",
+      "django__django-12308",
+      "django__django-12747",
+      "django__django-13710",
+      "django__django-13768",
+      "django__django-14017",
       "sympy__sympy-15011",
       "sympy__sympy-22005"
     ],
@@ -32,127 +63,180 @@
   },
   "tasks": {
     "django__django-11099": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/3"
+        "3/3",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/3"
+        "3/3",
+        "0/0"
       ],
       "base_steps": [
-        9
+        9,
+        0
       ],
       "sentry_steps": [
-        7
+        7,
+        0
       ],
       "base_tokens": [
-        92188
+        92188,
+        0
       ],
       "sentry_tokens": [
-        32078
+        32078,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-11133": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        24
+        24,
+        0
       ],
       "sentry_steps": [
-        21
+        21,
+        0
       ],
       "base_tokens": [
-        338210
+        338210,
+        0
       ],
       "sentry_tokens": [
-        305627
+        305627,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-11179": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        19
+        19,
+        0
       ],
       "sentry_steps": [
-        24
+        24,
+        0
       ],
       "base_tokens": [
-        265087
+        265087,
+        0
       ],
       "sentry_tokens": [
-        320602
+        320602,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-11999": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        35
+        35,
+        0
       ],
       "sentry_steps": [
-        40
+        40,
+        0
       ],
       "base_tokens": [
-        897933
+        897933,
+        0
       ],
       "sentry_tokens": [
-        865818
+        865818,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-12113": {
       "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        47
+        47,
+        0
       ],
       "sentry_steps": [
-        41
+        41,
+        0
       ],
       "base_tokens": [
-        1154012
+        1154012,
+        0
       ],
       "sentry_tokens": [
-        946285
+        946285,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -160,149 +244,209 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
-        "0/1"
+        "0/0",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "0/0",
+        "0/0"
       ],
       "base_steps": [
-        54
+        54,
+        0
       ],
       "sentry_steps": [
-        35
+        35,
+        0
       ],
       "base_tokens": [
-        1222044
+        1222044,
+        0
       ],
       "sentry_tokens": [
-        639769
+        639769,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-12308": {
       "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/2"
+        "0/2",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/2"
+        "2/2",
+        "0/0"
       ],
       "base_steps": [
-        37
+        37,
+        0
       ],
       "sentry_steps": [
-        16
+        16,
+        0
       ],
       "base_tokens": [
-        603322
+        603322,
+        0
       ],
       "sentry_tokens": [
-        131554
+        131554,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-12747": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/3"
+        "3/3",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/3"
+        "3/3",
+        "0/0"
       ],
       "base_steps": [
-        15
+        15,
+        0
       ],
       "sentry_steps": [
-        32
+        32,
+        0
       ],
       "base_tokens": [
-        130853
+        130853,
+        0
       ],
       "sentry_tokens": [
-        646377
+        646377,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-13710": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        31
+        31,
+        0
       ],
       "sentry_steps": [
-        22
+        22,
+        0
       ],
       "base_tokens": [
-        471086
+        471086,
+        0
       ],
       "sentry_tokens": [
-        326557
+        326557,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-13768": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        25
+        25,
+        0
       ],
       "sentry_steps": [
-        16
+        16,
+        0
       ],
       "base_tokens": [
-        322225
+        322225,
+        0
       ],
       "sentry_tokens": [
-        224657
+        224657,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
     "django__django-14017": {
-      "base_resolved_iters": [],
-      "sentry_resolved_iters": [],
+      "base_resolved_iters": [
+        1
+      ],
+      "sentry_resolved_iters": [
+        1
+      ],
       "base_f2p_rates": [
-        "0/2"
+        "2/2",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/2"
+        "2/2",
+        "0/0"
       ],
       "base_steps": [
-        49
+        49,
+        0
       ],
       "sentry_steps": [
-        40
+        40,
+        0
       ],
       "base_tokens": [
-        1010641
+        1010641,
+        0
       ],
       "sentry_tokens": [
-        896580
+        896580,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -310,24 +454,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
+        "0/1",
         "0/0"
       ],
       "sentry_f2p_rates": [
+        "0/1",
         "0/0"
       ],
       "base_steps": [
-        31
+        31,
+        0
       ],
       "sentry_steps": [
-        60
+        60,
+        0
       ],
       "base_tokens": [
-        635528
+        635528,
+        0
       ],
       "sentry_tokens": [
-        1310117
+        1310117,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -335,24 +486,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
+        "0/0",
         "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/2"
+        "0/2",
+        "0/0"
       ],
       "base_steps": [
-        60
+        60,
+        0
       ],
       "sentry_steps": [
-        60
+        60,
+        0
       ],
       "base_tokens": [
-        1304577
+        1304577,
+        0
       ],
       "sentry_tokens": [
-        1465282
+        1465282,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -360,24 +518,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
-        44
+        44,
+        0
       ],
       "sentry_steps": [
-        29
+        29,
+        0
       ],
       "base_tokens": [
-        981522
+        981522,
+        0
       ],
       "sentry_tokens": [
-        421050
+        421050,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -385,24 +550,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
-        39
+        39,
+        0
       ],
       "sentry_steps": [
-        26
+        26,
+        0
       ],
       "base_tokens": [
-        739093
+        739093,
+        0
       ],
       "sentry_tokens": [
-        494239
+        494239,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -410,24 +582,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
-        60
+        60,
+        0
       ],
       "sentry_steps": [
-        34
+        34,
+        0
       ],
       "base_tokens": [
-        1810024
+        1810024,
+        0
       ],
       "sentry_tokens": [
-        996748
+        996748,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -435,24 +614,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
-        "1/2"
+        "1/2",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "1/2"
+        "1/2",
+        "0/0"
       ],
       "base_steps": [
-        25
+        25,
+        0
       ],
       "sentry_steps": [
-        15
+        15,
+        0
       ],
       "base_tokens": [
-        345937
+        345937,
+        0
       ],
       "sentry_tokens": [
-        200526
+        200526,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -464,24 +650,31 @@
         1
       ],
       "base_f2p_rates": [
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        22
+        22,
+        0
       ],
       "sentry_steps": [
-        29
+        29,
+        0
       ],
       "base_tokens": [
-        254943
+        254943,
+        0
       ],
       "sentry_tokens": [
-        480159
+        480159,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -489,24 +682,31 @@
       "base_resolved_iters": [],
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
-        33
+        33,
+        0
       ],
       "sentry_steps": [
-        35
+        35,
+        0
       ],
       "base_tokens": [
-        294249
+        294249,
+        0
       ],
       "sentry_tokens": [
-        465221
+        465221,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     },
@@ -518,24 +718,31 @@
         1
       ],
       "base_f2p_rates": [
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
-        32
+        32,
+        0
       ],
       "sentry_steps": [
-        33
+        33,
+        0
       ],
       "base_tokens": [
-        585867
+        585867,
+        0
       ],
       "sentry_tokens": [
-        616531
+        616531,
+        0
       ],
       "sentry_interventions": [
+        0,
         0
       ]
     }

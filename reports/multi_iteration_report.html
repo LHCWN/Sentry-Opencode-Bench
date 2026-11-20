@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SWE-bench Multi-Iteration Benchmark Summary (1 Iterations)</title>
+    <title>SWE-bench Multi-Iteration Benchmark Summary (2 Iterations)</title>
     <style>
         :root {
             --bg-dark: #0d1117;
@@ -42,7 +42,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>SWE-bench Lite Multi-Iteration Benchmark Summary (1 Iterations)</h1>
+            <h1>SWE-bench Lite Multi-Iteration Benchmark Summary (2 Iterations)</h1>
             <div class="subtitle">
                 Model: <strong>crazyrouter/deepseek-flash</strong> &bull;
                 Supervisor: <strong>google/gemma-4-e4b</strong> (LM Studio) &bull;
@@ -55,12 +55,12 @@
         <div class="kpi-row">
             <div class="kpi-card">
                 <div class="kpi-title">Completed Iterations</div>
-                <div class="kpi-val">1 / 5</div>
-                <div class="kpi-desc">40 task executions total</div>
+                <div class="kpi-val">2 / 5</div>
+                <div class="kpi-desc">80 task executions total</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Pass@k (Any Iteration Solved)</div>
-                <div class="kpi-val" style="color: #3fb950;">Base: 2 | Sentry: 2</div>
+                <div class="kpi-val" style="color: #3fb950;">Base: 10 | Sentry: 12</div>
                 <div class="kpi-desc">Out of 20 distinct tasks</div>
             </div>
         </div>
@@ -70,10 +70,19 @@
             
         <div class="kpi-card">
             <div class="kpi-title">Iteration 1</div>
-            <div class="kpi-val" style="font-size: 20px;">Resolved: 2 vs 2</div>
+            <div class="kpi-val" style="font-size: 20px;">Resolved: 10 vs 12</div>
             <div class="kpi-desc">
                 Steps: 691 &rarr; 615 (-11.0%)<br>
                 Tokens: <span style="color:#3fb950; font-weight:600;">-12.4%</span> | Interventions: 0
+            </div>
+        </div>
+        
+        <div class="kpi-card">
+            <div class="kpi-title">Iteration 2</div>
+            <div class="kpi-val" style="font-size: 20px;">Resolved: 0 vs 0</div>
+            <div class="kpi-desc">
+                Steps: 0 &rarr; 0 (+0.0%)<br>
+                Tokens: <span style="color:#f85149; font-weight:600;">+0.0%</span> | Interventions: 0
             </div>
         </div>
         
@@ -96,181 +105,181 @@
                     
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-11099</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>9.0 / 7.0</td>
-            <td>92,188 / 32,078 <span style="color: #3fb950; font-weight: 600;">(-65.2%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>4.5 / 3.5</td>
+            <td>46,094 / 16,039 <span style="color: #3fb950; font-weight: 600;">(-65.2%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-11133</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>24.0 / 21.0</td>
-            <td>338,210 / 305,627 <span style="color: #3fb950; font-weight: 600;">(-9.6%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>12.0 / 10.5</td>
+            <td>169,105 / 152,813 <span style="color: #3fb950; font-weight: 600;">(-9.6%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-11179</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>19.0 / 24.0</td>
-            <td>265,087 / 320,602 <span style="color: #f85149; font-weight: 600;">(+20.9%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>9.5 / 12.0</td>
+            <td>132,543 / 160,301 <span style="color: #f85149; font-weight: 600;">(+20.9%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-11999</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>35.0 / 40.0</td>
-            <td>897,933 / 865,818 <span style="color: #3fb950; font-weight: 600;">(-3.6%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>17.5 / 20.0</td>
+            <td>448,966 / 432,909 <span style="color: #3fb950; font-weight: 600;">(-3.6%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-12113</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>47.0 / 41.0</td>
-            <td>1,154,012 / 946,285 <span style="color: #3fb950; font-weight: 600;">(-18.0%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>23.5 / 20.5</td>
+            <td>577,006 / 473,142 <span style="color: #3fb950; font-weight: 600;">(-18.0%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-12284</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>54.0 / 35.0</td>
-            <td>1,222,044 / 639,769 <span style="color: #3fb950; font-weight: 600;">(-47.6%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>27.0 / 17.5</td>
+            <td>611,022 / 319,884 <span style="color: #3fb950; font-weight: 600;">(-47.6%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-12308</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>37.0 / 16.0</td>
-            <td>603,322 / 131,554 <span style="color: #3fb950; font-weight: 600;">(-78.2%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>18.5 / 8.0</td>
+            <td>301,661 / 65,777 <span style="color: #3fb950; font-weight: 600;">(-78.2%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-12747</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>15.0 / 32.0</td>
-            <td>130,853 / 646,377 <span style="color: #f85149; font-weight: 600;">(+394.0%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>7.5 / 16.0</td>
+            <td>65,426 / 323,188 <span style="color: #f85149; font-weight: 600;">(+394.0%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-13710</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>31.0 / 22.0</td>
-            <td>471,086 / 326,557 <span style="color: #3fb950; font-weight: 600;">(-30.7%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>15.5 / 11.0</td>
+            <td>235,543 / 163,278 <span style="color: #3fb950; font-weight: 600;">(-30.7%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-13768</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>25.0 / 16.0</td>
-            <td>322,225 / 224,657 <span style="color: #3fb950; font-weight: 600;">(-30.3%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>12.5 / 8.0</td>
+            <td>161,112 / 112,328 <span style="color: #3fb950; font-weight: 600;">(-30.3%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-14017</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>49.0 / 40.0</td>
-            <td>1,010,641 / 896,580 <span style="color: #3fb950; font-weight: 600;">(-11.3%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>24.5 / 20.0</td>
+            <td>505,320 / 448,290 <span style="color: #3fb950; font-weight: 600;">(-11.3%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-14667</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>31.0 / 60.0</td>
-            <td>635,528 / 1,310,117 <span style="color: #f85149; font-weight: 600;">(+106.1%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>15.5 / 30.0</td>
+            <td>317,764 / 655,058 <span style="color: #f85149; font-weight: 600;">(+106.1%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">django__django-16816</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>60.0 / 60.0</td>
-            <td>1,304,577 / 1,465,282 <span style="color: #f85149; font-weight: 600;">(+12.3%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>30.0 / 30.0</td>
+            <td>652,288 / 732,641 <span style="color: #f85149; font-weight: 600;">(+12.3%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">pytest-dev__pytest-7220</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>44.0 / 29.0</td>
-            <td>981,522 / 421,050 <span style="color: #3fb950; font-weight: 600;">(-57.1%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>22.0 / 14.5</td>
+            <td>490,761 / 210,525 <span style="color: #3fb950; font-weight: 600;">(-57.1%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">sphinx-doc__sphinx-7975</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>39.0 / 26.0</td>
-            <td>739,093 / 494,239 <span style="color: #3fb950; font-weight: 600;">(-33.1%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>19.5 / 13.0</td>
+            <td>369,546 / 247,119 <span style="color: #3fb950; font-weight: 600;">(-33.1%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">sympy__sympy-11870</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>60.0 / 34.0</td>
-            <td>1,810,024 / 996,748 <span style="color: #3fb950; font-weight: 600;">(-44.9%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>30.0 / 17.0</td>
+            <td>905,012 / 498,374 <span style="color: #3fb950; font-weight: 600;">(-44.9%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">sympy__sympy-13177</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>25.0 / 15.0</td>
-            <td>345,937 / 200,526 <span style="color: #3fb950; font-weight: 600;">(-42.0%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>12.5 / 7.5</td>
+            <td>172,968 / 100,263 <span style="color: #3fb950; font-weight: 600;">(-42.0%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">sympy__sympy-15011</td>
-            <td><span class="status-solved">Resolved</span> (1/1)</td>
-            <td><span class="status-solved">Resolved</span> (1/1)</td>
-            <td>22.0 / 29.0</td>
-            <td>254,943 / 480,159 <span style="color: #f85149; font-weight: 600;">(+88.3%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>11.0 / 14.5</td>
+            <td>127,471 / 240,079 <span style="color: #f85149; font-weight: 600;">(+88.3%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">sympy__sympy-15308</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td><span class="status-failed">Failed</span> (0/1)</td>
-            <td>33.0 / 35.0</td>
-            <td>294,249 / 465,221 <span style="color: #f85149; font-weight: 600;">(+58.1%)</span></td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td><span class="status-failed">Failed</span> (0/2)</td>
+            <td>16.5 / 17.5</td>
+            <td>147,124 / 232,610 <span style="color: #f85149; font-weight: 600;">(+58.1%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         
         <tr>
             <td style="font-weight: 600; color: #fff;">sympy__sympy-22005</td>
-            <td><span class="status-solved">Resolved</span> (1/1)</td>
-            <td><span class="status-solved">Resolved</span> (1/1)</td>
-            <td>32.0 / 33.0</td>
-            <td>585,867 / 616,531 <span style="color: #f85149; font-weight: 600;">(+5.2%)</span></td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td><span class="status-solved">Resolved</span> (1/2)</td>
+            <td>16.0 / 16.5</td>
+            <td>292,933 / 308,265 <span style="color: #f85149; font-weight: 600;">(+5.2%)</span></td>
             <td><span class="badge">0.0</span></td>
         </tr>
         

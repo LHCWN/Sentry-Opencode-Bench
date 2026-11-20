@@ -3,15 +3,17 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2610.02994-b31b1b)](https://arxiv.org/abs/2610.02994)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Benchmark Report](https://img.shields.io/badge/Report-HTML_Dashboard-blue?logo=html5)](reports/benchmark_report_deepseek_flash.html)
-[![Multi-Iteration Summary](https://img.shields.io/badge/Report-Multi--Iteration-success)](reports/multi_iteration_report.html)
+[![DeepSeek Sentry 4-Run Report](https://img.shields.io/badge/Report-DeepSeek_Sentry_4--Run-success?logo=html5)](reports/multi_iteration_report_deepseek_sentry.html)
+[![Live Dashboard](https://img.shields.io/badge/Dashboard-DeepSeek_Sentry-blue?logo=html5)](reports/benchmark_report_deepseek_sentry.html)
+[![Gemma Sentry Report](https://img.shields.io/badge/Report-Gemma_Sentry_Run-orange)](reports/benchmark_report_deepseek_flash.html)
 
 An evaluation and reproduction harness integrating **[Sentry](https://arxiv.org/abs/2610.02994)** (runtime failure management for LLM agents) with the **[OpenCode](https://opencode.ai)** CLI agent across **SWE-bench Lite**.
 
 > 📊 **Interactive Benchmark Dashboards**:
-> - 🖥️ **[View Live Comparative HTML Dashboard](reports/benchmark_report_deepseek_flash.html)**
-> - 📈 **[View Multi-Iteration Aggregate Report](reports/multi_iteration_report.html)**
-> - 📄 **[View Raw JSON Evaluation Metrics](reports/results_deepseek_flash.json)**
+> - 🚀 **[Multi-Run DeepSeek Sentry Report (4 Iterations)](reports/multi_iteration_report_deepseek_sentry.html)** — **Pass@4: Sentry 75.0% vs Base 70.0%**
+> - 🖥️ **[Live DeepSeek Sentry Dashboard (Latest Run)](reports/benchmark_report_deepseek_sentry.html)**
+> - 📄 **[Raw JSON DeepSeek Sentry Metrics](reports/multi_iteration_summary_deepseek_sentry.json)**
+> - 🏛️ **[Local Gemma Sentry Dashboard (Host GPU Run)](reports/benchmark_report_deepseek_flash.html)** — Sentry 65.0% vs Base 55.0%
 
 ---
 
@@ -72,6 +74,37 @@ An evaluation and reproduction harness integrating **[Sentry](https://arxiv.org/
 ---
 
 ## 📊 Empirical Results Summary: 20 Tasks (Seed 42)
+
+### 🚀 4-Iteration Benchmark: OpenCode with DeepSeek Sentry Supervisor
+
+Full multi-iteration comparative benchmark evaluating **OpenCode with DeepSeek Flash (`crazyrouter/deepseek-flash`)** supervised by **Sentry with DeepSeek Flash** across 4 independent runs on 20 SWE-bench Lite tasks (Seed 42).
+All Sentry supervisor tokens are treated as billed API costs and included in total token metrics.
+
+> 📊 **Explore Multi-Run Results**:
+> - 🚀 **[Open Multi-Iteration Aggregate Report (4 Runs)](reports/multi_iteration_report_deepseek_sentry.html)** — **Pass@4: Sentry 75.0% vs Base 70.0%**
+> - 🖥️ **[Open Live Dashboard (Latest Run)](reports/benchmark_report_deepseek_sentry.html)**
+> - 📦 **[Download Machine-Readable Multi-Iteration Summary (JSON)](reports/multi_iteration_summary_deepseek_sentry.json)**
+
+#### 🏆 Pass@4 & Aggregate Run Breakdown
+
+| Benchmark Run | Base Resolved | Sentry Resolved | Base Steps | Sentry Steps (Δ) | Base Billed Tokens | Sentry Billed Tokens (Δ)* |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Iteration 1** | 9 / 20 (45.0%) | 9 / 20 (45.0%) | 596 | 634 (+6.4%) | 11.73M | 12.83M (+9.4%) |
+| **Iteration 2** | 10 / 20 (50.0%) | **12 / 20 (60.0%)** | 612 | 638 (+4.2%) | 13.02M | 12.92M (**-0.7%**) |
+| **Iteration 3** | 12 / 20 (60.0%) | 12 / 20 (60.0%) | 597 | 650 (+8.9%) | 11.04M | 12.29M (+11.3%) |
+| **Iteration 4** | 11 / 20 (55.0%) | **13 / 20 (65.0%)** | 681 | **569 (-16.4%)** | 12.80M | **11.61M (-9.3%)** |
+| **Pass@4 (Any Run)** | 14 / 20 (70.0%) | **15 / 20 (75.0%)** | — | — | 48.59M | 49.65M (+2.2%) |
+
+*\* Note: Sentry billed tokens include 100% of the Sentry LLM runtime supervisor API calls.*
+
+#### 💡 Key DeepSeek Sentry Highlights
+1. **Higher Ceiling (Pass@4 = 75.0% vs 70.0%)**: Sentry resolved 15 out of 20 tasks in at least one run (including `django-14667` which Base failed across all 4 runs).
+2. **Consistent Outperformance in Complex Runs**: Sentry achieved a +10% absolute boost in resolved rate in both Iteration 2 (60% vs 50%) and Iteration 4 (65% vs 55%).
+3. **Execution Efficiency in Iteration 4**: Under identical 1200s timeouts, Sentry slashed execution steps by **-16.4%** and net token consumption by **-9.3%**, proving that early intervention and rescue prompts curb unproductive model loops even when paying for supervisor API calls.
+
+---
+
+### 🏛️ Local Gemma-4 Supervisor Benchmark (1 Run on Host GPU)
 
 Full comparative benchmark evaluating **OpenCode with DeepSeek Flash (`crazyrouter/deepseek-flash`, variant: high)** against the **Sentry Runtime Supervisor (`google/gemma-4-e4b` on LM Studio)** across 20 randomly sampled SWE-bench Lite tasks (Seed 42).
 

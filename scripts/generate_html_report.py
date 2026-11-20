@@ -50,8 +50,14 @@ def generate_report(results_path: Path, output_html: Path):
     for tid, modes in data.items():
         b = modes["base"]
         s = modes["sentry"]
-        b_patch = Path(b["patch_file"]).read_text(encoding="utf-8") if Path(b["patch_file"]).exists() else ""
-        s_patch = Path(s["patch_file"]).read_text(encoding="utf-8") if Path(s["patch_file"]).exists() else ""
+        b_p = Path(b.get("patch_file", ""))
+        if not b_p.exists() and str(b_p).startswith("/app/"):
+            b_p = Path(__file__).resolve().parent.parent / str(b_p)[5:]
+        s_p = Path(s.get("patch_file", ""))
+        if not s_p.exists() and str(s_p).startswith("/app/"):
+            s_p = Path(__file__).resolve().parent.parent / str(s_p)[5:]
+        b_patch = b_p.read_text(encoding="utf-8") if (b.get("patch_file") and b_p.is_file()) else ""
+        s_patch = s_p.read_text(encoding="utf-8") if (s.get("patch_file") and s_p.is_file()) else ""
         
         b_billed = b.get("cumulative_tokens", 0)
         s_billed = s.get("cumulative_tokens", 0)
@@ -298,6 +304,7 @@ def generate_report(results_path: Path, output_html: Path):
                 </div>
             </div>
         </div>
+        """
     sentry_model_name = next((modes.get("sentry", {}).get("sentry_model") for modes in data.values() if modes.get("sentry", {}).get("sentry_model")), "google/gemma-4-e4b")
     if "gemma" in sentry_model_name.lower():
         supervisor_desc = f"{sentry_model_name} (Local LM Studio)"

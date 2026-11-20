@@ -231,17 +231,19 @@ def evaluate_patch(
         if p_path.is_file():
             patch_content = p_path.read_text(encoding="utf-8")
 
-    # If reset_to_base requested or patch_content provided and we want clean slate
-    if reset_to_base and patch_content is not None:
+    # If reset_to_base requested, always ensure clean checkout of base_commit
+    if reset_to_base:
         index_lock = workspace / ".git" / "index.lock"
         if index_lock.exists():
             try:
                 index_lock.unlink()
             except Exception:
                 pass
+        subprocess.run(["git", "-C", str(workspace), "reset", "--hard", "HEAD"], check=False, capture_output=True)
         subprocess.run(["git", "-C", str(workspace), "checkout", "-f", base_commit], check=False, capture_output=True)
-        subprocess.run(["git", "-C", str(workspace), "clean", "-fd"], check=False, capture_output=True)
+        subprocess.run(["git", "-C", str(workspace), "clean", "-fdx"], check=False, capture_output=True)
 
+    if patch_content is not None:
         # Strip test files from model patch so hidden test_patch doesn't conflict
         clean_model_patch = strip_test_hunks(patch_content)
 

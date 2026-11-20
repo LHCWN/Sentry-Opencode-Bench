@@ -117,8 +117,19 @@ case "$MODE" in
         if [ -n "$1" ] && [[ "$1" != --* ]]; then
             PATCH_FILE="$1"
             shift || true
+            if [[ "${PATCH_FILE}" == "${SCRIPT_DIR}/"* ]]; then
+                PATCH_FILE="/app/${PATCH_FILE#${SCRIPT_DIR}/}"
+            fi
             EXTRA_ARGS+=(--patch-file "${PATCH_FILE}")
         fi
+        CONTAINER_ARGS=()
+        for arg in "$@"; do
+            if [[ "$arg" == "${SCRIPT_DIR}/"* ]]; then
+                CONTAINER_ARGS+=("/app/${arg#${SCRIPT_DIR}/}")
+            else
+                CONTAINER_ARGS+=("$arg")
+            fi
+        done
         echo "🧪 Evaluating patch for ${INSTANCE_ID} in Docker..."
         docker run --rm ${DOCKER_FLAGS} \
             -v "${SCRIPT_DIR}/benchmarks:/app/benchmarks" \
@@ -131,7 +142,7 @@ case "$MODE" in
                 --instance-id "${INSTANCE_ID}" \
                 --workspace-dir "/app/workspace" \
                 "${EXTRA_ARGS[@]}" \
-                "$@"
+                "${CONTAINER_ARGS[@]}"
         ;;
 
     eval-batch)

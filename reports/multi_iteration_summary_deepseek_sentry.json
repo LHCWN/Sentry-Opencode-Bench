@@ -1,8 +1,9 @@
 {
-  "num_iterations": 2,
+  "num_iterations": 3,
   "iterations_present": [
     1,
-    2
+    2,
+    3
   ],
   "iteration_stats": {
     "1": {
@@ -27,6 +28,18 @@
       "base_tokens": 13018175,
       "sentry_tokens": 12923738,
       "token_savings_pct": -0.7,
+      "sentry_interventions": 0
+    },
+    "3": {
+      "total_tasks": 2,
+      "base_resolved": 0,
+      "sentry_resolved": 0,
+      "base_steps": 24,
+      "sentry_steps": 0,
+      "step_reduction_pct": -100.0,
+      "base_tokens": 208606,
+      "sentry_tokens": 0,
+      "token_savings_pct": -100.0,
       "sentry_interventions": 0
     }
   },
@@ -78,29 +91,36 @@
       ],
       "base_f2p_rates": [
         "3/3",
-        "3/3"
+        "3/3",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "3/3",
-        "3/3"
+        "3/3",
+        "0/0"
       ],
       "base_steps": [
         9,
-        10
+        10,
+        9
       ],
       "sentry_steps": [
         9,
-        14
+        14,
+        0
       ],
       "base_tokens": [
         88931,
-        62510
+        62510,
+        70234
       ],
       "sentry_tokens": [
         86217,
-        139001
+        139001,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -114,29 +134,36 @@
       ],
       "base_f2p_rates": [
         "0/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/0",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         13,
-        17
+        17,
+        0
       ],
       "sentry_steps": [
         18,
-        13
+        13,
+        0
       ],
       "base_tokens": [
         145759,
-        242469
+        242469,
+        0
       ],
       "sentry_tokens": [
         217387,
-        157067
+        157067,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -150,29 +177,36 @@
       ],
       "base_f2p_rates": [
         "0/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/0",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         17,
-        15
+        15,
+        0
       ],
       "sentry_steps": [
         13,
-        7
+        7,
+        0
       ],
       "base_tokens": [
         216081,
-        181824
+        181824,
+        0
       ],
       "sentry_tokens": [
         205072,
-        74054
+        74054,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -188,29 +222,36 @@
       ],
       "base_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         16,
-        19
+        19,
+        0
       ],
       "sentry_steps": [
         53,
-        22
+        22,
+        0
       ],
       "base_tokens": [
         185497,
-        233118
+        233118,
+        0
       ],
       "sentry_tokens": [
         1048023,
-        225341
+        225341,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -225,29 +266,36 @@
       ],
       "base_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/0",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         32,
-        34
+        34,
+        0
       ],
       "sentry_steps": [
         35,
-        43
+        43,
+        0
       ],
       "base_tokens": [
         564436,
-        492650
+        492650,
+        0
       ],
       "sentry_tokens": [
         669538,
-        833671
+        833671,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -262,29 +310,36 @@
       ],
       "base_f2p_rates": [
         "0/0",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         0,
-        24
+        24,
+        0
       ],
       "sentry_steps": [
         22,
-        26
+        26,
+        0
       ],
       "base_tokens": [
         0,
-        260608
+        260608,
+        0
       ],
       "sentry_tokens": [
         276804,
-        404393
+        404393,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -298,29 +353,36 @@
       ],
       "base_f2p_rates": [
         "2/2",
-        "0/2"
+        "0/2",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "2/2",
-        "0/2"
+        "0/2",
+        "0/0"
       ],
       "base_steps": [
         34,
-        33
+        33,
+        0
       ],
       "sentry_steps": [
         26,
-        20
+        20,
+        0
       ],
       "base_tokens": [
         455889,
-        485444
+        485444,
+        0
       ],
       "sentry_tokens": [
         367444,
-        285324
+        285324,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -336,29 +398,36 @@
       ],
       "base_f2p_rates": [
         "3/3",
-        "3/3"
+        "3/3",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "3/3",
-        "3/3"
+        "3/3",
+        "0/0"
       ],
       "base_steps": [
         27,
-        40
+        40,
+        0
       ],
       "sentry_steps": [
         31,
-        26
+        26,
+        0
       ],
       "base_tokens": [
         369022,
-        734898
+        734898,
+        0
       ],
       "sentry_tokens": [
         545264,
-        552741
+        552741,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -372,29 +441,36 @@
       ],
       "base_f2p_rates": [
         "0/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/0",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         18,
-        19
+        19,
+        0
       ],
       "sentry_steps": [
         24,
-        15
+        15,
+        0
       ],
       "base_tokens": [
         203375,
-        263353
+        263353,
+        0
       ],
       "sentry_tokens": [
         306995,
-        163731
+        163731,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -409,29 +485,36 @@
       ],
       "base_f2p_rates": [
         "1/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         14,
-        11
+        11,
+        15
       ],
       "sentry_steps": [
         26,
-        18
+        18,
+        0
       ],
       "base_tokens": [
         144654,
-        124311
+        124311,
+        138372
       ],
       "sentry_tokens": [
         459122,
-        290214
+        290214,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -445,29 +528,36 @@
       ],
       "base_f2p_rates": [
         "2/2",
-        "1/2"
+        "1/2",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "2/2",
+        "0/0",
         "0/0"
       ],
       "base_steps": [
         47,
-        24
+        24,
+        0
       ],
       "sentry_steps": [
         34,
-        35
+        35,
+        0
       ],
       "base_tokens": [
         1060315,
-        350438
+        350438,
+        0
       ],
       "sentry_tokens": [
         780445,
-        832041
+        832041,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -477,29 +567,36 @@
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
         30,
-        40
+        40,
+        0
       ],
       "sentry_steps": [
         39,
-        35
+        35,
+        0
       ],
       "base_tokens": [
         510940,
-        740883
+        740883,
+        0
       ],
       "sentry_tokens": [
         779495,
-        670613
+        670613,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -511,29 +608,36 @@
       ],
       "base_f2p_rates": [
         "0/2",
+        "0/0",
         "0/0"
       ],
       "sentry_f2p_rates": [
         "0/0",
-        "2/2"
+        "2/2",
+        "0/0"
       ],
       "base_steps": [
         55,
-        60
+        60,
+        0
       ],
       "sentry_steps": [
         52,
-        50
+        50,
+        0
       ],
       "base_tokens": [
         1273235,
-        1520995
+        1520995,
+        0
       ],
       "sentry_tokens": [
         1072830,
-        1130955
+        1130955,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -543,29 +647,36 @@
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
         60,
-        60
+        60,
+        0
       ],
       "sentry_steps": [
         33,
-        60
+        60,
+        0
       ],
       "base_tokens": [
         1545486,
-        1448033
+        1448033,
+        0
       ],
       "sentry_tokens": [
         626138,
-        1265683
+        1265683,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -575,29 +686,36 @@
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
         "0/1",
+        "0/0",
         "0/0"
       ],
       "sentry_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
         48,
+        0,
         0
       ],
       "sentry_steps": [
         28,
-        41
+        41,
+        0
       ],
       "base_tokens": [
         1099473,
+        0,
         0
       ],
       "sentry_tokens": [
         439597,
-        800042
+        800042,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -607,29 +725,36 @@
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
         "0/1",
+        "0/0",
         "0/0"
       ],
       "sentry_f2p_rates": [
         "0/1",
+        "0/0",
         "0/0"
       ],
       "base_steps": [
         60,
-        60
+        60,
+        0
       ],
       "sentry_steps": [
         60,
-        60
+        60,
+        0
       ],
       "base_tokens": [
         1858150,
-        1895605
+        1895605,
+        0
       ],
       "sentry_tokens": [
         2467960,
-        1252784
+        1252784,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -639,29 +764,36 @@
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
         "1/2",
-        "1/2"
+        "1/2",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "1/2",
-        "1/2"
+        "1/2",
+        "0/0"
       ],
       "base_steps": [
         19,
-        14
+        14,
+        0
       ],
       "sentry_steps": [
         22,
-        25
+        25,
+        0
       ],
       "base_tokens": [
         232140,
-        169983
+        169983,
+        0
       ],
       "sentry_tokens": [
         340833,
-        435508
+        435508,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -677,29 +809,36 @@
       ],
       "base_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         24,
-        60
+        60,
+        0
       ],
       "sentry_steps": [
         38,
-        51
+        51,
+        0
       ],
       "base_tokens": [
         353738,
-        2483836
+        2483836,
+        0
       ],
       "sentry_tokens": [
         936446,
-        1428885
+        1428885,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -709,29 +848,36 @@
       "sentry_resolved_iters": [],
       "base_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "0/1",
-        "0/1"
+        "0/1",
+        "0/0"
       ],
       "base_steps": [
         39,
-        44
+        44,
+        0
       ],
       "sentry_steps": [
         45,
-        43
+        43,
+        0
       ],
       "base_tokens": [
         695409,
-        791249
+        791249,
+        0
       ],
       "sentry_tokens": [
         851107,
-        1095298
+        1095298,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]
@@ -747,29 +893,36 @@
       ],
       "base_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "sentry_f2p_rates": [
         "1/1",
-        "1/1"
+        "1/1",
+        "0/0"
       ],
       "base_steps": [
         34,
-        28
+        28,
+        0
       ],
       "sentry_steps": [
         26,
-        34
+        34,
+        0
       ],
       "base_tokens": [
         726315,
-        535968
+        535968,
+        0
       ],
       "sentry_tokens": [
         354317,
-        886392
+        886392,
+        0
       ],
       "sentry_interventions": [
+        0,
         0,
         0
       ]

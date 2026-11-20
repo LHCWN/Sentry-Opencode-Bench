@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Re-evaluate benchmark results with detailed test category metrics (FAIL_TO_PASS, PASS_TO_PASS)."""
+from __future__ import annotations
 
 import argparse
 import concurrent.futures
@@ -11,8 +12,26 @@ import time
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+def resolve_host_path(p: str | None) -> Path | None:
+    if not p:
+        return None
+    path_obj = Path(p)
+    if path_obj.exists():
+        return path_obj
+    p_str = str(p)
+    if p_str.startswith("/app/"):
+        candidate = PROJECT_ROOT / p_str[5:]
+        if candidate.exists():
+            return candidate
+    candidate = PROJECT_ROOT / p_str.lstrip("/")
+    if candidate.exists():
+        return candidate
+    return path_obj
+
+
 def eval_patch(instance_id: str, patch_file: str) -> dict:
-    if not patch_file or not Path(patch_file).exists() or os.path.getsize(patch_file) == 0:
+    patch_path = resolve_host_path(patch_file)
+    if not patch_path or not patch_path.exists() or patch_path.stat().st_size == 0:
         return {
             "resolved": False,
             "fail_to_pass": {"total": 0, "passed": 0, "failed": 0, "success": [], "failure": []},
@@ -26,7 +45,7 @@ def eval_patch(instance_id: str, patch_file: str) -> dict:
         str(PROJECT_ROOT / "run_in_docker.sh"),
         "eval",
         instance_id,
-        patch_file,
+        str(patch_path),
         "--reset-to-base",
         "--json",
     ]

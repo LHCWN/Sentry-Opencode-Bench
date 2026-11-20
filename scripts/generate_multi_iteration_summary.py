@@ -80,7 +80,7 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
             summary_per_task[tid]["base_tokens"].append(b_tok)
             summary_per_task[tid]["sentry_tokens"].append(s_tok)
 
-            summary_per_task[tid]["sentry_interventions"].append(s.get("interventions_count", 0))
+            summary_per_task[tid]["sentry_interventions"].append(s.get("interventions", s.get("interventions_count", 0)))
 
     # Overall stats
     iter_stats = {}
@@ -91,7 +91,7 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
         s_steps = sum((d.get("sentry") or {}).get("total_steps", 0) for d in it_data.values())
         b_toks = sum((d.get("base") or {}).get("total_tokens", 0) for d in it_data.values())
         s_toks = sum((d.get("sentry") or {}).get("total_tokens", 0) for d in it_data.values())
-        s_intrv = sum((d.get("sentry") or {}).get("interventions_count", 0) for d in it_data.values())
+        s_intrv = sum((d.get("sentry") or {}).get("interventions", (d.get("sentry") or {}).get("interventions_count", 0)) for d in it_data.values())
 
         iter_stats[it_num] = {
             "total_tasks": len(it_data),

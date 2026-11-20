@@ -17,7 +17,7 @@
       "base_tokens": 11728845,
       "sentry_tokens": 12831034,
       "token_savings_pct": 9.4,
-      "sentry_interventions": 0
+      "sentry_interventions": 11
     },
     "2": {
       "total_tasks": 20,
@@ -29,7 +29,7 @@
       "base_tokens": 13018175,
       "sentry_tokens": 12923738,
       "token_savings_pct": -0.7,
-      "sentry_interventions": 0
+      "sentry_interventions": 9
     },
     "3": {
       "total_tasks": 20,
@@ -41,7 +41,7 @@
       "base_tokens": 11042674,
       "sentry_tokens": 12288194,
       "token_savings_pct": 11.3,
-      "sentry_interventions": 0
+      "sentry_interventions": 11
     },
     "4": {
       "total_tasks": 20,
@@ -53,7 +53,7 @@
       "base_tokens": 12803301,
       "sentry_tokens": 11609932,
       "token_savings_pct": -9.3,
-      "sentry_interventions": 0
+      "sentry_interventions": 15
     }
   },
   "pass_at_k": {
@@ -309,7 +309,7 @@
         225567
       ],
       "sentry_interventions": [
-        0,
+        1,
         0,
         0,
         0
@@ -364,10 +364,10 @@
         656359
       ],
       "sentry_interventions": [
+        1,
         0,
         0,
-        0,
-        0
+        1
       ]
     },
     "django__django-12284": {
@@ -422,7 +422,7 @@
         0,
         0,
         0,
-        0
+        1
       ]
     },
     "django__django-12308": {
@@ -472,8 +472,8 @@
       "sentry_interventions": [
         0,
         0,
-        0,
-        0
+        1,
+        1
       ]
     },
     "django__django-12747": {
@@ -528,8 +528,8 @@
       "sentry_interventions": [
         0,
         0,
-        0,
-        0
+        2,
+        1
       ]
     },
     "django__django-13710": {
@@ -633,7 +633,7 @@
         188400
       ],
       "sentry_interventions": [
-        0,
+        1,
         0,
         0,
         0
@@ -688,9 +688,9 @@
       ],
       "sentry_interventions": [
         0,
+        1,
         0,
-        0,
-        0
+        1
       ]
     },
     "django__django-14667": {
@@ -735,10 +735,10 @@
         710655
       ],
       "sentry_interventions": [
-        0,
-        0,
-        0,
-        0
+        2,
+        1,
+        1,
+        2
       ]
     },
     "django__django-16816": {
@@ -785,10 +785,10 @@
         1732290
       ],
       "sentry_interventions": [
-        0,
-        0,
-        0,
-        0
+        1,
+        1,
+        2,
+        2
       ]
     },
     "pytest-dev__pytest-7220": {
@@ -831,10 +831,10 @@
         988179
       ],
       "sentry_interventions": [
+        2,
         0,
-        0,
-        0,
-        0
+        1,
+        2
       ]
     },
     "sphinx-doc__sphinx-7975": {
@@ -877,10 +877,10 @@
         661211
       ],
       "sentry_interventions": [
+        1,
         0,
-        0,
-        0,
-        0
+        1,
+        1
       ]
     },
     "sympy__sympy-11870": {
@@ -924,9 +924,9 @@
       ],
       "sentry_interventions": [
         0,
-        0,
-        0,
-        0
+        1,
+        1,
+        1
       ]
     },
     "sympy__sympy-13177": {
@@ -969,10 +969,10 @@
         250892
       ],
       "sentry_interventions": [
-        0,
-        0,
-        0,
-        0
+        1,
+        1,
+        1,
+        1
       ]
     },
     "sympy__sympy-15011": {
@@ -1026,7 +1026,7 @@
       ],
       "sentry_interventions": [
         0,
-        0,
+        1,
         0,
         0
       ]
@@ -1071,10 +1071,10 @@
         552920
       ],
       "sentry_interventions": [
-        0,
-        0,
-        0,
-        0
+        1,
+        2,
+        1,
+        1
       ]
     },
     "sympy__sympy-22005": {
@@ -1127,7 +1127,7 @@
       ],
       "sentry_interventions": [
         0,
-        0,
+        1,
         0,
         0
       ]

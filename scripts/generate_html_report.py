@@ -298,7 +298,11 @@ def generate_report(results_path: Path, output_html: Path):
                 </div>
             </div>
         </div>
-        """
+    sentry_model_name = next((modes.get("sentry", {}).get("sentry_model") for modes in data.values() if modes.get("sentry", {}).get("sentry_model")), "google/gemma-4-e4b")
+    if "gemma" in sentry_model_name.lower():
+        supervisor_desc = f"{sentry_model_name} (Local LM Studio)"
+    else:
+        supervisor_desc = f"{sentry_model_name} (CrazyRouter)"
 
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -477,10 +481,10 @@ def generate_report(results_path: Path, output_html: Path):
 <body>
     <div class="container">
         <header>
-            <h1>Sentry vs Base Benchmark Dashboard (DeepSeek Flash)</h1>
+            <h1>Sentry vs Base Benchmark Dashboard</h1>
             <div class="subtitle">
                 Agent Model: <strong>crazyrouter/deepseek-flash</strong> (variant: high, endpoint: api.lhcwn.pro/v1) &bull;
-                Supervisor: <strong>google/gemma-4-e4b</strong> (Local LM Studio) &bull;
+                Supervisor: <strong>{supervisor_desc}</strong> &bull;
                 Dataset: <strong>SWE-bench Lite ({len(tasks)} tasks)</strong> &bull;
                 Network Whitelist: <strong>Enforced (Default Deny)</strong> &bull;
                 Repository Isolation: <strong>Isolated /app/workspace</strong>

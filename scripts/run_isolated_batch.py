@@ -96,6 +96,7 @@ def process_single_task(
     force: bool,
     rerun_failed: bool,
     evaluate: bool,
+    sentry_config: str | None = None,
 ) -> None:
     print(f"\n[{idx}/{total}] 🟢 Starting task: {instance_id}")
 
@@ -165,6 +166,8 @@ def process_single_task(
             "--max-steps", str(max_steps),
             "--output-dir", str(runs_dir),
         ]
+        if sentry_config:
+            sentry_cmd.extend(["--config", sentry_config])
         subprocess.run(sentry_cmd, cwd=str(PROJECT_ROOT), check=False)
         summary = find_latest_run_summary(runs_dir, instance_id, "_sentry")
         with results_lock:
@@ -245,6 +248,7 @@ def run_batch(
     force: bool = False,
     rerun_failed: bool = False,
     evaluate: bool = True,
+    sentry_config: str | None = None,
 ) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     runs_dir = output_dir / "runs"
@@ -254,6 +258,8 @@ def run_batch(
     print(f"🚀 Running Isolated Benchmark across {len(task_ids)} tasks")
     print(f"Concurrency: {concurrency} parallel workers")
     print(f"Max steps: {max_steps} | Output directory: {output_dir}")
+    if sentry_config:
+        print(f"Sentry Config: {sentry_config}")
     print(f"Container Workspace: /app/workspace (anonymous, zero task hints)")
     print("=" * 70)
 
@@ -271,6 +277,7 @@ def run_batch(
                 force=force,
                 rerun_failed=rerun_failed,
                 evaluate=evaluate,
+                sentry_config=sentry_config,
             ): instance_id
             for idx, instance_id in enumerate(task_ids, 1)
         }
@@ -292,6 +299,7 @@ def main():
     parser.add_argument("--max-steps", type=int, default=60, help="Max steps per task")
     parser.add_argument("--force", action="store_true", help="Force re-run all tasks")
     parser.add_argument("--rerun-failed", action="store_true", help="Rerun failed tasks")
+    parser.add_argument("--sentry-config", type=str, default=None, help="Path to Sentry config YAML")
     args = parser.parse_args()
 
     run_batch(
@@ -301,6 +309,7 @@ def main():
         max_steps=args.max_steps,
         force=args.force,
         rerun_failed=args.rerun_failed,
+        sentry_config=args.sentry_config,
     )
 
 

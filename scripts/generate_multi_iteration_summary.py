@@ -16,10 +16,10 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
-def load_iteration_results(outputs_dir: Path, max_iters: int = 5) -> dict[int, dict]:
+def load_iteration_results(outputs_dir: Path, max_iters: int = 5, pattern: str = "batch_20tasks_iter{i}") -> dict[int, dict]:
     iterations = {}
     for i in range(1, max_iters + 1):
-        res_file = outputs_dir / f"batch_20tasks_iter{i}" / "results.json"
+        res_file = outputs_dir / pattern.format(i=i) / "results.json"
         if res_file.is_file():
             try:
                 data = json.loads(res_file.read_text(encoding="utf-8"))
@@ -276,12 +276,13 @@ def generate_html_summary(agg: dict, output_path: Path):
 def main():
     parser = argparse.ArgumentParser(description="Multi-Iteration Aggregator")
     parser.add_argument("--outputs-dir", type=Path, default=PROJECT_ROOT / "outputs")
+    parser.add_argument("--pattern", type=str, default="batch_20tasks_iter{i}", help="Directory pattern for iterations")
     parser.add_argument("--max-iters", type=int, default=5)
     parser.add_argument("--output-json", type=Path, default=PROJECT_ROOT / "reports" / "multi_iteration_summary.json")
     parser.add_argument("--output-html", type=Path, default=PROJECT_ROOT / "reports" / "multi_iteration_report.html")
     args = parser.parse_args()
 
-    iters_data = load_iteration_results(args.outputs_dir, args.max_iters)
+    iters_data = load_iteration_results(args.outputs_dir, args.max_iters, pattern=args.pattern)
     if not iters_data:
         print("No iteration results found.")
         sys.exit(1)

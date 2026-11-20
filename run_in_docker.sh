@@ -41,6 +41,7 @@ NET_FLAGS=(
 VOLUMES=(
     -v "${SCRIPT_DIR}/benchmarks:/app/benchmarks"
     -v "${SCRIPT_DIR}/scripts:/app/scripts"
+    -v "${SCRIPT_DIR}/configs:/app/configs"
     -v "${SCRIPT_DIR}/outputs:/app/outputs"
     -v "${SCRIPT_DIR}/reports:/app/reports"
     -v "${SCRIPT_DIR}/workspaces:/app/workspaces"
@@ -56,10 +57,17 @@ case "$MODE" in
         shift || true
         echo "🚀 Running single SWE-bench instance in Docker: ${INSTANCE_ID}"
         mkdir -p "${SCRIPT_DIR}/workspaces/${INSTANCE_ID}" "${SCRIPT_DIR}/workspaces/.shims"
+        DEFAULT_CONFIG="${SENTRY_CONFIG:-configs/providers/crazyrouter_deepseek.yaml}"
+        CONFIG_ARGS=()
+        if [[ ! " $@ " =~ " --config " ]]; then
+            CONFIG_ARGS=(--config "${DEFAULT_CONFIG}")
+        fi
         docker run --rm ${DOCKER_FLAGS} \
             "${NET_FLAGS[@]}" \
+            -e CRAZYROUTER_API_KEY="${CRAZYROUTER_API_KEY:-sk-aSR4SNXMye--Mo1CDHSKlg}" \
             -v "${SCRIPT_DIR}/benchmarks:/app/benchmarks" \
             -v "${SCRIPT_DIR}/scripts:/app/scripts" \
+            -v "${SCRIPT_DIR}/configs:/app/configs" \
             -v "${SCRIPT_DIR}/outputs:/app/outputs" \
             -v "${SCRIPT_DIR}/reports:/app/reports" \
             -v "${SCRIPT_DIR}/workspaces/${INSTANCE_ID}:/app/workspace" \
@@ -70,7 +78,7 @@ case "$MODE" in
                 --workspace-path "/app/workspace" \
                 --opencode-model "crazyrouter/deepseek-flash" \
                 --opencode-variant high \
-                --config "configs/providers/lmstudio_docker.yaml" \
+                "${CONFIG_ARGS[@]}" \
                 --max-steps 60 \
                 --check-interval 5 \
                 --check-on-error \

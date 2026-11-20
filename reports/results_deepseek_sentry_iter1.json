@@ -1,0 +1,2137 @@
+{
+  "django__django-12284": {
+    "base": {
+      "error": "No summary produced",
+      "elapsed_seconds": 10.433286190032959,
+      "total_steps": 0,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-12284",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 167.30468225479126,
+      "total_steps": 22,
+      "interventions": 0,
+      "patch_length": 1625,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112951Z_sentry/django__django-12284/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 12759,
+        "cumulative_output": 2135,
+        "cumulative_reasoning": 1618,
+        "cumulative_total": 264192,
+        "max_context_window": 2107,
+        "last_step_input": 291,
+        "total_generated": 3753,
+        "net_session_tokens": 4044,
+        "input": 12759,
+        "output": 2135,
+        "reasoning": 1618,
+        "total": 264192
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 11042,
+        "completion_tokens": 1570,
+        "total_tokens": 12612
+      },
+      "cumulative_tokens": 276804,
+      "session_net_tokens": 16656,
+      "total_tokens": 276804,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "sympy__sympy-15011": {
+    "base": {
+      "instance_id": "sympy__sympy-15011",
+      "repo": "sympy/sympy",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 95.44982242584229,
+      "total_steps": 24,
+      "interventions": 0,
+      "patch_length": 917,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112940Z_base/sympy__sympy-15011/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 15148,
+        "cumulative_output": 2354,
+        "cumulative_reasoning": 3308,
+        "cumulative_total": 353738,
+        "max_context_window": 3048,
+        "last_step_input": 391,
+        "total_generated": 5662,
+        "net_session_tokens": 6053,
+        "input": 15148,
+        "output": 2354,
+        "reasoning": 3308,
+        "total": 353738
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 353738,
+      "session_net_tokens": 6053,
+      "total_tokens": 353738,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "sympy__sympy-15011",
+      "repo": "sympy/sympy",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 185.24022269248962,
+      "total_steps": 38,
+      "interventions": 0,
+      "patch_length": 2845,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113121Z_sentry/sympy__sympy-15011/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 23753,
+        "cumulative_output": 4888,
+        "cumulative_reasoning": 8670,
+        "cumulative_total": 909503,
+        "max_context_window": 10507,
+        "last_step_input": 917,
+        "total_generated": 13558,
+        "net_session_tokens": 14475,
+        "input": 23753,
+        "output": 4888,
+        "reasoning": 8670,
+        "total": 909503
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 21912,
+        "completion_tokens": 5031,
+        "total_tokens": 26943
+      },
+      "cumulative_tokens": 936446,
+      "session_net_tokens": 41418,
+      "total_tokens": 936446,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-11099": {
+    "base": {
+      "instance_id": "django__django-11099",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 110.30129098892212,
+      "total_steps": 9,
+      "interventions": 0,
+      "patch_length": 1961,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112940Z_base/django__django-11099/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 3254,
+        "cumulative_output": 1135,
+        "cumulative_reasoning": 190,
+        "cumulative_total": 88931,
+        "max_context_window": 813,
+        "last_step_input": 240,
+        "total_generated": 1325,
+        "net_session_tokens": 1565,
+        "input": 3254,
+        "output": 1135,
+        "reasoning": 190,
+        "total": 88931
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 88931,
+      "session_net_tokens": 1565,
+      "total_tokens": 88931,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-11099",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 104.7876808643341,
+      "total_steps": 9,
+      "interventions": 0,
+      "patch_length": 895,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113143Z_sentry/django__django-11099/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 2288,
+        "cumulative_output": 1016,
+        "cumulative_reasoning": 157,
+        "cumulative_total": 82949,
+        "max_context_window": 351,
+        "last_step_input": 174,
+        "total_generated": 1173,
+        "net_session_tokens": 1347,
+        "input": 2288,
+        "output": 1016,
+        "reasoning": 157,
+        "total": 82949
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 2811,
+        "completion_tokens": 457,
+        "total_tokens": 3268
+      },
+      "cumulative_tokens": 86217,
+      "session_net_tokens": 4615,
+      "total_tokens": 86217,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-13768": {
+    "base": {
+      "instance_id": "django__django-13768",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 135.8270936012268,
+      "total_steps": 14,
+      "interventions": 0,
+      "patch_length": 2034,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112941Z_base/django__django-13768/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 7616,
+        "cumulative_output": 1614,
+        "cumulative_reasoning": 1152,
+        "cumulative_total": 144654,
+        "max_context_window": 3951,
+        "last_step_input": 597,
+        "total_generated": 2766,
+        "net_session_tokens": 3363,
+        "input": 7616,
+        "output": 1614,
+        "reasoning": 1152,
+        "total": 144654
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 144654,
+      "session_net_tokens": 3363,
+      "total_tokens": 144654,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-13768",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 268.4549448490143,
+      "total_steps": 26,
+      "interventions": 1,
+      "patch_length": 3027,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113210Z_sentry/django__django-13768/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 12373,
+        "cumulative_output": 2965,
+        "cumulative_reasoning": 3778,
+        "cumulative_total": 439084,
+        "max_context_window": 2712,
+        "last_step_input": 415,
+        "total_generated": 6743,
+        "net_session_tokens": 7158,
+        "input": 12373,
+        "output": 2965,
+        "reasoning": 3778,
+        "total": 439084
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 15882,
+        "completion_tokens": 4156,
+        "total_tokens": 20038
+      },
+      "cumulative_tokens": 459122,
+      "session_net_tokens": 27196,
+      "total_tokens": 459122,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "sympy__sympy-15308": {
+    "base": {
+      "instance_id": "sympy__sympy-15308",
+      "repo": "sympy/sympy",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 145.12690901756287,
+      "total_steps": 39,
+      "interventions": 0,
+      "patch_length": 505,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112941Z_base/sympy__sympy-15308/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 18986,
+        "cumulative_output": 3599,
+        "cumulative_reasoning": 5560,
+        "cumulative_total": 695409,
+        "max_context_window": 3403,
+        "last_step_input": 252,
+        "total_generated": 9159,
+        "net_session_tokens": 9411,
+        "input": 18986,
+        "output": 3599,
+        "reasoning": 5560,
+        "total": 695409
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 695409,
+      "session_net_tokens": 9411,
+      "total_tokens": 695409,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "sympy__sympy-15308",
+      "repo": "sympy/sympy",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 180.64057159423828,
+      "total_steps": 45,
+      "interventions": 1,
+      "patch_length": 505,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113213Z_sentry/sympy__sympy-15308/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 22163,
+        "cumulative_output": 3660,
+        "cumulative_reasoning": 9897,
+        "cumulative_total": 811144,
+        "max_context_window": 5308,
+        "last_step_input": 747,
+        "total_generated": 13557,
+        "net_session_tokens": 14304,
+        "input": 22163,
+        "output": 3660,
+        "reasoning": 9897,
+        "total": 811144
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 31146,
+        "completion_tokens": 8817,
+        "total_tokens": 39963
+      },
+      "cumulative_tokens": 851107,
+      "session_net_tokens": 54267,
+      "total_tokens": 851107,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-12747": {
+    "base": {
+      "instance_id": "django__django-12747",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 237.06082201004028,
+      "total_steps": 27,
+      "interventions": 0,
+      "patch_length": 2741,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112940Z_base/django__django-12747/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 13492,
+        "cumulative_output": 2814,
+        "cumulative_reasoning": 3916,
+        "cumulative_total": 369022,
+        "max_context_window": 3013,
+        "last_step_input": 707,
+        "total_generated": 6730,
+        "net_session_tokens": 7437,
+        "input": 13492,
+        "output": 2814,
+        "reasoning": 3916,
+        "total": 369022
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 369022,
+      "session_net_tokens": 7437,
+      "total_tokens": 369022,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-12747",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 255.06318497657776,
+      "total_steps": 31,
+      "interventions": 0,
+      "patch_length": 1064,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113349Z_sentry/django__django-12747/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 15966,
+        "cumulative_output": 2710,
+        "cumulative_reasoning": 6283,
+        "cumulative_total": 520703,
+        "max_context_window": 4403,
+        "last_step_input": 186,
+        "total_generated": 8993,
+        "net_session_tokens": 9179,
+        "input": 15966,
+        "output": 2710,
+        "reasoning": 6283,
+        "total": 520703
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 17354,
+        "completion_tokens": 7207,
+        "total_tokens": 24561
+      },
+      "cumulative_tokens": 545264,
+      "session_net_tokens": 33740,
+      "total_tokens": 545264,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "sympy__sympy-13177": {
+    "base": {
+      "instance_id": "sympy__sympy-13177",
+      "repo": "sympy/sympy",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 86.75328469276428,
+      "total_steps": 19,
+      "interventions": 0,
+      "patch_length": 588,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113258Z_base/sympy__sympy-13177/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 9311,
+        "cumulative_output": 1987,
+        "cumulative_reasoning": 5034,
+        "cumulative_total": 232140,
+        "max_context_window": 2693,
+        "last_step_input": 146,
+        "total_generated": 7021,
+        "net_session_tokens": 7167,
+        "input": 9311,
+        "output": 1987,
+        "reasoning": 5034,
+        "total": 232140
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 232140,
+      "session_net_tokens": 7167,
+      "total_tokens": 232140,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "sympy__sympy-13177",
+      "repo": "sympy/sympy",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 134.7155556678772,
+      "total_steps": 22,
+      "interventions": 1,
+      "patch_length": 583,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113436Z_sentry/sympy__sympy-13177/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 13136,
+        "cumulative_output": 2031,
+        "cumulative_reasoning": 3770,
+        "cumulative_total": 314489,
+        "max_context_window": 3479,
+        "last_step_input": 168,
+        "total_generated": 5801,
+        "net_session_tokens": 5969,
+        "input": 13136,
+        "output": 2031,
+        "reasoning": 3770,
+        "total": 314489
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 15680,
+        "completion_tokens": 10664,
+        "total_tokens": 26344
+      },
+      "cumulative_tokens": 340833,
+      "session_net_tokens": 32313,
+      "total_tokens": 340833,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "sympy__sympy-11870": {
+    "base": {
+      "instance_id": "sympy__sympy-11870",
+      "repo": "sympy/sympy",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 298.2948622703552,
+      "total_steps": 60,
+      "interventions": 0,
+      "patch_length": 712,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112940Z_base/sympy__sympy-11870/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 43753,
+        "cumulative_output": 5340,
+        "cumulative_reasoning": 17825,
+        "cumulative_total": 1858150,
+        "max_context_window": 9716,
+        "last_step_input": 676,
+        "total_generated": 23165,
+        "net_session_tokens": 23841,
+        "input": 43753,
+        "output": 5340,
+        "reasoning": 17825,
+        "total": 1858150
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 1858150,
+      "session_net_tokens": 23841,
+      "total_tokens": 1858150,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "sympy__sympy-11870",
+      "repo": "sympy/sympy",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 414.71505880355835,
+      "total_steps": 60,
+      "interventions": 0,
+      "patch_length": 1521,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113447Z_sentry/sympy__sympy-11870/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 42734,
+        "cumulative_output": 6661,
+        "cumulative_reasoning": 26790,
+        "cumulative_total": 2415897,
+        "max_context_window": 7498,
+        "last_step_input": 585,
+        "total_generated": 33451,
+        "net_session_tokens": 34036,
+        "input": 42734,
+        "output": 6661,
+        "reasoning": 26790,
+        "total": 2415897
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 36476,
+        "completion_tokens": 15587,
+        "total_tokens": 52063
+      },
+      "cumulative_tokens": 2467960,
+      "session_net_tokens": 86099,
+      "total_tokens": 2467960,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-14667": {
+    "base": {
+      "instance_id": "django__django-14667",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 304.056343793869,
+      "total_steps": 30,
+      "interventions": 0,
+      "patch_length": 1168,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112940Z_base/django__django-14667/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 15238,
+        "cumulative_output": 3026,
+        "cumulative_reasoning": 6532,
+        "cumulative_total": 510940,
+        "max_context_window": 1940,
+        "last_step_input": 269,
+        "total_generated": 9558,
+        "net_session_tokens": 9827,
+        "input": 15238,
+        "output": 3026,
+        "reasoning": 6532,
+        "total": 510940
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 510940,
+      "session_net_tokens": 9827,
+      "total_tokens": 510940,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-14667",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 393.8937017917633,
+      "total_steps": 39,
+      "interventions": 2,
+      "patch_length": 515,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113456Z_sentry/django__django-14667/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 17241,
+        "cumulative_output": 3453,
+        "cumulative_reasoning": 16414,
+        "cumulative_total": 740212,
+        "max_context_window": 1805,
+        "last_step_input": 220,
+        "total_generated": 19867,
+        "net_session_tokens": 20087,
+        "input": 17241,
+        "output": 3453,
+        "reasoning": 16414,
+        "total": 740212
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 30287,
+        "completion_tokens": 8996,
+        "total_tokens": 39283
+      },
+      "cumulative_tokens": 779495,
+      "session_net_tokens": 59370,
+      "total_tokens": 779495,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-12308": {
+    "base": {
+      "instance_id": "django__django-12308",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 271.08252573013306,
+      "total_steps": 34,
+      "interventions": 0,
+      "patch_length": 731,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112941Z_base/django__django-12308/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 14581,
+        "cumulative_output": 2613,
+        "cumulative_reasoning": 11303,
+        "cumulative_total": 455889,
+        "max_context_window": 3693,
+        "last_step_input": 220,
+        "total_generated": 13916,
+        "net_session_tokens": 14136,
+        "input": 14581,
+        "output": 2613,
+        "reasoning": 11303,
+        "total": 455889
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 455889,
+      "session_net_tokens": 14136,
+      "total_tokens": 455889,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-12308",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 225.7830958366394,
+      "total_steps": 26,
+      "interventions": 0,
+      "patch_length": 904,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113505Z_sentry/django__django-12308/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 11829,
+        "cumulative_output": 2320,
+        "cumulative_reasoning": 3829,
+        "cumulative_total": 350906,
+        "max_context_window": 2038,
+        "last_step_input": 168,
+        "total_generated": 6149,
+        "net_session_tokens": 6317,
+        "input": 11829,
+        "output": 2320,
+        "reasoning": 3829,
+        "total": 350906
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 13275,
+        "completion_tokens": 3263,
+        "total_tokens": 16538
+      },
+      "cumulative_tokens": 367444,
+      "session_net_tokens": 22855,
+      "total_tokens": 367444,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "pytest-dev__pytest-7220": {
+    "base": {
+      "instance_id": "pytest-dev__pytest-7220",
+      "repo": "pytest-dev/pytest",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 182.85246419906616,
+      "total_steps": 60,
+      "interventions": 0,
+      "patch_length": 56854,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113431Z_base/pytest-dev__pytest-7220/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 30619,
+        "cumulative_output": 5626,
+        "cumulative_reasoning": 6649,
+        "cumulative_total": 1545486,
+        "max_context_window": 3053,
+        "last_step_input": 239,
+        "total_generated": 12275,
+        "net_session_tokens": 12514,
+        "input": 30619,
+        "output": 5626,
+        "reasoning": 6649,
+        "total": 1545486
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 1545486,
+      "session_net_tokens": 12514,
+      "total_tokens": 1545486,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "pytest-dev__pytest-7220",
+      "repo": "pytest-dev/pytest",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 140.16205263137817,
+      "total_steps": 33,
+      "interventions": 2,
+      "patch_length": 929,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113737Z_sentry/pytest-dev__pytest-7220/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 18508,
+        "cumulative_output": 2720,
+        "cumulative_reasoning": 6097,
+        "cumulative_total": 579517,
+        "max_context_window": 3463,
+        "last_step_input": 160,
+        "total_generated": 8817,
+        "net_session_tokens": 8977,
+        "input": 18508,
+        "output": 2720,
+        "reasoning": 6097,
+        "total": 579517
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 36045,
+        "completion_tokens": 10576,
+        "total_tokens": 46621
+      },
+      "cumulative_tokens": 626138,
+      "session_net_tokens": 55598,
+      "total_tokens": 626138,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-11999": {
+    "base": {
+      "instance_id": "django__django-11999",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 135.9038290977478,
+      "total_steps": 16,
+      "interventions": 0,
+      "patch_length": 2640,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113521Z_base/django__django-11999/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 5802,
+        "cumulative_output": 1774,
+        "cumulative_reasoning": 1153,
+        "cumulative_total": 185497,
+        "max_context_window": 980,
+        "last_step_input": 388,
+        "total_generated": 2927,
+        "net_session_tokens": 3315,
+        "input": 5802,
+        "output": 1774,
+        "reasoning": 1153,
+        "total": 185497
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 185497,
+      "session_net_tokens": 3315,
+      "total_tokens": 185497,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-11999",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 456.2571589946747,
+      "total_steps": 53,
+      "interventions": 1,
+      "patch_length": 2733,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113753Z_sentry/django__django-11999/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 18149,
+        "cumulative_output": 4525,
+        "cumulative_reasoning": 13258,
+        "cumulative_total": 1006812,
+        "max_context_window": 1840,
+        "last_step_input": 142,
+        "total_generated": 17783,
+        "net_session_tokens": 17925,
+        "input": 18149,
+        "output": 4525,
+        "reasoning": 13258,
+        "total": 1006812
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 32937,
+        "completion_tokens": 8274,
+        "total_tokens": 41211
+      },
+      "cumulative_tokens": 1048023,
+      "session_net_tokens": 59136,
+      "total_tokens": 1048023,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-14017": {
+    "base": {
+      "instance_id": "django__django-14017",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 519.8796610832214,
+      "total_steps": 47,
+      "interventions": 0,
+      "patch_length": 832,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T112941Z_base/django__django-14017/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 19001,
+        "cumulative_output": 4245,
+        "cumulative_reasoning": 16269,
+        "cumulative_total": 1060315,
+        "max_context_window": 2303,
+        "last_step_input": 384,
+        "total_generated": 20514,
+        "net_session_tokens": 20898,
+        "input": 19001,
+        "output": 4245,
+        "reasoning": 16269,
+        "total": 1060315
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 1060315,
+      "session_net_tokens": 20898,
+      "total_tokens": 1060315,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-14017",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 355.8354825973511,
+      "total_steps": 34,
+      "interventions": 0,
+      "patch_length": 1711,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113834Z_sentry/django__django-14017/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 19450,
+        "cumulative_output": 4114,
+        "cumulative_reasoning": 8244,
+        "cumulative_total": 756928,
+        "max_context_window": 2576,
+        "last_step_input": 180,
+        "total_generated": 12358,
+        "net_session_tokens": 12538,
+        "input": 19450,
+        "output": 4114,
+        "reasoning": 8244,
+        "total": 756928
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 18806,
+        "completion_tokens": 4711,
+        "total_tokens": 23517
+      },
+      "cumulative_tokens": 780445,
+      "session_net_tokens": 36055,
+      "total_tokens": 780445,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "sphinx-doc__sphinx-7975": {
+    "base": {
+      "instance_id": "sphinx-doc__sphinx-7975",
+      "repo": "sphinx-doc/sphinx",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 207.41073298454285,
+      "total_steps": 48,
+      "interventions": 0,
+      "patch_length": 1054,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113649Z_base/sphinx-doc__sphinx-7975/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 27846,
+        "cumulative_output": 4947,
+        "cumulative_reasoning": 11832,
+        "cumulative_total": 1099473,
+        "max_context_window": 7434,
+        "last_step_input": 168,
+        "total_generated": 16779,
+        "net_session_tokens": 16947,
+        "input": 27846,
+        "output": 4947,
+        "reasoning": 11832,
+        "total": 1099473
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 1099473,
+      "session_net_tokens": 16947,
+      "total_tokens": 1099473,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "sphinx-doc__sphinx-7975",
+      "repo": "sphinx-doc/sphinx",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 136.12715315818787,
+      "total_steps": 28,
+      "interventions": 1,
+      "patch_length": 2050,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114023Z_sentry/sphinx-doc__sphinx-7975/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 13818,
+        "cumulative_output": 4056,
+        "cumulative_reasoning": 4262,
+        "cumulative_total": 423032,
+        "max_context_window": 2809,
+        "last_step_input": 724,
+        "total_generated": 8318,
+        "net_session_tokens": 9042,
+        "input": 13818,
+        "output": 4056,
+        "reasoning": 4262,
+        "total": 423032
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 11570,
+        "completion_tokens": 4995,
+        "total_tokens": 16565
+      },
+      "cumulative_tokens": 439597,
+      "session_net_tokens": 25607,
+      "total_tokens": 439597,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "sympy__sympy-22005": {
+    "base": {
+      "instance_id": "sympy__sympy-22005",
+      "repo": "sympy/sympy",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 426.4550304412842,
+      "total_steps": 34,
+      "interventions": 0,
+      "patch_length": 1450,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113334Z_base/sympy__sympy-22005/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 15258,
+        "cumulative_output": 3484,
+        "cumulative_reasoning": 12789,
+        "cumulative_total": 726315,
+        "max_context_window": 2273,
+        "last_step_input": 515,
+        "total_generated": 16273,
+        "net_session_tokens": 16788,
+        "input": 15258,
+        "output": 3484,
+        "reasoning": 12789,
+        "total": 726315
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 726315,
+      "session_net_tokens": 16788,
+      "total_tokens": 726315,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "sympy__sympy-22005",
+      "repo": "sympy/sympy",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 144.5933210849762,
+      "total_steps": 26,
+      "interventions": 0,
+      "patch_length": 1534,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114046Z_sentry/sympy__sympy-22005/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 9164,
+        "cumulative_output": 2874,
+        "cumulative_reasoning": 7553,
+        "cumulative_total": 325255,
+        "max_context_window": 2028,
+        "last_step_input": 656,
+        "total_generated": 10427,
+        "net_session_tokens": 11083,
+        "input": 9164,
+        "output": 2874,
+        "reasoning": 7553,
+        "total": 325255
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 16480,
+        "completion_tokens": 12582,
+        "total_tokens": 29062
+      },
+      "cumulative_tokens": 354317,
+      "session_net_tokens": 40145,
+      "total_tokens": 354317,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-11179": {
+    "base": {
+      "instance_id": "django__django-11179",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 164.98247599601746,
+      "total_steps": 17,
+      "interventions": 0,
+      "patch_length": 1102,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113812Z_base/django__django-11179/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 8947,
+        "cumulative_output": 1734,
+        "cumulative_reasoning": 1112,
+        "cumulative_total": 216081,
+        "max_context_window": 1788,
+        "last_step_input": 141,
+        "total_generated": 2846,
+        "net_session_tokens": 2987,
+        "input": 8947,
+        "output": 1734,
+        "reasoning": 1112,
+        "total": 216081
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 216081,
+      "session_net_tokens": 2987,
+      "total_tokens": 216081,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-11179",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 156.56546759605408,
+      "total_steps": 13,
+      "interventions": 0,
+      "patch_length": 1138,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114114Z_sentry/django__django-11179/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 9746,
+        "cumulative_output": 1357,
+        "cumulative_reasoning": 1835,
+        "cumulative_total": 199434,
+        "max_context_window": 1902,
+        "last_step_input": 463,
+        "total_generated": 3192,
+        "net_session_tokens": 3655,
+        "input": 9746,
+        "output": 1357,
+        "reasoning": 1835,
+        "total": 199434
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 4864,
+        "completion_tokens": 774,
+        "total_tokens": 5638
+      },
+      "cumulative_tokens": 205072,
+      "session_net_tokens": 9293,
+      "total_tokens": 205072,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-11133": {
+    "base": {
+      "instance_id": "django__django-11133",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 122.76585412025452,
+      "total_steps": 13,
+      "interventions": 0,
+      "patch_length": 1672,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113910Z_base/django__django-11133/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 6226,
+        "cumulative_output": 1400,
+        "cumulative_reasoning": 661,
+        "cumulative_total": 145759,
+        "max_context_window": 2519,
+        "last_step_input": 171,
+        "total_generated": 2061,
+        "net_session_tokens": 2232,
+        "input": 6226,
+        "output": 1400,
+        "reasoning": 661,
+        "total": 145759
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 145759,
+      "session_net_tokens": 2232,
+      "total_tokens": 145759,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-11133",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 162.39459681510925,
+      "total_steps": 18,
+      "interventions": 0,
+      "patch_length": 1860,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114131Z_sentry/django__django-11133/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 9648,
+        "cumulative_output": 1644,
+        "cumulative_reasoning": 2111,
+        "cumulative_total": 208091,
+        "max_context_window": 2414,
+        "last_step_input": 664,
+        "total_generated": 3755,
+        "net_session_tokens": 4419,
+        "input": 9648,
+        "output": 1644,
+        "reasoning": 2111,
+        "total": 208091
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 8268,
+        "completion_tokens": 1028,
+        "total_tokens": 9296
+      },
+      "cumulative_tokens": 217387,
+      "session_net_tokens": 13715,
+      "total_tokens": 217387,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-13710": {
+    "base": {
+      "instance_id": "django__django-13710",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 156.29401516914368,
+      "total_steps": 18,
+      "interventions": 0,
+      "patch_length": 2132,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114138Z_base/django__django-13710/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 8479,
+        "cumulative_output": 2064,
+        "cumulative_reasoning": 1728,
+        "cumulative_total": 203375,
+        "max_context_window": 1875,
+        "last_step_input": 350,
+        "total_generated": 3792,
+        "net_session_tokens": 4142,
+        "input": 8479,
+        "output": 2064,
+        "reasoning": 1728,
+        "total": 203375
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 203375,
+      "session_net_tokens": 4142,
+      "total_tokens": 203375,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-13710",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 100.77265286445618,
+      "total_steps": 24,
+      "interventions": 0,
+      "patch_length": 4251,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114435Z_sentry/django__django-13710/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 10278,
+        "cumulative_output": 2668,
+        "cumulative_reasoning": 3352,
+        "cumulative_total": 290218,
+        "max_context_window": 2376,
+        "last_step_input": 395,
+        "total_generated": 6020,
+        "net_session_tokens": 6415,
+        "input": 10278,
+        "output": 2668,
+        "reasoning": 3352,
+        "total": 290218
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 14079,
+        "completion_tokens": 2698,
+        "total_tokens": 16777
+      },
+      "cumulative_tokens": 306995,
+      "session_net_tokens": 23192,
+      "total_tokens": 306995,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-12113": {
+    "base": {
+      "instance_id": "django__django-12113",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 263.461056470871,
+      "total_steps": 32,
+      "interventions": 0,
+      "patch_length": 2693,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113959Z_base/django__django-12113/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 20579,
+        "cumulative_output": 3317,
+        "cumulative_reasoning": 4732,
+        "cumulative_total": 564436,
+        "max_context_window": 4659,
+        "last_step_input": 786,
+        "total_generated": 8049,
+        "net_session_tokens": 8835,
+        "input": 20579,
+        "output": 3317,
+        "reasoning": 4732,
+        "total": 564436
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 564436,
+      "session_net_tokens": 8835,
+      "total_tokens": 564436,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-12113",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 144.7069389820099,
+      "total_steps": 35,
+      "interventions": 1,
+      "patch_length": 519,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114442Z_sentry/django__django-12113/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 21298,
+        "cumulative_output": 3340,
+        "cumulative_reasoning": 4535,
+        "cumulative_total": 631413,
+        "max_context_window": 3785,
+        "last_step_input": 247,
+        "total_generated": 7875,
+        "net_session_tokens": 8122,
+        "input": 21298,
+        "output": 3340,
+        "reasoning": 4535,
+        "total": 631413
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 32806,
+        "completion_tokens": 5319,
+        "total_tokens": 38125
+      },
+      "cumulative_tokens": 669538,
+      "session_net_tokens": 46247,
+      "total_tokens": 669538,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "django__django-16816": {
+    "base": {
+      "instance_id": "django__django-16816",
+      "repo": "django/django",
+      "use_sentry": false,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": null,
+      "elapsed_seconds": 518.6361021995544,
+      "total_steps": 55,
+      "interventions": 0,
+      "patch_length": 2080,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T113700Z_base/django__django-16816/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 19198,
+        "cumulative_output": 5561,
+        "cumulative_reasoning": 12764,
+        "cumulative_total": 1273235,
+        "max_context_window": 2015,
+        "last_step_input": 286,
+        "total_generated": 18325,
+        "net_session_tokens": 18611,
+        "input": 19198,
+        "output": 5561,
+        "reasoning": 12764,
+        "total": 1273235
+      },
+      "sentry_tokens": {},
+      "cumulative_tokens": 1273235,
+      "session_net_tokens": 18611,
+      "total_tokens": 1273235,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sentry": {
+      "instance_id": "django__django-16816",
+      "repo": "django/django",
+      "use_sentry": true,
+      "opencode_model": "crazyrouter/deepseek-flash",
+      "sentry_model": "deepseek-flash",
+      "elapsed_seconds": 236.561137676239,
+      "total_steps": 52,
+      "interventions": 1,
+      "patch_length": 1384,
+      "patch_file": "/app/outputs/batch_20tasks_deepseek_sentry_iter1/runs/20261120T114555Z_sentry/django__django-16816/model_patch.diff",
+      "opencode_tokens": {
+        "cumulative_input": 17987,
+        "cumulative_output": 4935,
+        "cumulative_reasoning": 9753,
+        "cumulative_total": 1010851,
+        "max_context_window": 2908,
+        "last_step_input": 197,
+        "total_generated": 14688,
+        "net_session_tokens": 14885,
+        "input": 17987,
+        "output": 4935,
+        "reasoning": 9753,
+        "total": 1010851
+      },
+      "sentry_tokens": {
+        "prompt_tokens": 45587,
+        "completion_tokens": 16392,
+        "total_tokens": 61979
+      },
+      "cumulative_tokens": 1072830,
+      "session_net_tokens": 76864,
+      "total_tokens": 1072830,
+      "resolved": false,
+      "fail_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "pass_to_pass": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "success": [],
+        "failure": []
+      },
+      "test_counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  }
+}

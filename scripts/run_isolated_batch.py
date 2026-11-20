@@ -126,7 +126,16 @@ def process_single_task(
             "--max-steps", str(max_steps),
             "--output-dir", str(runs_dir),
         ]
-        subprocess.run(base_cmd, cwd=str(PROJECT_ROOT), check=False)
+        try:
+            subprocess.run(base_cmd, cwd=str(PROJECT_ROOT), check=False, timeout=1200)
+        except subprocess.TimeoutExpired:
+            print(f"[{instance_id}] ⚠️ BASE run timed out after 1200s (20 mins)!")
+            try:
+                cids = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=opencode-sentry-bench"], text=True).split()
+                if cids:
+                    subprocess.run(["docker", "kill"] + cids, check=False)
+            except Exception:
+                pass
         summary = find_latest_run_summary(runs_dir, instance_id, "_base")
         with results_lock:
             try:
@@ -168,7 +177,16 @@ def process_single_task(
         ]
         if sentry_config:
             sentry_cmd.extend(["--config", sentry_config])
-        subprocess.run(sentry_cmd, cwd=str(PROJECT_ROOT), check=False)
+        try:
+            subprocess.run(sentry_cmd, cwd=str(PROJECT_ROOT), check=False, timeout=1200)
+        except subprocess.TimeoutExpired:
+            print(f"[{instance_id}] ⚠️ SENTRY run timed out after 1200s (20 mins)!")
+            try:
+                cids = subprocess.check_output(["docker", "ps", "-q", "--filter", "ancestor=opencode-sentry-bench"], text=True).split()
+                if cids:
+                    subprocess.run(["docker", "kill"] + cids, check=False)
+            except Exception:
+                pass
         summary = find_latest_run_summary(runs_dir, instance_id, "_sentry")
         with results_lock:
             try:

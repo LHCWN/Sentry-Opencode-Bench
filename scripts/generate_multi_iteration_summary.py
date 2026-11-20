@@ -72,8 +72,11 @@ def aggregate_metrics(iterations: dict[int, dict]) -> dict:
             summary_per_task[tid]["base_steps"].append(b.get("total_steps", 0))
             summary_per_task[tid]["sentry_steps"].append(s.get("total_steps", 0))
 
-            b_tok = b.get("total_tokens") or b.get("billed_tokens") or 0
-            s_tok = s.get("total_tokens") or s.get("billed_tokens") or 0
+            b_tok = b.get("cumulative_tokens") or b.get("total_tokens") or b.get("billed_tokens") or 0
+            s_tok = s.get("cumulative_tokens") or s.get("total_tokens") or s.get("billed_tokens") or 0
+            s_sentry_only = (s.get("sentry_tokens") or {}).get("total_tokens", 0)
+            if s.get("opencode_tokens", {}).get("cumulative_total") and s_tok == s.get("opencode_tokens", {}).get("cumulative_total"):
+                s_tok += s_sentry_only
             summary_per_task[tid]["base_tokens"].append(b_tok)
             summary_per_task[tid]["sentry_tokens"].append(s_tok)
 

@@ -62,6 +62,14 @@ case "$MODE" in
         if [[ ! " $@ " =~ " --config " ]]; then
             CONFIG_ARGS=(--config "${DEFAULT_CONFIG}")
         fi
+        CONTAINER_ARGS=()
+        for arg in "$@"; do
+            if [[ "$arg" == "${SCRIPT_DIR}/"* ]]; then
+                CONTAINER_ARGS+=("/app/${arg#${SCRIPT_DIR}/}")
+            else
+                CONTAINER_ARGS+=("$arg")
+            fi
+        done
         docker run --rm ${DOCKER_FLAGS} \
             "${NET_FLAGS[@]}" \
             -e CRAZYROUTER_API_KEY="${CRAZYROUTER_API_KEY:-sk-aSR4SNXMye--Mo1CDHSKlg}" \
@@ -82,7 +90,7 @@ case "$MODE" in
                 --max-steps 60 \
                 --check-interval 5 \
                 --check-on-error \
-                "$@"
+                "${CONTAINER_ARGS[@]}"
         ;;
 
     batch)

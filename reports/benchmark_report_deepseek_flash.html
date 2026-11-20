@@ -193,8 +193,8 @@
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">FAIL_TO_PASS Tests (Base / Sentry)</div>
-                <div class="kpi-val" style="color: #3fb950;">16 vs 19</div>
-                <div class="kpi-desc">Total F2P tests in suite: 27</div>
+                <div class="kpi-val" style="color: #3fb950;">17 vs 21</div>
+                <div class="kpi-desc">Total F2P tests in suite: 28</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Net Token Savings</div>
@@ -483,10 +483,10 @@
                 <span class="val-sentry">639,769</span>
                 <span class="badge tok-saved">-47.6%</span>
             </td>
-            <td><span class="status-pill status-pending">-</span> / <span class="status-pill status-pending">-</span></td>
-            <td><span class="status-pill status-pending">-</span> / <span class="status-pill status-pending">-</span></td>
-            <td><span class="val-base">-</span> / <span class="val-sentry">-</span></td>
-            <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
+            <td><span class="status-pill status-solved">1/1 (100%)</span> / <span class="status-pill status-solved">1/1 (100%)</span></td>
+            <td><span class="status-pill status-solved">31/31 (100%)</span> / <span class="status-pill status-solved">31/31 (100%)</span></td>
+            <td><span class="val-base">1P / 0F</span> / <span class="val-sentry">1P / 0F</span></td>
+            <td><span class="status-pill status-solved">Resolved</span> / <span class="status-pill status-solved">Resolved</span></td>
         </tr>
         
         <tr>
@@ -559,9 +559,9 @@
                 <span class="val-sentry">1,465,282</span>
                 <span class="badge tok-more">+12.3%</span>
             </td>
-            <td><span class="status-pill status-pending">0/0</span> / <span class="status-pill status-failed">0/2 (0%)</span></td>
+            <td><span class="status-pill status-pending">0/0</span> / <span class="status-pill status-partial">1/2 (50%)</span></td>
             <td><span class="status-pill status-pending">0/0</span> / <span class="status-pill status-failed">0/123 (0%)</span></td>
-            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">0P / 2F</span></td>
+            <td><span class="val-base">0P / 0F</span> / <span class="val-sentry">1P / 1F</span></td>
             <td><span class="status-pill status-failed">Failed</span> / <span class="status-pill status-failed">Failed</span></td>
         </tr>
         
@@ -2520,7 +2520,7 @@ index 5af2139..8df5250 100644
                 </div>
                 <div class="header-badges">
                     <span class="badge badge-intrv">2 Sentry Intervention(s)</span>
-                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-failed">Failed</span></span>
+                    <span class="status-pill status-solved">Sentry: <span class="status-pill status-solved">Resolved</span></span>
                 </div>
             </div>
             <div class="card-body">
@@ -2548,21 +2548,37 @@ index 5af2139..8df5250 100644
                     <h4 style="margin: 0 0 12px 0; font-size: 14px; color: #58a6ff;">🧪 SWE-bench Ground Truth Test Suite Execution</h4>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                         <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-weight: 600; margin-bottom: 8px;">Baseline: <span class="status-pill status-solved">Resolved</span></div>
                             <div style="font-size: 13px; line-height: 1.6;">
-                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-solved">1/1 (100%)</span></div>
                                 
-                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
-                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> -</div>
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-solved">31/31 (100%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 0 failed, 0 skipped</div>
                             </div>
                         </div>
                         <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
+                            <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-solved">Resolved</span></div>
                             <div style="font-size: 13px; line-height: 1.6;">
-                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-solved">1/1 (100%)</span></div>
                                 
-                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-pending">-</span></div>
-                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> -</div>
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_overriding_inherited_FIELD_display (model_fields.tests.GetFieldDisplayTests)</code></li>
+        </ul>
+        
+    </details>
+    
+                                <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-solved">31/31 (100%)</span></div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 0 failed, 0 skipped</div>
                             </div>
                         </div>
                     </div>
@@ -3118,18 +3134,26 @@ index 55eeb22..276a9bb 100644
                         <div style="background: rgba(255,255,255,0.02); padding: 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
                             <div style="font-weight: 600; margin-bottom: 8px;">Sentry: <span class="status-pill status-failed">Failed</span></div>
                             <div style="font-size: 13px; line-height: 1.6;">
-                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-failed">0/2 (0%)</span></div>
+                                <div>🎯 <strong>FAIL_TO_PASS:</strong> <span class="status-pill status-partial">1/2 (50%)</span></div>
                                 
     <details style="margin-top: 4px;">
-        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (2)</summary>
+        <summary style="cursor: pointer; color: #3fb950; font-size: 12px; font-weight: 500;">Passed Tests (1)</summary>
         <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
-            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_invalid_m2m_related_name (modeladmin.test_checks.ListDisplayTests.test_invalid_m2m_related_name)</code></li><li style='margin-bottom: 2px; word-break: break-all;'><code>test_invalid_related_field (modeladmin.test_checks.ListDisplayTests.test_invalid_related_field)</code></li>
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_invalid_related_field (modeladmin.test_checks.ListDisplayTests.test_invalid_related_field)</code></li>
+        </ul>
+        
+    </details>
+    
+    <details style="margin-top: 4px;">
+        <summary style="cursor: pointer; color: #f85149; font-size: 12px; font-weight: 500;">Failed Tests (1)</summary>
+        <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 11px;">
+            <li style='margin-bottom: 2px; word-break: break-all;'><code>test_invalid_m2m_related_name (modeladmin.test_checks.ListDisplayTests.test_invalid_m2m_related_name)</code></li>
         </ul>
         
     </details>
     
                                 <div style="margin-top: 6px;">🛡️ <strong>PASS_TO_PASS:</strong> <span class="status-pill status-failed">0/123 (0%)</span></div>
-                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 0 passed, 2 failed, 0 skipped</div>
+                                <div style="margin-top: 6px; color: var(--text-muted);">📊 <strong>Summary:</strong> 1 passed, 1 failed, 0 skipped</div>
                             </div>
                         </div>
                     </div>

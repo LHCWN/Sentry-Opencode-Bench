@@ -233,6 +233,12 @@ def evaluate_patch(
 
     # If reset_to_base requested or patch_content provided and we want clean slate
     if reset_to_base and patch_content is not None:
+        index_lock = workspace / ".git" / "index.lock"
+        if index_lock.exists():
+            try:
+                index_lock.unlink()
+            except Exception:
+                pass
         subprocess.run(["git", "-C", str(workspace), "checkout", "-f", base_commit], check=False, capture_output=True)
         subprocess.run(["git", "-C", str(workspace), "clean", "-fd"], check=False, capture_output=True)
 
@@ -330,7 +336,12 @@ def evaluate_patch(
             for t in fail_to_pass:
                 m = re.match(r"^(.*?)\s*\((.*?)\)$", t.strip())
                 if m:
-                    converted_tests.append(f"{m.group(2)}.{m.group(1)}")
+                    fn = m.group(1).strip()
+                    cls = m.group(2).strip()
+                    if cls.endswith("." + fn):
+                        converted_tests.append(cls)
+                    else:
+                        converted_tests.append(f"{cls}.{fn}")
                 else:
                     converted_tests.append(t)
             runtests_script = workspace / "tests" / "runtests.py"
